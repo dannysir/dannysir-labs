@@ -1,3 +1,26 @@
 {
-  "siteName": "dannysir-labs"
+  "siteName": "dannysir-labs",
+  "header": {
+    "home": "Home",
+    "localeSwitcher": {
+      "label": "Language",
+      "ko": "한국어",
+      "en": "English"
+    }
+  },
+  "footer": {
+    "copyright": "© {{year}} dannysir",
+    "githubProfile": "GitHub"
+  },
+  "landing": {
+    "heroTitle": "Try the libraries hands-on",
+    "heroSubtitle": "Interactive demos of npm libraries by @dannysir",
+    "librariesHeading": "Libraries"
+  },
+  "card": {
+    "npm": "npm",
+    "github": "GitHub",
+    "demo": "Try demo",
+    "comingSoon": "Coming soon"
+  }
 }

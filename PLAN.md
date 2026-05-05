@@ -70,9 +70,9 @@
 │   ├── layout.tsx
 │   └── globals.css
 ├── components/
-│   ├── site/                         # header, footer, locale-switcher, library-card
+│   ├── site/                         # Header, Footer, LocaleSwitcher, LibraryCard
 │   ├── floating-demo/                # 'use client' 시연
-│   └── js-te-demo/                   # editor, runner, results, examples
+│   └── js-te-demo/                   # Editor, Results, JsTeDemo (+ runner.ts, examples.ts)
 ├── lib/
 │   ├── libraries.ts                  # 라이브러리 메타데이터 (확장 포인트)
 │   └── i18n/{config.ts,dictionaries.ts,ko.json,en.json}
@@ -93,7 +93,7 @@
 | --- | --- | --- |
 | 0 | 조사 + 결정 + 본 플랜 작성 | [x] 완료 |
 | 1 | Next.js 프로젝트 생성 + i18n 골격 | [x] 완료 |
-| 2 | 사이트 셸 (헤더/푸터/언어 토글) + 랜딩 페이지 | [ ] |
+| 2 | 사이트 셸 (헤더/푸터/언어 토글) + 랜딩 페이지 | [x] 완료 |
 | 3 | floating-components 시연 페이지 | [ ] |
 | 4 | js-te 미니 러너 (핵심 로직) | [ ] |
 | 5 | js-te 시연 페이지 UI | [ ] |
@@ -152,10 +152,10 @@
    };
    export const libraries: Library[] = [/* floating-components, js-te */];
    ```
-2. `components/site/header.tsx` — 좌측 사이트명 (홈 링크), 우측 `<LocaleSwitcher>` (현재 경로의 locale 만 바꿔 이동)
-3. `components/site/footer.tsx` — GitHub 프로필 / 저작권 한 줄
-4. `components/site/locale-switcher.tsx` — 헤더 우측의 **드롭다운 버튼** (현재 locale 을 라벨에 표시: 예 `🌐 KO ▾`). 클릭 시 `ko` / `en` 메뉴 노출 → 선택 시 (a) 쿠키 `NEXT_LOCALE` 저장, (b) `useRouter` + `usePathname` 으로 현재 경로의 locale 세그먼트만 치환해 이동. 메뉴 외부 클릭 시 닫힘, ESC 로도 닫힘. 접근성: `aria-haspopup="menu"`, 키보드 화살표로 항목 이동.
-5. `components/site/library-card.tsx` — name, tagline, npm/GitHub 보조 링크, 시연 버튼 (status 가 `coming-soon` 이면 비활성 + "곧 출시" 배지)
+2. `components/site/Header.tsx` — 좌측 사이트명 (홈 링크), 우측 `<LocaleSwitcher>` (현재 경로의 locale 만 바꿔 이동)
+3. `components/site/Footer.tsx` — GitHub 프로필 / 저작권 한 줄
+4. `components/site/LocaleSwitcher.tsx` — 헤더 우측의 **드롭다운 버튼** (현재 locale 을 라벨에 표시: 예 `🌐 KO ▾`). 클릭 시 `ko` / `en` 메뉴 노출 → 선택 시 (a) 쿠키 `NEXT_LOCALE` 저장, (b) `useRouter` + `usePathname` 으로 현재 경로의 locale 세그먼트만 치환해 이동. 메뉴 외부 클릭 시 닫힘, ESC 로도 닫힘. 접근성: `aria-haspopup="menu"`, 키보드 화살표로 항목 이동.
+5. `components/site/LibraryCard.tsx` — name, tagline, npm/GitHub 보조 링크, 시연 버튼 (status 가 `coming-soon` 이면 비활성 + "곧 출시" 배지)
 6. `app/[locale]/layout.tsx` 에 `<Header>` / `<Footer>` 배치
 7. `app/[locale]/page.tsx` — `getDictionary(locale)` 로 hero 문구 가져오고, `libraries.map` 으로 카드 그리드 렌더
 
@@ -169,7 +169,7 @@
 - 모바일 폭(375px) 에서도 그리드 깨지지 않음
 - `npm run build` / `tsc --noEmit` 통과
 
-**완료 메모**: _(완료 시 한 줄 기록)_
+**완료 메모**: 2026-05-05 lib/libraries.ts + Header/Footer/LocaleSwitcher/LibraryCard + 사전 키 확장 + 랜딩 페이지 카드 그리드. tsc/lint/build 통과, /ko·/en 양쪽 hero/footer/카드 모두 렌더 확인. `<html lang>` 동적 처리는 Phase 6 으로 미룸 (옵션 1 권장: proxy → x-locale 헤더 → 루트 layout headers() 읽기).
 
 ---
 
@@ -179,14 +179,14 @@
 
 **작업 내용**:
 1. `npm i @dannysir/floating-components` (peer: react>=18 충족)
-2. `components/floating-demo/floating-demo.tsx` (`'use client'`)
+2. `components/floating-demo/FloatingDemo.tsx` (`'use client'`)
    - 초기 트리 정의 (참조: `floating-demo/src/App.tsx` 의 패턴)
    - `useLayoutTree(initial)` 사용 → `tree`, `resizeBorder`, `movePanel`, `splitPanel`, `insertPanel`, `removePanel`
    - `<TreeLayout tree={tree} onResizeBorder={resizeBorder} onMovePanel={movePanel} ...>` 렌더
    - 패널 콘텐츠는 색상 + 라벨이 들어간 단순 div
-3. `components/floating-demo/toolbar.tsx`
+3. `components/floating-demo/Toolbar.tsx`
    - "Split horizontal", "Split vertical", "Add panel", "Reset" 버튼
-4. `components/floating-demo/tree-inspector.tsx` — 우측(또는 하단)에 현재 `tree` 상태를 JSON 으로 실시간 표시 (학습용)
+4. `components/floating-demo/TreeInspector.tsx` — 우측(또는 하단)에 현재 `tree` 상태를 JSON 으로 실시간 표시 (학습용)
 5. `app/[locale]/libraries/floating-components/page.tsx` — 위 컴포넌트들을 배치
    - 페이지 자체는 서버 컴포넌트, 시연만 `'use client'` 자식
 
@@ -240,9 +240,9 @@
 1. `npm i @uiw/react-codemirror @codemirror/lang-javascript`
 2. `components/js-te-demo/examples.ts` — 5종 예제
    - `'hello'` (첫 테스트), `'matchers'`, `'each'`, `'fn'`, `'mock'`(Node 전용 — readonly)
-3. `components/js-te-demo/editor.tsx` — CodeMirror, JavaScript 모드, value/onChange
-4. `components/js-te-demo/results.tsx` — describe/test 트리 (들여쓰기, 통과 녹색·실패 빨강·에러 메시지·콘솔 캡처)
-5. `components/js-te-demo/js-te-demo.tsx` (`'use client'`)
+3. `components/js-te-demo/Editor.tsx` — CodeMirror, JavaScript 모드, value/onChange
+4. `components/js-te-demo/Results.tsx` — describe/test 트리 (들여쓰기, 통과 녹색·실패 빨강·에러 메시지·콘솔 캡처)
+5. `components/js-te-demo/JsTeDemo.tsx` (`'use client'`)
    - 좌측: 에디터 + 상단 예제 셀렉터 + "Run" 버튼
    - 우측: 결과 패널
    - 모킹 예제 선택 시 에디터 readonly + 실행 비활성 + 안내 배너
@@ -272,11 +272,13 @@
 1. `lib/i18n/{ko,en}.json` — 헤더/푸터/랜딩 hero/카드 라벨/시연 페이지 UI 라벨/결과 라벨 모두 채우기. 사용자 코드와 예제 코드 자체는 번역 X.
 2. Tailwind 디자인 정돈 — 색상 팔레트, 타이포 스케일, 카드/버튼 일관성, 모바일 반응형 (375px / 768px / 1280px 검수)
 3. 다크 모드는 이번 범위에서 제외 (확장 시 별도 작업)
-4. `README.md` 작성:
+4. **`<html lang>` 동적 처리** — 현재 루트 `app/layout.tsx` 가 `lang="ko"` 로 고정. App Router 제약상 루트 레이아웃이 `params` 를 못 받음. 권장 옵션: `proxy.ts` 에서 응답 헤더 `x-locale` 를 설정 → 루트 레이아웃에서 `headers()` 로 읽어 `<html lang>` 에 반영. (Phase 2 에서 옵션 3 — 고정 — 으로 미뤄둔 항목)
+5. `README.md` 작성:
    - 프로젝트 소개
    - 로컬 개발 / 빌드 / 린트 / 타입체크 명령
    - **새 라이브러리 추가 절차** (= `lib/libraries.ts` 항목 추가 → 시연 페이지 추가 → 번역 키 추가)
    - 미니 러너의 한계 (모듈 모킹은 모사 불가)
+6. (선택) `eslint-config-airbnb-typescript` 의 ESLint 9 flat config 호환 도입 검토 — CLAUDE.md 코드 스타일을 정식 린팅으로 자동 강제
 
 **산출물**:
 - 한·영 모두 빠진 텍스트 없음
