@@ -1,0 +1,21 @@
+@import "tailwindcss";
+@import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
+
+@theme {
+  --color-cream: #FFFFEA;
+  --color-onyx: #261D12;
+  --color-cocoa: #4D3A25;
+  --color-forest: #31401A;
+  --color-olive: #656643;
+  --color-sage: #A1A680;
+  --color-stone: #CBBDA0;
+  --color-gold: #BF9A54;
+
+  --font-sans: 'Pretendard Variable', Pretendard, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-onyx);
+  font-family: var(--font-sans);
+}

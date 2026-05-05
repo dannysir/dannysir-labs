@@ -1,0 +1,26 @@
+{
+  "siteName": "dannysir-labs",
+  "header": {
+    "home": "홈",
+    "localeSwitcher": {
+      "label": "언어",
+      "ko": "한국어",
+      "en": "English"
+    }
+  },
+  "footer": {
+    "copyright": "© {{year}} dannysir",
+    "githubProfile": "GitHub"
+  },
+  "landing": {
+    "heroTitle": "라이브러리를 직접 만져보세요",
+    "heroSubtitle": "@dannysir 가 만든 npm 라이브러리들의 인터랙티브 시연 모음",
+    "librariesHeading": "라이브러리"
+  },
+  "card": {
+    "npm": "npm",
+    "github": "GitHub",
+    "demo": "시연 보기",
+    "comingSoon": "곧 출시"
+  }
+}
