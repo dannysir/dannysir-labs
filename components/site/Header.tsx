@@ -11,12 +11,12 @@ interface HeaderProps {
 
 export function Header({ locale, dict }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-10 border-b border-gray-200 bg-white/90 backdrop-blur">
+    <header className="sticky top-0 z-10 border-b border-stone bg-cream/90 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-6">
         <Link
           href={`/${locale}`}
           aria-label={dict.header.home}
-          className="text-base font-semibold tracking-tight"
+          className="text-base font-semibold tracking-tight text-forest hover:text-onyx"
         >
           {dict.siteName}
         </Link>

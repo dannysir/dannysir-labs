@@ -16,15 +16,15 @@ export default async function Home({ params }: HomeProps) {
   return (
     <div className="mx-auto max-w-5xl px-6 py-12">
       <section className="mb-12">
-        <h1 className="text-4xl font-bold tracking-tight">
+        <h1 className="text-4xl font-bold tracking-tight text-forest">
           {dict.landing.heroTitle}
         </h1>
-        <p className="mt-3 text-lg text-gray-600">
+        <p className="mt-3 text-lg text-cocoa">
           {dict.landing.heroSubtitle}
         </p>
       </section>
       <section>
-        <h2 className="mb-6 text-xl font-semibold">
+        <h2 className="mb-6 text-xl font-semibold text-forest">
           {dict.landing.librariesHeading}
         </h2>
         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
