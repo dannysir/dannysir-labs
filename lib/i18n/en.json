@@ -22,5 +22,21 @@
     "github": "GitHub",
     "demo": "Try demo",
     "comingSoon": "Coming soon"
+  },
+  "floating": {
+    "title": "@dannysir/floating-components",
+    "description": "A VS Code-style panel tree. Drag a panel header onto another panel to reorder, drag the borders to resize. Try the toolbar to split, add, or reset.",
+    "toolbar": {
+      "splitH": "Split horizontal",
+      "splitV": "Split vertical",
+      "addPanel": "Add panel",
+      "reset": "Reset",
+      "selectedHint": "Selected: {{id}}",
+      "noSelection": "Click a panel to select it"
+    },
+    "inspector": {
+      "title": "Tree state"
+    },
+    "panelLabel": "Panel {{id}}"
   }
 }

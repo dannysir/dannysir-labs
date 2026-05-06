@@ -29,6 +29,22 @@ export type Dictionary = {
     demo: string;
     comingSoon: string;
   };
+  floating: {
+    title: string;
+    description: string;
+    toolbar: {
+      splitH: string;
+      splitV: string;
+      addPanel: string;
+      reset: string;
+      selectedHint: string;
+      noSelection: string;
+    };
+    inspector: {
+      title: string;
+    };
+    panelLabel: string;
+  };
 };
 
 const dictionaries: Record<Locale, Dictionary> = {

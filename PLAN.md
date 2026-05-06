@@ -94,7 +94,7 @@
 | 0 | 조사 + 결정 + 본 플랜 작성 | [x] 완료 |
 | 1 | Next.js 프로젝트 생성 + i18n 골격 | [x] 완료 |
 | 2 | 사이트 셸 (헤더/푸터/언어 토글) + 랜딩 페이지 | [x] 완료 |
-| 3 | floating-components 시연 페이지 | [ ] |
+| 3 | floating-components 시연 페이지 | [x] 완료 |
 | 4 | js-te 미니 러너 (핵심 로직) | [ ] |
 | 5 | js-te 시연 페이지 UI | [ ] |
 | 6 | 다국어 사전 채우기 + 디자인 정돈 + README | [ ] |
@@ -200,7 +200,7 @@
 - 브라우저에서 직접 인터랙션 (마우스 드래그 / 드롭 / 버튼 클릭)
 - `npm run build` 통과 (특히 SSR 측 `window`/`document` 참조 에러 없는지)
 
-**완료 메모**: _(완료 시 한 줄 기록)_
+**완료 메모**: 2026-05-06 @dannysir/floating-components ^0.2.4 도입 + FloatingDemo/Toolbar/TreeInspector/DemoPanel + i18n floating.* 키. 시연 중 라이브러리 루트 div 가 부모 크기를 못 채우는 이슈 발견 → 라이브러리 본체에 `width/height: 100%` 기본값(+ prop override) 도입해 0.2.4 publish 로 해결. 선택 표시는 inset box-shadow + 항상 렌더되는 뱃지(visibility 토글)로 사이즈 흔들림 제거. tsc/lint/build 통과. 디자인 톤 정돈은 Phase 6 으로 미룸.
 
 ---
 
