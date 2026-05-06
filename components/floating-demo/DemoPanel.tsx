@@ -34,7 +34,10 @@ export function DemoPanel({ id, label }: DemoPanelProps): React.ReactElement {
     <button
       type="button"
       onClick={() => setSelectedId(id)}
-      className="flex h-full w-full min-w-1/2 cursor-pointer flex-col items-stretch border-0 p-0 text-left outline-none"
+      className={[
+        'flex h-full w-full min-w-1/2 cursor-pointer flex-col items-stretch border-0 p-0 text-left outline-none',
+        isSelected ? 'shadow-[inset_0_0_0_2px_var(--color-gold)]' : '',
+      ].join(' ')}
       style={{ backgroundColor: color.bg, color: color.fg }}
     >
       <div
@@ -46,14 +49,16 @@ export function DemoPanel({ id, label }: DemoPanelProps): React.ReactElement {
         data-drag-handle
       >
         <span>{label}</span>
-        {isSelected && (
-          <span
-            className="rounded-full px-1.5 py-0.5 text-[9px]"
-            style={{ backgroundColor: color.bg, color: color.accent }}
-          >
-            ●
-          </span>
-        )}
+        <span
+          className="rounded-full px-1.5 py-0.5 text-[9px]"
+          style={{
+            backgroundColor: color.bg,
+            color: color.accent,
+            visibility: isSelected ? 'visible' : 'hidden',
+          }}
+        >
+          ●
+        </span>
       </div>
       <div className="flex-1 px-3 py-2 text-xs leading-relaxed">
         <p className="font-mono opacity-80">id: {id}</p>
