@@ -95,7 +95,7 @@
 | 1 | Next.js 프로젝트 생성 + i18n 골격 | [x] 완료 |
 | 2 | 사이트 셸 (헤더/푸터/언어 토글) + 랜딩 페이지 | [x] 완료 |
 | 3 | floating-components 시연 페이지 | [x] 완료 |
-| 4 | js-te 미니 러너 (핵심 로직) | [ ] |
+| 4 | js-te 미니 러너 (핵심 로직) | [x] 완료 |
 | 5 | js-te 시연 페이지 UI | [ ] |
 | 6 | 다국어 사전 채우기 + 디자인 정돈 + README | [ ] |
 | 7 | GitHub push + Vercel 배포 (사용자 사전 허락 필수) | [ ] |
@@ -218,17 +218,17 @@
    - 사용자 코드 평가: `new Function('describe','test','beforeEach','expect','fn', source)(...injected)`
    - `console.log` 캡처 → 결과에 동봉
    - `mock(` 패턴 감지 → 결과에 `usedNodeOnlyMock: true` 플래그
-2. (Phase 5 에서 사용할) Web Worker 변형 준비 — `runner.worker.ts`. 메인 스레드 fallback 도 export.
+2. (Phase 5 에서 사용할) Web Worker 변형 준비 — `runner.worker.ts`. 메인 스레드 fallback 도 export. *(Phase 4 에서는 메시지 핸들러 스캐폴드만 작성. timeout / terminate 는 Phase 5.)*
 
 **산출물**:
 - `runner.ts` 단독으로 호출 가능 (UI 없이도 단위 시나리오 실행 가능)
-- 임시 검증 페이지 `app/[locale]/__runner-check/page.tsx` 에서 하드코딩한 코드 문자열 5종(통과/실패/throw/fn/test.each) 을 돌려 결과를 console 또는 화면에 출력. **이 페이지는 Phase 5 끝에서 삭제.**
+- 임시 검증 페이지 `app/[locale]/runner-check/page.tsx` 에서 하드코딩한 코드 문자열 5종(통과/실패/throw/fn/test.each) 을 돌려 결과를 console 또는 화면에 출력. **이 페이지는 Phase 5 끝에서 삭제.** *(Next.js 의 `_` prefix private 폴더 규칙 때문에 PLAN 초안의 `__runner-check` 대신 `runner-check` 로 작성)*
 
 **검증**:
 - 검증 페이지에서 5종 시나리오 모두 의도대로 동작 (통과·실패·error 메시지 적절)
 - `tsc --noEmit` 통과
 
-**완료 메모**: _(완료 시 한 줄 기록)_
+**완료 메모**: 2026-05-06 `components/js-te-demo/runner/{types,deepEqual,createMockFn,matchers,collector,index,runner.worker}.ts` 작성. `runUserCode(source)` 가 describe-children 트리, 13 matcher (with `.not`), `fn(impl?)` mock helpers, `test.each` `%s/%o` 치환, beforeEach 스코프, console.log 캡처, `mock(` 정규식 감지를 모두 처리. Web Worker 진입점은 스캐폴드만 (5초 타임아웃 / terminate 는 Phase 5). 임시 검증 페이지는 `app/[locale]/runner-check/{page,RunnerCheck}.tsx` (Next.js 의 `_` prefix private 폴더 회피 위해 PLAN 의 `__runner-check` 대신 `runner-check` 사용. Phase 5 끝에서 삭제). tsc/lint/build 통과, /ko·/en 양쪽 6개 시나리오 (pass / fail / throw / fn / each / mock-detection) 의도대로 결과 출력 확인.
 
 ---
 
