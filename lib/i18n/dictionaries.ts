@@ -45,6 +45,31 @@ export type Dictionary = {
     };
     panelLabel: string;
   };
+  jste: {
+    title: string;
+    description: string;
+    exampleLabel: string;
+    examples: {
+      hello: string;
+      matchers: string;
+      each: string;
+      fn: string;
+      mock: string;
+    };
+    run: string;
+    running: string;
+    mockBanner: string;
+    results: {
+      heading: string;
+      idle: string;
+      summary: string;
+      timeout: string;
+      runtimeError: string;
+      nodeOnlyMockDetected: string;
+      consoleHeading: string;
+      noWorker: string;
+    };
+  };
 };
 
 const dictionaries: Record<Locale, Dictionary> = {

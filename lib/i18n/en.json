@@ -38,5 +38,30 @@
       "title": "Tree state"
     },
     "panelLabel": "Panel {{id}}"
+  },
+  "jste": {
+    "title": "@dannysir/js-te",
+    "description": "A Jest-style test framework. The real library runs on top of Node.js native loader hooks, but this page only mimics the core API (describe/test/expect/fn/test.each) in a tiny browser runner. Module mocking (mock()) can't be simulated in the browser, so we just show the code.",
+    "exampleLabel": "Example",
+    "examples": {
+      "hello": "Hello test",
+      "matchers": "Matchers",
+      "each": "test.each",
+      "fn": "fn() mocking",
+      "mock": "mock() (Node only)"
+    },
+    "run": "▶ Run",
+    "running": "Running...",
+    "mockBanner": "This example uses Node.js module mocking (mock()), which can't run in the browser — code is shown for reference only.",
+    "results": {
+      "heading": "Results",
+      "idle": "Click ▶ Run to see results",
+      "summary": "{{passed}} passed · {{failed}} failed · {{ms}}ms",
+      "timeout": "Execution exceeded 5s and was terminated. Check for infinite loops.",
+      "runtimeError": "Error while evaluating code",
+      "nodeOnlyMockDetected": "mock() call detected but ignored (Node.js only).",
+      "consoleHeading": "console",
+      "noWorker": "Web Workers are unsupported in this browser — running on the main thread (no timeout protection)."
+    }
   }
 }

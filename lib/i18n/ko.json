@@ -38,5 +38,30 @@
       "title": "트리 상태"
     },
     "panelLabel": "Panel {{id}}"
+  },
+  "jste": {
+    "title": "@dannysir/js-te",
+    "description": "Jest 스타일 테스트 프레임워크. 원본은 Node.js native loader hooks 위에 동작하지만, 이 페이지에서는 브라우저용 미니 러너로 핵심 API (describe/test/expect/fn/test.each) 만 모사합니다. 모듈 모킹 (mock()) 은 브라우저에서 모사할 수 없어 코드만 보여드립니다.",
+    "exampleLabel": "예제",
+    "examples": {
+      "hello": "첫 테스트",
+      "matchers": "Matchers",
+      "each": "test.each",
+      "fn": "fn() 모킹",
+      "mock": "mock() (Node.js 전용)"
+    },
+    "run": "▶ 실행",
+    "running": "실행 중...",
+    "mockBanner": "이 예제는 Node.js 의 모듈 모킹 (mock()) 을 사용합니다. 브라우저에서는 실행할 수 없으므로 코드만 보여드립니다.",
+    "results": {
+      "heading": "결과",
+      "idle": "▶ 실행을 눌러 결과를 확인하세요",
+      "summary": "통과 {{passed}} · 실패 {{failed}} · {{ms}}ms",
+      "timeout": "5초가 지나도 완료되지 않아 강제 종료했습니다. 무한 루프를 확인해 보세요.",
+      "runtimeError": "코드 평가 중 오류 발생",
+      "nodeOnlyMockDetected": "코드에 mock() 호출이 감지되었지만 무시되었습니다 (Node.js 전용)",
+      "consoleHeading": "console",
+      "noWorker": "이 브라우저는 Web Worker 를 지원하지 않아 메인 스레드에서 실행됩니다 (타임아웃 보호 없음)."
+    }
   }
 }

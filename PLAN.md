@@ -96,7 +96,7 @@
 | 2 | 사이트 셸 (헤더/푸터/언어 토글) + 랜딩 페이지 | [x] 완료 |
 | 3 | floating-components 시연 페이지 | [x] 완료 |
 | 4 | js-te 미니 러너 (핵심 로직) | [x] 완료 |
-| 5 | js-te 시연 페이지 UI | [ ] |
+| 5 | js-te 시연 페이지 UI | [x] 완료 |
 | 6 | 다국어 사전 채우기 + 디자인 정돈 + README | [ ] |
 | 7 | GitHub push + Vercel 배포 (사용자 사전 허락 필수) | [ ] |
 | 8 | 두 라이브러리 저장소에 `homepage` 필드 추가 PR (사용자 사전 허락 필수) | [ ] |
@@ -260,7 +260,7 @@
 - 브라우저에서 직접 코드 작성 → 실행 → 결과 확인
 - `npm run build` 통과
 
-**완료 메모**: _(완료 시 한 줄 기록)_
+**완료 메모**: 2026-05-16 `components/js-te-demo/{examples,Editor,Results,JsTeDemo,runWithWorker}.tsx` + `app/[locale]/libraries/js-te/page.tsx` + i18n `jste.*` 키. `@uiw/react-codemirror` + `@codemirror/lang-javascript` 도입. Worker 5초 타임아웃 (UI 레이어 `setTimeout` + `worker.terminate()`) 동작, mock 예제 readonly + Run 비활성 + 배너 정상. Phase 4 임시 검증 페이지 (`app/[locale]/runner-check/`) 삭제. tsc/lint/build 통과. /ko·/en 양쪽 hello/matchers/each/fn 예제 통과, 무한 루프 입력 시 ~5초 후 타임아웃 메시지 + UI 복구 확인.
 
 ---
 
