@@ -15,32 +15,37 @@ export function LibraryCard({ library, locale, dict }: LibraryCardProps) {
   const npmUrl = `https://www.npmjs.com/package/${library.npmName}`;
   const demoHref = `/${locale}/libraries/${library.slug}`;
   return (
-    <article className="flex flex-col rounded-lg border border-stone p-6 transition hover:shadow-md">
+    <article className="glass-card glass-card-hover relative flex flex-col rounded-xl p-6">
       <div className="flex items-start justify-between gap-3">
-        <h3 className="text-lg font-semibold tracking-tight">
+        <h3 className="font-mono text-lg font-semibold tracking-tight text-on-surface">
           {library.name[locale]}
         </h3>
         {!isLive && (
-          <span className="rounded-full border border-gold/50 bg-gold/15 px-2 py-0.5 text-xs text-cocoa">
+          <span className="rounded-full border border-secondary/40 bg-secondary/10 px-2 py-0.5 text-xs text-secondary">
             {dict.comingSoon}
           </span>
         )}
       </div>
-      <p className="mt-2 text-sm text-cocoa">
+      <p className="mt-2 text-sm text-on-surface-variant">
         {library.tagline[locale]}
       </p>
-      <ul className="mt-4 list-disc space-y-1 pl-5 text-sm text-olive">
+      <ul className="mt-4 flex flex-wrap gap-2">
         {library.highlights[locale].map((item) => (
-          <li key={item}>{item}</li>
+          <li
+            key={item}
+            className="rounded-full border border-outline-variant/30 bg-surface-high/60 px-2.5 py-1 font-mono text-xs text-on-surface-variant"
+          >
+            {item}
+          </li>
         ))}
       </ul>
       <div className="mt-6 flex items-center justify-between">
-        <div className="flex gap-3 text-sm">
+        <div className="relative z-10 flex gap-4 font-mono text-xs">
           <a
             href={npmUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-olive hover:text-cocoa"
+            className="text-on-surface-variant transition-colors hover:text-primary"
           >
             {dict.npm}
           </a>
@@ -48,7 +53,7 @@ export function LibraryCard({ library, locale, dict }: LibraryCardProps) {
             href={library.githubUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-olive hover:text-cocoa"
+            className="text-on-surface-variant transition-colors hover:text-primary"
           >
             {dict.github}
           </a>
@@ -56,14 +61,16 @@ export function LibraryCard({ library, locale, dict }: LibraryCardProps) {
         {isLive ? (
           <Link
             href={demoHref}
-            className="rounded-md bg-forest px-3 py-1.5 text-sm font-medium text-cream hover:bg-onyx"
+            aria-label={`${library.name[locale]} — ${dict.demo}`}
+            className="rounded-lg bg-primary px-3.5 py-1.5 text-sm font-bold text-on-primary shadow-[0_0_20px_rgba(138,235,255,0.25)] transition-shadow hover:shadow-[0_0_30px_rgba(138,235,255,0.45)]"
           >
+            <span className="absolute inset-0 rounded-xl" aria-hidden="true" />
             {dict.demo}
           </Link>
         ) : (
           <span
             aria-disabled="true"
-            className="rounded-md bg-stone/40 px-3 py-1.5 text-sm font-medium text-cocoa/60"
+            className="rounded-lg bg-surface-high px-3.5 py-1.5 text-sm font-medium text-on-surface-variant/50"
           >
             {dict.demo}
           </span>

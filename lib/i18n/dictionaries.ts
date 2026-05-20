@@ -19,9 +19,23 @@ export type Dictionary = {
     githubProfile: string;
   };
   landing: {
+    heroBadge: string;
     heroTitle: string;
     heroSubtitle: string;
+    tryFloating: string;
+    tryJsTe: string;
     librariesHeading: string;
+    features: {
+      runTitle: string;
+      runDesc: string;
+      npmTitle: string;
+      npmDesc: string;
+      ossTitle: string;
+      ossDesc: string;
+    };
+    builtWith: string;
+    ctaTitle: string;
+    ctaSubtitle: string;
   };
   card: {
     npm: string;

@@ -13,9 +13,23 @@
     "githubProfile": "GitHub"
   },
   "landing": {
+    "heroBadge": "INTERACTIVE DEMOS",
     "heroTitle": "Try the libraries hands-on",
     "heroSubtitle": "Interactive demos of npm libraries by @dannysir",
-    "librariesHeading": "Libraries"
+    "tryFloating": "Try floating-components",
+    "tryJsTe": "Try js-te",
+    "librariesHeading": "Libraries",
+    "features": {
+      "runTitle": "Right in the browser",
+      "runDesc": "Run everything on this page — no install needed.",
+      "npmTitle": "Real npm packages",
+      "npmDesc": "The demo code is the published library itself.",
+      "ossTitle": "Open source",
+      "ossDesc": "All source is public on GitHub."
+    },
+    "builtWith": "BUILT WITH",
+    "ctaTitle": "Install from npm",
+    "ctaSubtitle": "Both libraries are published on npm. Explore the demos, then drop them into your project."
   },
   "card": {
     "npm": "npm",

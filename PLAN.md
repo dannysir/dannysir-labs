@@ -50,8 +50,9 @@
 | 라이브러리 연결 | npm published 버전 dependency (`@dannysir/floating-components`). `@dannysir/js-te` 는 Node 전용이라 dependency 에 포함하지 않고 미니 러너로 모사. |
 | 다국어 | 자체 dictionary (`lib/i18n/{ko,en}.json`) + `app/[locale]/...` 라우팅. 한국어 기본. 헤더 우측의 **드롭다운 버튼**으로 전환. 사용자 선택은 쿠키 `NEXT_LOCALE` 에 저장 (다음 방문 유지). **`Accept-Language` 자동 감지는 사용하지 않음** — 사용자가 명시적으로 버튼으로 바꿔야 함. |
 | js-te 시연 방식 | 클라이언트 측 미니 러너. `mock()` 모킹은 코드 미리보기만, 실행 비활성. |
-| 코드 에디터 | CodeMirror 6 (`@uiw/react-codemirror`) |
+| 코드 에디터 | CodeMirror 6 (`@uiw/react-codemirror`, 다크 테마) |
 | 사이트 이름 | `dannysir-labs` (Vercel: `dannysir-labs.vercel.app`) |
+| 디자인 테마 | **다크-테크 단일 테마** (2026-05-20 결정). Stitch 디자인 기반 — 딥 네이비(`#0b1326`) + 네온 시안/퍼플/에메랄드 + 글래스모피즘. 폰트: 본문/한글 Pretendard, 코드/라벨 JetBrains Mono(next/font). 아이콘은 인라인 SVG. (이전 "다크 모드 제외" 결정을 의도적으로 뒤집음 — 라이트/토글 아님.) |
 
 ---
 
@@ -100,6 +101,8 @@
 | 6 | 다국어 사전 채우기 + 디자인 정돈 + README | [x] 완료 |
 | 7 | GitHub push + Vercel 배포 (사용자 사전 허락 필수) | [ ] |
 | 8 | 두 라이브러리 저장소에 `homepage` 필드 추가 PR (사용자 사전 허락 필수) | [ ] |
+| 9 | 다크-테크 전면 리디자인 (Stitch 기반) — 메인/랜딩 | [x] 완료 |
+| 10 | 시연 페이지 2개 디자인 정돈 (floating / js-te) | [ ] |
 
 > **Phase 를 완료할 때마다 위 표의 `[ ]` 를 `[x]` 로 바꾸고, 그 Phase 섹션 끝의 "완료 메모" 에 한 줄 기록**해 두세요. 그래야 새 세션에서 어디까지 했는지 빠르게 파악됩니다.
 
@@ -326,6 +329,36 @@
 **산출물**:
 - 두 저장소 모두 `homepage` 필드 갱신 PR
 - (다음 publish 시) npmjs.com 의 패키지 페이지에서 본 사이트로 이동 가능
+
+**완료 메모**: _(완료 시 한 줄 기록)_
+
+---
+
+## Phase 9 — 다크-테크 전면 리디자인 (Stitch 기반)
+
+**목적**: 사용자가 Stitch 로 생성한 다크-테크 디자인(`/tmp/stitch_design/`)을 사이트 전체에 적용. 라이트 cream/forest → 딥 네이비 + 네온 + 글래스모피즘. 텍스트는 우리 프로젝트(실제 라이브러리)에 맞게 유지.
+
+**작업 내용 (완료)**:
+1. `app/globals.css` — 다크 팔레트 `@theme` 토큰(background/surface\*/on-surface/outline/primary cyan/secondary purple/tertiary emerald/error/code-bg), `--font-mono` = next/font JetBrains Mono var, `.glass-card`/`.glass-card-hover`/`.glow-text`/`animate-float` 유틸.
+2. 사이트 셸 — Header(다크 nav + mono 네브 링크), Footer(다크 + 이메일/GitHub), LocaleSwitcher(다크 드롭다운), LibraryCard(글래스 카드 + highlight 칩).
+3. 랜딩 `app/[locale]/page.tsx` — hero(배지+글로우 타이틀+CTA 2버튼+배경 글로우) → 라이브러리 글래스 bento 2개 → **피처 트리오 3개**(브라우저 실행/실제 npm 패키지/오픈소스) → **"이 사이트에 사용한 기술" 로고 월**(Next.js/React/TS/Tailwind/Claude Code, muted→hover) → install CTA(`CopyCommand` 클라이언트 컴포넌트, max-w-5xl). i18n `landing.*` 키 추가(heroBadge/tryFloating/tryJsTe/features.*/builtWith/ctaTitle/ctaSubtitle, ko·en).
+4. 데모 컴포넌트 — DemoPanel 네온 팔레트, FloatingDemo TreeLayout 색, Toolbar/TreeInspector/JsTeDemo/Results 다크 토큰, Editor CodeMirror `theme="dark"`, 시연 페이지 헤더 색 + max-w-6xl 정렬. (※ 시연 페이지 *레이아웃/디자인 정돈*은 Phase 10 으로 분리.)
+5. 폰트/아이콘 — JetBrains Mono 는 `next/font/google`(Material Symbols 는 next/font 미지원이라 제외), 아이콘은 `components/site/icons.tsx` 인라인 SVG(Sparkle/ArrowRight/Copy/Check/Bolt/Package/Code + 브랜드 로고 React·Next·TS·Tailwind·Claude).
+6. 디테일 — Header 활성 네브 표시(`HeaderNav` 클라이언트, `usePathname`, 시안+언더라인, 기본 bold/활성 extrabold), 로고·네브 baseline 정렬, LibraryCard 전체 클릭(stretched-link), Footer 이메일`|`GitHub 구분자.
+
+**완료 메모**: 2026-05-20 전체 다크-테크 전환 완료 (메인/랜딩 디자인 확정). **함정 2건**: (1) 외부 `@import url(...)` 폰트를 `@import "tailwindcss"` 뒤에 두면 Lightning CSS 가 "@import must precede all rules" 로 깨짐 → 폰트는 next/font 로 이동. (2) `Material_Symbols_Outlined` 는 `next/font/google` 미export → 아이콘 폰트 버리고 인라인 SVG. **Turbopack 함정**: CSS 파싱 에러가 한 번 나면 HMR 이 stale 캐시로 고착 → `.next` 삭제 후 dev 재시작 필요(여러 번 발생). tsc/lint/build(경고 0) 통과, /ko·/en × 랜딩·floating·js-te × desktop·mobile 브라우저 검수 통과, js-te 러너 다크 결과 정상, 콘솔 에러 0. **다음**: 시연 페이지 2개의 디자인 정돈 = Phase 10.
+
+---
+
+## Phase 10 — 시연 페이지 2개 디자인 정돈
+
+**목적**: Phase 9 에서 다크 토큰으로 색만 맞춰둔 두 시연 페이지(`/libraries/floating-components`, `/libraries/js-te`)의 **레이아웃/디자인을 메인 페이지 수준으로 정돈**. (다음 세션에서 진행 — 사용자가 메인 디자인 확정 후 시연 페이지로 넘어가기로 함, 2026-05-20.)
+
+**대상 (예상)**:
+- 시연 영역 컨테이너/헤더의 글래스·여백·타이포 톤을 랜딩과 일관되게.
+- floating: 패널/툴바/트리 인스펙터 배치·간격, 데모 영역 프레임.
+- js-te: 에디터/결과 패널 비율·프레임, Run 버튼·예제 셀렉터 정돈.
+- 새 디자인 참고가 있으면 그에 맞춤(메인처럼 Stitch 산출물 활용 가능).
 
 **완료 메모**: _(완료 시 한 줄 기록)_
 

@@ -147,16 +147,16 @@ export function FloatingDemo({ dict }: FloatingDemoProps): React.ReactElement {
             onAddPanel={handleAddPanel}
             onReset={handleReset}
           />
-          <div className="h-[480px] overflow-hidden rounded-b-lg border border-stone">
+          <div className="h-[480px] overflow-hidden rounded-b-lg border border-outline-variant/30">
             <TreeLayout
               tree={tree}
               onResizeBorder={resizeBorder}
               onMovePanel={movePanel}
               dragHandleSelector="[data-drag-handle]"
-              backgroundColor="#FFFFEA"
+              backgroundColor="#060e20"
               padding={4}
-              resizerColor="#CBBDA0"
-              resizerHoverColor="#BF9A54"
+              resizerColor="#3c494c"
+              resizerHoverColor="#8aebff"
             />
           </div>
         </div>

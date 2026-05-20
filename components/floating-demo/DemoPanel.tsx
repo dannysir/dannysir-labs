@@ -5,12 +5,12 @@ import { useContext } from 'react';
 import { SelectionContext } from './SelectionContext';
 
 const PANEL_PALETTE = [
-  { bg: '#FFFFEA', fg: '#261D12', accent: '#BF9A54' },
-  { bg: '#CBBDA0', fg: '#261D12', accent: '#4D3A25' },
-  { bg: '#A1A680', fg: '#FFFFEA', accent: '#31401A' },
-  { bg: '#656643', fg: '#FFFFEA', accent: '#BF9A54' },
-  { bg: '#31401A', fg: '#FFFFEA', accent: '#A1A680' },
-  { bg: '#4D3A25', fg: '#FFFFEA', accent: '#BF9A54' },
+  { bg: '#131b2e', fg: '#dae2fd', accent: '#22d3ee' },
+  { bg: '#1a1330', fg: '#dae2fd', accent: '#ddb7ff' },
+  { bg: '#10231c', fg: '#dae2fd', accent: '#68f5b8' },
+  { bg: '#171f33', fg: '#dae2fd', accent: '#8aebff' },
+  { bg: '#222a3d', fg: '#dae2fd', accent: '#a2eeff' },
+  { bg: '#0e1a2e', fg: '#dae2fd', accent: '#ddb7ff' },
 ];
 
 const colorForId = (id: string): { bg: string; fg: string; accent: string } => {
@@ -36,7 +36,7 @@ export function DemoPanel({ id, label }: DemoPanelProps): React.ReactElement {
       onClick={() => setSelectedId(id)}
       className={[
         'flex h-full w-full min-w-1/2 cursor-pointer flex-col items-stretch border-0 p-0 text-left outline-none',
-        isSelected ? 'shadow-[inset_0_0_0_2px_var(--color-gold)]' : '',
+        isSelected ? 'shadow-[inset_0_0_0_2px_var(--color-primary)]' : '',
       ].join(' ')}
       style={{ backgroundColor: color.bg, color: color.fg }}
     >

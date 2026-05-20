@@ -22,6 +22,7 @@ export function Editor({
     <CodeMirror
       value={value}
       height={height}
+      theme="dark"
       readOnly={readOnly}
       editable={!readOnly}
       extensions={extensions}

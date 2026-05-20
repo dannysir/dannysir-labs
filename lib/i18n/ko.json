@@ -13,9 +13,23 @@
     "githubProfile": "GitHub"
   },
   "landing": {
+    "heroBadge": "인터랙티브 시연",
     "heroTitle": "라이브러리를 직접 만져보세요",
     "heroSubtitle": "@dannysir 가 만든 npm 라이브러리들의 인터랙티브 시연 모음",
-    "librariesHeading": "라이브러리"
+    "tryFloating": "floating-components 시연",
+    "tryJsTe": "js-te 시연",
+    "librariesHeading": "라이브러리",
+    "features": {
+      "runTitle": "브라우저에서 바로",
+      "runDesc": "설치 없이 이 페이지에서 직접 실행해 보세요.",
+      "npmTitle": "실제 npm 패키지",
+      "npmDesc": "시연에 쓰인 코드가 곧 배포된 라이브러리예요.",
+      "ossTitle": "오픈 소스",
+      "ossDesc": "전체 소스는 GitHub 에 공개돼 있어요."
+    },
+    "builtWith": "이 사이트에 사용한 기술",
+    "ctaTitle": "npm 에서 바로 설치",
+    "ctaSubtitle": "두 라이브러리 모두 npm 에 공개돼 있어요. 시연을 둘러본 뒤 프로젝트에 추가해 보세요."
   },
   "card": {
     "npm": "npm",

@@ -24,9 +24,9 @@ export function Toolbar({
 }: ToolbarProps): React.ReactElement {
   const hasSelection = selectedId !== null;
   const buttonClass =
-    'rounded-md border border-stone bg-cream px-3 py-1.5 text-xs font-medium text-cocoa transition hover:border-cocoa hover:text-onyx disabled:cursor-not-allowed disabled:opacity-40';
+    'rounded-md border border-outline-variant/40 bg-surface-high px-3 py-1.5 font-mono text-xs font-medium text-on-surface-variant transition hover:border-primary/50 hover:text-primary disabled:cursor-not-allowed disabled:opacity-40';
   return (
-    <div className="flex flex-wrap items-center gap-2 rounded-t-lg border border-b-0 border-stone bg-cream/60 px-3 py-2">
+    <div className="flex flex-wrap items-center gap-2 rounded-t-lg border border-b-0 border-outline-variant/30 bg-surface/60 px-3 py-2">
       <button
         type="button"
         className={buttonClass}
@@ -51,7 +51,7 @@ export function Toolbar({
       >
         {dict.addPanel}
       </button>
-      <span className="ml-auto text-xs text-olive">
+      <span className="ml-auto font-mono text-xs text-on-surface-variant/70">
         {hasSelection
           ? formatHint(dict.selectedHint, selectedId)
           : dict.noSelection}

@@ -15,7 +15,7 @@ interface JsTeDemoProps {
 
 const TIMEOUT_MS = 5000;
 
-const buttonClass = 'rounded-md border border-stone bg-cream px-3 py-1.5 text-xs font-medium text-cocoa transition hover:border-cocoa hover:text-onyx disabled:cursor-not-allowed disabled:opacity-40';
+const runButtonClass = 'ml-auto rounded-md bg-primary px-4 py-1.5 font-mono text-xs font-bold text-on-primary shadow-[0_0_16px_rgba(138,235,255,0.3)] transition-shadow hover:shadow-[0_0_28px_rgba(138,235,255,0.5)] disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none';
 
 export function JsTeDemo({ dict }: JsTeDemoProps): React.ReactElement {
   const [selectedId, setSelectedId] = useState<ExampleId>('hello');
@@ -71,10 +71,10 @@ export function JsTeDemo({ dict }: JsTeDemoProps): React.ReactElement {
   return (
     <div className="grid gap-4 lg:grid-cols-[3fr_2fr]">
       <div className="flex flex-col">
-        <div className="flex flex-wrap items-center gap-2 rounded-t-lg border border-b-0 border-stone bg-cream/60 px-3 py-2">
+        <div className="flex flex-wrap items-center gap-2 rounded-t-lg border border-b-0 border-outline-variant/30 bg-surface/60 px-3 py-2">
           <label
             htmlFor="jste-example-select"
-            className="text-xs font-medium text-cocoa"
+            className="font-mono text-xs font-medium text-on-surface-variant"
           >
             {dict.exampleLabel}
           </label>
@@ -82,7 +82,7 @@ export function JsTeDemo({ dict }: JsTeDemoProps): React.ReactElement {
             id="jste-example-select"
             value={selectedId}
             onChange={(e) => handleSelectExample(e.target.value as ExampleId)}
-            className="rounded-md border border-stone bg-cream px-2 py-1 text-xs text-onyx focus:border-cocoa focus:outline-none"
+            className="rounded-md border border-outline-variant/40 bg-surface-high px-2 py-1 font-mono text-xs text-on-surface focus:border-primary/50 focus:outline-none"
           >
             {exampleOrder.map((id) => (
               <option key={id} value={id}>
@@ -92,7 +92,7 @@ export function JsTeDemo({ dict }: JsTeDemoProps): React.ReactElement {
           </select>
           <button
             type="button"
-            className={`${buttonClass} ml-auto`}
+            className={runButtonClass}
             disabled={blocked || isRunning}
             onClick={handleRun}
           >
@@ -100,11 +100,11 @@ export function JsTeDemo({ dict }: JsTeDemoProps): React.ReactElement {
           </button>
         </div>
         {blocked ? (
-          <div className="border-x border-stone bg-gold/10 px-3 py-2 text-xs text-cocoa">
+          <div className="border-x border-outline-variant/30 bg-secondary/10 px-3 py-2 font-mono text-xs text-secondary">
             {dict.mockBanner}
           </div>
         ) : null}
-        <div className="overflow-hidden rounded-b-lg border border-stone bg-white">
+        <div className="overflow-hidden rounded-b-lg border border-outline-variant/30">
           <Editor
             value={source}
             onChange={handleSourceChange}

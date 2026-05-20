@@ -13,12 +13,12 @@ export default async function JsTePage({ params }: JsTePageProps) {
   if (!locales.includes(locale as Locale)) notFound();
   const dict = getDictionary(locale as Locale);
   return (
-    <div className="mx-auto max-w-5xl px-6 py-12">
+    <div className="mx-auto max-w-6xl px-6 py-12">
       <header className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight text-forest">
+        <h1 className="font-mono text-3xl font-bold tracking-tight text-on-surface">
           {dict.jste.title}
         </h1>
-        <p className="mt-3 max-w-3xl text-sm leading-relaxed text-cocoa">
+        <p className="mt-3 max-w-3xl text-sm leading-relaxed text-on-surface-variant">
           {dict.jste.description}
         </p>
       </header>

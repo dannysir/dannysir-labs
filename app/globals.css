@@ -2,20 +2,67 @@
 @import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 
 @theme {
-  --color-cream: #FFFFEA;
-  --color-onyx: #261D12;
-  --color-cocoa: #4D3A25;
-  --color-forest: #31401A;
-  --color-olive: #656643;
-  --color-sage: #A1A680;
-  --color-stone: #CBBDA0;
-  --color-gold: #BF9A54;
+  --color-background: #0b1326;
+  --color-surface: #171f33;
+  --color-surface-lowest: #060e20;
+  --color-surface-low: #131b2e;
+  --color-surface-high: #222a3d;
+  --color-surface-highest: #2d3449;
+  --color-surface-bright: #31394d;
+
+  --color-on-surface: #dae2fd;
+  --color-on-surface-variant: #bbc9cd;
+
+  --color-outline: #859397;
+  --color-outline-variant: #3c494c;
+
+  --color-primary: #8aebff;
+  --color-on-primary: #00363e;
+  --color-primary-container: #22d3ee;
+
+  --color-secondary: #ddb7ff;
+  --color-on-secondary: #490080;
+
+  --color-tertiary: #68f5b8;
+  --color-on-tertiary: #003824;
+
+  --color-error: #ffb4ab;
+  --color-on-error: #690005;
+
+  --color-code-bg: #010409;
 
   --font-sans: 'Pretendard Variable', Pretendard, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 body {
-  background-color: var(--color-cream);
-  color: var(--color-onyx);
+  background-color: var(--color-background);
+  color: var(--color-on-surface);
   font-family: var(--font-sans);
+}
+
+.glass-card {
+  background-color: color-mix(in srgb, var(--color-surface) 70%, transparent);
+  backdrop-filter: blur(12px);
+  border: 1px solid color-mix(in srgb, var(--color-outline) 20%, transparent);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card-hover:hover {
+  border-color: color-mix(in srgb, var(--color-primary) 50%, transparent);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--color-primary) 12%, transparent);
+}
+
+.glow-text {
+  text-shadow: 0 0 30px color-mix(in srgb, var(--color-primary) 40%, transparent);
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
 }

@@ -36,7 +36,7 @@ function Tree({ nodes, depth, consoleHeading }: TreeProps): React.ReactElement {
     <ul className="space-y-1">
       {nodes.map((node) => {
         const pass = node.status === 'pass';
-        const statusClass = pass ? 'text-forest' : 'text-red-700';
+        const statusClass = pass ? 'text-tertiary' : 'text-error';
         const icon = node.type === 'describe' ? '▾' : pass ? '✓' : '✗';
         return (
           <li key={node.id} style={{ paddingLeft: depth * 14 }}>
@@ -46,26 +46,26 @@ function Tree({ nodes, depth, consoleHeading }: TreeProps): React.ReactElement {
                 {node.name}
               </span>
               {node.type === 'test' ? (
-                <span className="text-xs text-olive">
+                <span className="text-xs text-on-surface-variant/60">
                   ({node.durationMs}
                   ms)
                 </span>
               ) : null}
             </div>
             {node.type === 'test' && node.error ? (
-              <pre className="ml-6 mt-1 whitespace-pre-wrap break-words rounded-md bg-red-50 px-3 py-2 font-mono text-xs text-red-800">
+              <pre className="ml-6 mt-1 whitespace-pre-wrap break-words rounded-md border border-error/30 bg-error/10 px-3 py-2 font-mono text-xs text-error">
                 {node.error.message}
               </pre>
             ) : null}
             {node.type === 'test' && node.consoleLogs.length > 0 ? (
-              <div className="ml-6 mt-1 rounded-md border border-stone/60 bg-cream/50 px-3 py-2">
-                <div className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-olive">
+              <div className="ml-6 mt-1 rounded-md border border-outline-variant/30 bg-surface-high/40 px-3 py-2">
+                <div className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-on-surface-variant/70">
                   {consoleHeading}
                 </div>
-                <ul className="space-y-0.5 font-mono text-xs text-cocoa">
+                <ul className="space-y-0.5 font-mono text-xs text-on-surface-variant">
                   {node.consoleLogs.map((entry, i) => (
                     <li key={`${node.id}-log-${i}`}>
-                      <span className="mr-1 text-olive">
+                      <span className="mr-1 text-on-surface-variant/50">
                         [
                         {entry.level}
                         ]
@@ -96,24 +96,24 @@ export function Results({ dict, state }: ResultsProps): React.ReactElement {
   return (
     <section
       aria-label={dict.heading}
-      className="flex h-full flex-col rounded-lg border border-stone bg-cream/40"
+      className="flex h-full flex-col rounded-lg border border-outline-variant/30 bg-surface/40"
     >
-      <header className="border-b border-stone/70 px-4 py-2">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-olive">
+      <header className="border-b border-outline-variant/30 px-4 py-2">
+        <h2 className="font-mono text-sm font-semibold uppercase tracking-wider text-on-surface-variant">
           {dict.heading}
         </h2>
       </header>
       <div className="flex-1 overflow-auto px-4 py-3">
         {state.kind === 'idle' ? (
-          <p className="text-sm text-olive">{dict.idle}</p>
+          <p className="text-sm text-on-surface-variant/70">{dict.idle}</p>
         ) : null}
 
         {state.kind === 'running' ? (
-          <p className="text-sm text-cocoa">{dict.heading}…</p>
+          <p className="text-sm text-on-surface-variant">{dict.heading}…</p>
         ) : null}
 
         {state.kind === 'timeout' ? (
-          <p className="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800">
+          <p className="rounded-md border border-error/30 bg-error/10 px-3 py-2 text-sm text-error">
             {dict.timeout}
           </p>
         ) : null}
@@ -121,11 +121,11 @@ export function Results({ dict, state }: ResultsProps): React.ReactElement {
         {state.kind === 'result' ? (
           <div className="space-y-3">
             {state.noWorker ? (
-              <p className="rounded-md border border-stone bg-cream/70 px-3 py-2 text-xs text-cocoa">
+              <p className="rounded-md border border-outline-variant/30 bg-surface-high/40 px-3 py-2 text-xs text-on-surface-variant">
                 {dict.noWorker}
               </p>
             ) : null}
-            <p className="text-sm font-medium text-onyx">
+            <p className="font-mono text-sm font-medium text-on-surface">
               {formatSummary(
                 dict.summary,
                 state.result.passed,
@@ -134,16 +134,16 @@ export function Results({ dict, state }: ResultsProps): React.ReactElement {
               )}
             </p>
             {state.result.usedNodeOnlyMock ? (
-              <p className="rounded-md border border-gold/50 bg-cream/80 px-3 py-2 text-xs text-cocoa">
+              <p className="rounded-md border border-secondary/40 bg-secondary/10 px-3 py-2 text-xs text-secondary">
                 {dict.nodeOnlyMockDetected}
               </p>
             ) : null}
             {state.result.runtimeError ? (
-              <div className="rounded-md border border-red-300 bg-red-50 px-3 py-2">
-                <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-red-700">
+              <div className="rounded-md border border-error/30 bg-error/10 px-3 py-2">
+                <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-error">
                   {dict.runtimeError}
                 </p>
-                <pre className="whitespace-pre-wrap break-words font-mono text-xs text-red-800">
+                <pre className="whitespace-pre-wrap break-words font-mono text-xs text-error">
                   {state.result.runtimeError.message}
                 </pre>
               </div>
