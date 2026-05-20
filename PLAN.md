@@ -97,7 +97,7 @@
 | 3 | floating-components 시연 페이지 | [x] 완료 |
 | 4 | js-te 미니 러너 (핵심 로직) | [x] 완료 |
 | 5 | js-te 시연 페이지 UI | [x] 완료 |
-| 6 | 다국어 사전 채우기 + 디자인 정돈 + README | [ ] |
+| 6 | 다국어 사전 채우기 + 디자인 정돈 + README | [x] 완료 |
 | 7 | GitHub push + Vercel 배포 (사용자 사전 허락 필수) | [ ] |
 | 8 | 두 라이브러리 저장소에 `homepage` 필드 추가 PR (사용자 사전 허락 필수) | [ ] |
 
@@ -289,7 +289,7 @@
 - 양 locale 페이지 직접 순회 점검
 - `npm run build` / `lint` / `tsc --noEmit` 모두 통과
 
-**완료 메모**: _(완료 시 한 줄 기록)_
+**완료 메모**: 2026-05-20 i18n 사전은 Phase 2~5 에서 이미 완비돼 있어 누락/하드코딩 0건 확인(검증만). `<html lang>` 동적화 — `proxy.ts` 가 locale 포함 요청에 `x-locale` 응답 헤더(`LOCALE_HEADER`, config.ts) 를 실어 보내고 루트 `app/layout.tsx` 가 `await headers()` 로 읽어 반영(이로 인해 전 라우트가 SSG→동적 ƒ 로 전환 — 데모 사이트라 무방). README 전면 재작성(소개/개발·검증 명령/구조/새 라이브러리 추가 절차/미니 러너 한계). 디자인은 기존 cream/forest 팔레트가 일관돼 추가 정돈 불필요 — desktop·mobile(375) × ko·en 3페이지 브라우저 검수 통과, 콘솔 에러 0, js-te 러너 npm 0.7.3 으로 "통과 1·실패 0" 동작 확인. tsc/lint/build 통과. (eslint-airbnb 정식 도입은 보류.)
 
 ---
 

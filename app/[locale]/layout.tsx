@@ -24,7 +24,7 @@ export default async function LocaleLayout({
   if (!locales.includes(locale as Locale)) notFound();
   const dict = getDictionary(locale as Locale);
   return (
-    <div className="flex min-h-full flex-col">
+    <div className="flex flex-1 flex-col">
       <Header locale={locale as Locale} dict={dict} />
       <main className="flex-1">{children}</main>
       <Footer dict={dict} />

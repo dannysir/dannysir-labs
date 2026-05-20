@@ -11,14 +11,22 @@ export function Footer({ dict }: FooterProps) {
     <footer className="mt-16 border-t border-stone">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-6 text-sm text-olive">
         <span>{copyright}</span>
-        <a
-          href="https://github.com/dannysir"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:text-cocoa"
-        >
-          {dict.footer.githubProfile}
-        </a>
+        <div className="flex items-center gap-4">
+          <a
+            href="mailto:dannysir0105@gmail.com"
+            className="hover:text-cocoa"
+          >
+            dannysir0105@gmail.com
+          </a>
+          <a
+            href="https://github.com/dannysir"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-cocoa"
+          >
+            {dict.footer.githubProfile}
+          </a>
+        </div>
       </div>
     </footer>
   );
