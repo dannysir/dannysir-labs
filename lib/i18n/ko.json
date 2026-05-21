@@ -13,15 +13,38 @@
     "githubProfile": "GitHub"
   },
   "landing": {
+    "heroBadge": "인터랙티브 시연",
     "heroTitle": "라이브러리를 직접 만져보세요",
     "heroSubtitle": "@dannysir 가 만든 npm 라이브러리들의 인터랙티브 시연 모음",
-    "librariesHeading": "라이브러리"
+    "tryFloating": "floating-components 시연",
+    "tryJsTe": "js-te 시연",
+    "librariesHeading": "라이브러리",
+    "features": {
+      "runTitle": "브라우저에서 바로",
+      "runDesc": "설치 없이 이 페이지에서 직접 실행해 보세요.",
+      "npmTitle": "실제 npm 패키지",
+      "npmDesc": "시연에 쓰인 코드가 곧 배포된 라이브러리예요.",
+      "ossTitle": "오픈 소스",
+      "ossDesc": "전체 소스는 GitHub 에 공개돼 있어요."
+    },
+    "builtWith": "이 사이트에 사용한 기술",
+    "ctaTitle": "npm 에서 바로 설치",
+    "ctaSubtitle": "두 라이브러리 모두 npm 에 공개돼 있어요. 시연을 둘러본 뒤 프로젝트에 추가해 보세요."
   },
   "card": {
     "npm": "npm",
     "github": "GitHub",
     "demo": "시연 보기",
     "comingSoon": "곧 출시"
+  },
+  "libraries": {
+    "nav": {
+      "readme": "설명",
+      "demo": "시연 화면",
+      "api": "API 문서"
+    },
+    "github": "GitHub",
+    "loadError": "문서를 불러오지 못했습니다. GitHub 에서 직접 확인해 주세요."
   },
   "floating": {
     "title": "@dannysir/floating-components",
@@ -37,6 +60,55 @@
     "inspector": {
       "title": "트리 상태"
     },
+    "liveCanvas": "라이브 캔버스 활성",
+    "activityLog": {
+      "title": "활동 로그",
+      "clear": "초기화",
+      "empty": "패널을 분할·이동·리사이즈하면 여기에 기록됩니다.",
+      "events": {
+        "init": "트리 구조 렌더링됨",
+        "split": "{{id}} 패널 분할",
+        "add": "{{id}} 패널 추가",
+        "move": "패널 이동됨",
+        "resize": "패널 크기 조정됨",
+        "reset": "트리 초기화됨"
+      }
+    },
     "panelLabel": "Panel {{id}}"
+  },
+  "jste": {
+    "title": "@dannysir/js-te",
+    "description": "Jest 스타일 테스트 프레임워크. 원본은 Node.js native loader hooks 위에 동작하지만, 이 페이지에서는 브라우저용 미니 러너로 핵심 API (describe/test/expect/fn/test.each) 만 모사합니다. 모듈 모킹 (mock()) 은 브라우저에서 모사할 수 없어 코드만 보여드립니다.",
+    "exampleLabel": "예제",
+    "examples": {
+      "hello": "첫 테스트",
+      "matchers": "Matchers",
+      "each": "test.each",
+      "fn": "fn() 모킹",
+      "mock": "mock() (Node.js 전용)"
+    },
+    "run": "테스트 실행",
+    "running": "실행 중...",
+    "clear": "콘솔 비우기",
+    "fileName": "demo.test.js",
+    "editorLabel": "에디터",
+    "terminalLabel": "터미널",
+    "status": {
+      "ready": "준비됨",
+      "running": "실행 중",
+      "pass": "통과",
+      "fail": "실패"
+    },
+    "mockBanner": "이 예제는 Node.js 의 모듈 모킹 (mock()) 을 사용합니다. 브라우저에서는 실행할 수 없으므로 코드만 보여드립니다.",
+    "results": {
+      "heading": "결과",
+      "idle": "테스트 실행을 눌러 결과를 확인하세요",
+      "summary": "통과 {{passed}} · 실패 {{failed}} · {{ms}}ms",
+      "timeout": "5초가 지나도 완료되지 않아 강제 종료했습니다. 무한 루프를 확인해 보세요.",
+      "runtimeError": "코드 평가 중 오류 발생",
+      "nodeOnlyMockDetected": "코드에 mock() 호출이 감지되었지만 무시되었습니다 (Node.js 전용)",
+      "consoleHeading": "console",
+      "noWorker": "이 브라우저는 Web Worker 를 지원하지 않아 메인 스레드에서 실행됩니다 (타임아웃 보호 없음)."
+    }
   }
 }

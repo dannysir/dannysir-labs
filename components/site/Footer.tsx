@@ -8,17 +8,29 @@ export function Footer({ dict }: FooterProps) {
   const year = new Date().getFullYear();
   const copyright = dict.footer.copyright.replace('{{year}}', String(year));
   return (
-    <footer className="mt-16 border-t border-stone">
-      <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-6 text-sm text-olive">
-        <span>{copyright}</span>
-        <a
-          href="https://github.com/dannysir"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:text-cocoa"
-        >
-          {dict.footer.githubProfile}
-        </a>
+    <footer className="mt-16 border-t border-outline-variant/10 bg-surface-lowest">
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-sm sm:flex-row">
+        <div className="flex flex-col items-center gap-1 sm:items-start">
+          <span className="font-bold text-primary">{dict.siteName}</span>
+          <span className="text-on-surface-variant/70">{copyright}</span>
+        </div>
+        <div className="flex items-center gap-3 font-mono text-xs text-on-surface-variant">
+          <a
+            href="mailto:dannysir@naver.com"
+            className="transition-colors hover:text-secondary"
+          >
+            dannysir@naver.com
+          </a>
+          <span aria-hidden="true" className="text-outline-variant">|</span>
+          <a
+            href="https://github.com/dannysir"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-secondary"
+          >
+            {dict.footer.githubProfile}
+          </a>
+        </div>
       </div>
     </footer>
   );

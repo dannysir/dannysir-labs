@@ -4,21 +4,14 @@ import { useContext } from 'react';
 
 import { SelectionContext } from './SelectionContext';
 
-const PANEL_PALETTE = [
-  { bg: '#FFFFEA', fg: '#261D12', accent: '#BF9A54' },
-  { bg: '#CBBDA0', fg: '#261D12', accent: '#4D3A25' },
-  { bg: '#A1A680', fg: '#FFFFEA', accent: '#31401A' },
-  { bg: '#656643', fg: '#FFFFEA', accent: '#BF9A54' },
-  { bg: '#31401A', fg: '#FFFFEA', accent: '#A1A680' },
-  { bg: '#4D3A25', fg: '#FFFFEA', accent: '#BF9A54' },
-];
+const ACCENT_PALETTE = ['#22d3ee', '#ddb7ff', '#68f5b8', '#8aebff', '#a2eeff', '#4edea3'];
 
-const colorForId = (id: string): { bg: string; fg: string; accent: string } => {
+const accentForId = (id: string): string => {
   let hash = 0;
   for (let i = 0; i < id.length; i += 1) {
     hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
   }
-  return PANEL_PALETTE[hash % PANEL_PALETTE.length];
+  return ACCENT_PALETTE[hash % ACCENT_PALETTE.length];
 };
 
 interface DemoPanelProps {
@@ -28,40 +21,53 @@ interface DemoPanelProps {
 
 export function DemoPanel({ id, label }: DemoPanelProps): React.ReactElement {
   const { selectedId, setSelectedId } = useContext(SelectionContext);
-  const color = colorForId(id);
+  const accent = accentForId(id);
   const isSelected = selectedId === id;
   return (
     <button
       type="button"
       onClick={() => setSelectedId(id)}
+      data-drag-handle
       className={[
-        'flex h-full w-full min-w-1/2 cursor-pointer flex-col items-stretch border-0 p-0 text-left outline-none',
-        isSelected ? 'shadow-[inset_0_0_0_2px_var(--color-gold)]' : '',
+        'group flex h-full w-full cursor-grab flex-col items-stretch border-0 p-0 text-left outline-none transition-shadow active:cursor-grabbing',
+        isSelected ? 'shadow-[inset_0_0_0_2px_var(--color-primary)]' : '',
       ].join(' ')}
-      style={{ backgroundColor: color.bg, color: color.fg }}
+      style={{ backgroundColor: `${accent}0f` }}
     >
-      <div
-        className="flex items-center justify-between px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider"
-        style={{
-          backgroundColor: color.accent,
-          color: color.bg,
-        }}
-        data-drag-handle
-      >
-        <span>{label}</span>
+      <div className="flex items-center justify-between px-3 py-2">
         <span
-          className="rounded-full px-1.5 py-0.5 text-[9px]"
-          style={{
-            backgroundColor: color.bg,
-            color: color.accent,
-            visibility: isSelected ? 'visible' : 'hidden',
-          }}
+          className="font-mono text-xs tracking-wide opacity-70"
+          style={{ color: accent }}
         >
-          ●
+          {`panel-${id}`}
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span
+            className="h-1.5 w-1.5 rounded-full transition-opacity"
+            style={{
+              backgroundColor: accent,
+              opacity: isSelected ? 1 : 0,
+            }}
+          />
+          <svg
+            className="h-4 w-4 cursor-grab text-on-surface-variant opacity-0 transition-opacity group-hover:opacity-60"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <circle cx="9" cy="6" r="1.6" />
+            <circle cx="15" cy="6" r="1.6" />
+            <circle cx="9" cy="12" r="1.6" />
+            <circle cx="15" cy="12" r="1.6" />
+            <circle cx="9" cy="18" r="1.6" />
+            <circle cx="15" cy="18" r="1.6" />
+          </svg>
         </span>
       </div>
-      <div className="flex-1 px-3 py-2 text-xs leading-relaxed">
-        <p className="font-mono opacity-80">id: {id}</p>
+      <div className="flex flex-1 items-center justify-center">
+        <span className="text-lg font-semibold text-on-surface-variant">
+          {label}
+        </span>
       </div>
     </button>
   );

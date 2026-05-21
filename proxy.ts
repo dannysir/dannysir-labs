@@ -1,5 +1,11 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { locales, defaultLocale, COOKIE_NAME, type Locale } from '@/lib/i18n/config';
+import {
+  locales,
+  defaultLocale,
+  COOKIE_NAME,
+  LOCALE_HEADER,
+  type Locale,
+} from '@/lib/i18n/config';
 
 const PUBLIC_FILE = /\.(.*)$/;
 
@@ -14,10 +20,14 @@ export function proxy(req: NextRequest) {
     return;
   }
 
-  const hasLocale = locales.some(
+  const current = locales.find(
     (l) => pathname === `/${l}` || pathname.startsWith(`/${l}/`),
   );
-  if (hasLocale) return;
+  if (current) {
+    const res = NextResponse.next();
+    res.headers.set(LOCALE_HEADER, current);
+    return res;
+  }
 
   const cookie = req.cookies.get(COOKIE_NAME)?.value as Locale | undefined;
   const target = cookie && locales.includes(cookie) ? cookie : defaultLocale;

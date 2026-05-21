@@ -13,15 +13,38 @@
     "githubProfile": "GitHub"
   },
   "landing": {
+    "heroBadge": "INTERACTIVE DEMOS",
     "heroTitle": "Try the libraries hands-on",
     "heroSubtitle": "Interactive demos of npm libraries by @dannysir",
-    "librariesHeading": "Libraries"
+    "tryFloating": "Try floating-components",
+    "tryJsTe": "Try js-te",
+    "librariesHeading": "Libraries",
+    "features": {
+      "runTitle": "Right in the browser",
+      "runDesc": "Run everything on this page — no install needed.",
+      "npmTitle": "Real npm packages",
+      "npmDesc": "The demo code is the published library itself.",
+      "ossTitle": "Open source",
+      "ossDesc": "All source is public on GitHub."
+    },
+    "builtWith": "BUILT WITH",
+    "ctaTitle": "Install from npm",
+    "ctaSubtitle": "Both libraries are published on npm. Explore the demos, then drop them into your project."
   },
   "card": {
     "npm": "npm",
     "github": "GitHub",
     "demo": "Try demo",
     "comingSoon": "Coming soon"
+  },
+  "libraries": {
+    "nav": {
+      "readme": "Overview",
+      "demo": "Demo",
+      "api": "API"
+    },
+    "github": "GitHub",
+    "loadError": "Couldn't load the docs. View them on GitHub instead."
   },
   "floating": {
     "title": "@dannysir/floating-components",
@@ -37,6 +60,55 @@
     "inspector": {
       "title": "Tree state"
     },
+    "liveCanvas": "Live canvas",
+    "activityLog": {
+      "title": "Activity log",
+      "clear": "Clear",
+      "empty": "Split, move, or resize panels and they show up here.",
+      "events": {
+        "init": "Tree structure rendered",
+        "split": "Split panel {{id}}",
+        "add": "Added panel {{id}}",
+        "move": "Panel moved",
+        "resize": "Panel resized",
+        "reset": "Tree reset"
+      }
+    },
     "panelLabel": "Panel {{id}}"
+  },
+  "jste": {
+    "title": "@dannysir/js-te",
+    "description": "A Jest-style test framework. The real library runs on top of Node.js native loader hooks, but this page only mimics the core API (describe/test/expect/fn/test.each) in a tiny browser runner. Module mocking (mock()) can't be simulated in the browser, so we just show the code.",
+    "exampleLabel": "Example",
+    "examples": {
+      "hello": "Hello test",
+      "matchers": "Matchers",
+      "each": "test.each",
+      "fn": "fn() mocking",
+      "mock": "mock() (Node only)"
+    },
+    "run": "Run tests",
+    "running": "Running...",
+    "clear": "Clear console",
+    "fileName": "demo.test.js",
+    "editorLabel": "Editor",
+    "terminalLabel": "Terminal",
+    "status": {
+      "ready": "Ready",
+      "running": "Running",
+      "pass": "Pass",
+      "fail": "Fail"
+    },
+    "mockBanner": "This example uses Node.js module mocking (mock()), which can't run in the browser — code is shown for reference only.",
+    "results": {
+      "heading": "Results",
+      "idle": "Click Run tests to see results",
+      "summary": "{{passed}} passed · {{failed}} failed · {{ms}}ms",
+      "timeout": "Execution exceeded 5s and was terminated. Check for infinite loops.",
+      "runtimeError": "Error while evaluating code",
+      "nodeOnlyMockDetected": "mock() call detected but ignored (Node.js only).",
+      "consoleHeading": "console",
+      "noWorker": "Web Workers are unsupported in this browser — running on the main thread (no timeout protection)."
+    }
   }
 }

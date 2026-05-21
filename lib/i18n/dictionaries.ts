@@ -19,15 +19,38 @@ export type Dictionary = {
     githubProfile: string;
   };
   landing: {
+    heroBadge: string;
     heroTitle: string;
     heroSubtitle: string;
+    tryFloating: string;
+    tryJsTe: string;
     librariesHeading: string;
+    features: {
+      runTitle: string;
+      runDesc: string;
+      npmTitle: string;
+      npmDesc: string;
+      ossTitle: string;
+      ossDesc: string;
+    };
+    builtWith: string;
+    ctaTitle: string;
+    ctaSubtitle: string;
   };
   card: {
     npm: string;
     github: string;
     demo: string;
     comingSoon: string;
+  };
+  libraries: {
+    nav: {
+      readme: string;
+      demo: string;
+      api: string;
+    };
+    github: string;
+    loadError: string;
   };
   floating: {
     title: string;
@@ -43,7 +66,56 @@ export type Dictionary = {
     inspector: {
       title: string;
     };
+    liveCanvas: string;
+    activityLog: {
+      title: string;
+      clear: string;
+      empty: string;
+      events: {
+        init: string;
+        split: string;
+        add: string;
+        move: string;
+        resize: string;
+        reset: string;
+      };
+    };
     panelLabel: string;
+  };
+  jste: {
+    title: string;
+    description: string;
+    exampleLabel: string;
+    examples: {
+      hello: string;
+      matchers: string;
+      each: string;
+      fn: string;
+      mock: string;
+    };
+    run: string;
+    running: string;
+    clear: string;
+    fileName: string;
+    editorLabel: string;
+    terminalLabel: string;
+    status: {
+      ready: string;
+      running: string;
+      pass: string;
+      fail: string;
+    };
+    mockBanner: string;
+    results: {
+      heading: string;
+      idle: string;
+      summary: string;
+      timeout: string;
+      runtimeError: string;
+      nodeOnlyMockDetected: string;
+      consoleHeading: string;
+      noWorker: string;
+    };
   };
 };
 

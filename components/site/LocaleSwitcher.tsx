@@ -94,7 +94,7 @@ export function LocaleSwitcher({ currentLocale, dict }: LocaleSwitcherProps) {
           setActiveIndex(0);
         }}
         onKeyDown={onTriggerKey}
-        className="flex items-center gap-1 rounded-md border border-stone px-2.5 py-1 text-sm hover:bg-stone/30"
+        className="flex items-center gap-1 rounded-md border border-outline-variant/40 bg-surface/60 px-2.5 py-1 font-mono text-xs text-on-surface-variant transition-colors hover:border-primary/50 hover:text-primary"
       >
         <span aria-hidden="true">🌐</span>
         <span>{currentLocale.toUpperCase()}</span>
@@ -103,7 +103,7 @@ export function LocaleSwitcher({ currentLocale, dict }: LocaleSwitcherProps) {
       {open && (
         <ul
           role="menu"
-          className="absolute right-0 mt-1 min-w-[8rem] overflow-hidden rounded-md border border-stone bg-cream shadow-md"
+          className="absolute right-0 mt-1 min-w-[8rem] overflow-hidden rounded-md border border-outline-variant/40 bg-surface-high shadow-lg shadow-black/40"
         >
           {locales.map((loc, index) => (
             <li key={loc} role="none">
@@ -116,8 +116,8 @@ export function LocaleSwitcher({ currentLocale, dict }: LocaleSwitcherProps) {
                 onClick={() => select(loc)}
                 onKeyDown={(event) => onItemKey(event, index)}
                 aria-current={loc === currentLocale ? 'true' : undefined}
-                className={`w-full px-3 py-2 text-left text-sm hover:bg-stone/30 ${
-                  loc === currentLocale ? 'font-medium text-forest' : ''
+                className={`w-full px-3 py-2 text-left text-sm transition-colors hover:bg-surface-highest ${
+                  loc === currentLocale ? 'font-medium text-primary' : 'text-on-surface-variant'
                 }`}
               >
                 {dict[loc]}
