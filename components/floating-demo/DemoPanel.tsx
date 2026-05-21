@@ -27,16 +27,14 @@ export function DemoPanel({ id, label }: DemoPanelProps): React.ReactElement {
     <button
       type="button"
       onClick={() => setSelectedId(id)}
+      data-drag-handle
       className={[
-        'group flex h-full w-full cursor-pointer flex-col items-stretch border-0 p-0 text-left outline-none transition-shadow',
+        'group flex h-full w-full cursor-grab flex-col items-stretch border-0 p-0 text-left outline-none transition-shadow active:cursor-grabbing',
         isSelected ? 'shadow-[inset_0_0_0_2px_var(--color-primary)]' : '',
       ].join(' ')}
       style={{ backgroundColor: `${accent}0f` }}
     >
-      <div
-        className="flex items-center justify-between px-3 py-2"
-        data-drag-handle
-      >
+      <div className="flex items-center justify-between px-3 py-2">
         <span
           className="font-mono text-xs tracking-wide opacity-70"
           style={{ color: accent }}

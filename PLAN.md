@@ -103,6 +103,7 @@
 | 8 | 두 라이브러리 저장소에 `homepage` 필드 추가 PR (사용자 사전 허락 필수) | [ ] |
 | 9 | 다크-테크 전면 리디자인 (Stitch 기반) — 메인/랜딩 | [x] 완료 |
 | 10 | 시연 페이지 2개 디자인 정돈 (floating / js-te) | [x] 완료 |
+| 11 | 라이브러리 페이지 재구성: 사이드바(설명/API/시연) + 저장소 마크다운 문서 연동 | [x] 완료 |
 
 > **Phase 를 완료할 때마다 위 표의 `[ ]` 를 `[x]` 로 바꾸고, 그 Phase 섹션 끝의 "완료 메모" 에 한 줄 기록**해 두세요. 그래야 새 세션에서 어디까지 했는지 빠르게 파악됩니다.
 
@@ -360,7 +361,65 @@
 - js-te: 에디터/결과 패널 비율·프레임, Run 버튼·예제 셀렉터 정돈.
 - 새 디자인 참고가 있으면 그에 맞춤(메인처럼 Stitch 산출물 활용 가능).
 
-**완료 메모**: 2026-05-21 Stitch 3차 산출물(`stitch_library_showcase_lab-3`: `_2`=floating, `js_testing`=js-te, `_1`=docs 참고용) 기반으로 두 시연 페이지 디자인 정돈. 사이트 공통 크롬(Header/Footer)·docs 사이드바는 차용 안 하고 **콘텐츠 영역만** 디자인 언어 적용. 공통: 페이지 헤더에 모노 eyebrow(heroBadge)+시안 글로우 모노 타이틀, 컨테이너 max-w-7xl. **floating**: 캔버스를 glass-card 프레임+도트그리드 radial 배경(TreeLayout `backgroundColor="transparent"`+DemoPanel 반투명 `${accent}0f`)으로, Toolbar 를 캔버스 헤더(아이콘 버튼+선택 pill+"라이브 캔버스 활성" pulse)로 재구성, 우측 칼럼은 TREE_STATE(glass)+**실제 동작하는 활동 로그**(resize/move 콜백 래핑+split/add/reset 로깅, resize 연속 dedupe, 최신순 50개). **js-te**: glass 프레임 안에 컨트롤 바(파일 라벨+예제 셀렉터+Clear+Run play 아이콘)+`에디터 | 터미널` 2-페인(`#010409`/surface-lowest), 터미널 헤더에 상태 배지(준비됨/실행 중/통과/실패), Results 를 PASS·FAIL 배지+요약+트리+깜빡이는 `❯` 커서 터미널 스타일로, Clear 실동작. 커버리지 표·패널 속성 폼은 우리 기능에 없어 제외(가짜 안 만듦). 아이콘 8종 인라인 SVG 추가(Play/Trash/SplitSquare/Refresh/FileCode/History/DataObject + DemoPanel grip). i18n `floating.{liveCanvas,activityLog.*}`·`jste.{clear,fileName,editorLabel,terminalLabel,status.*}` ko·en 추가. tsc/lint/build 통과(lint: useState 초기화 ref 접근 경고 → INIT 엔트리 인라인 생성으로 해결). /ko·/en × floating·js-te × desktop·mobile 브라우저 검수 통과, 콘솔 에러 0, 분할/추가→로그 기록·실행→PASS·Clear·mock readonly 동작 확인. (현재 사이클 모든 Phase 완료 — 남은 7·8 은 외부 공개 동작이라 사용자 진행 대기.)
+**완료 메모(Phase 10)**: 2026-05-21 Stitch 3차 산출물(`stitch_library_showcase_lab-3`: `_2`=floating, `js_testing`=js-te, `_1`=docs 참고용) 기반으로 두 시연 페이지 디자인 정돈. 사이트 공통 크롬(Header/Footer)·docs 사이드바는 차용 안 하고 **콘텐츠 영역만** 디자인 언어 적용. 공통: 페이지 헤더에 모노 eyebrow(heroBadge)+시안 글로우 모노 타이틀, 컨테이너 max-w-7xl. **floating**: 캔버스를 glass-card 프레임+도트그리드 radial 배경(TreeLayout `backgroundColor="transparent"`+DemoPanel 반투명 `${accent}0f`)으로, Toolbar 를 캔버스 헤더(아이콘 버튼+선택 pill+"라이브 캔버스 활성" pulse)로 재구성, 우측 칼럼은 TREE_STATE(glass)+**실제 동작하는 활동 로그**(resize/move 콜백 래핑+split/add/reset 로깅, resize 연속 dedupe, 최신순 50개). **js-te**: glass 프레임 안에 컨트롤 바(파일 라벨+예제 셀렉터+Clear+Run play 아이콘)+`에디터 | 터미널` 2-페인(`#010409`/surface-lowest), 터미널 헤더에 상태 배지(준비됨/실행 중/통과/실패), Results 를 PASS·FAIL 배지+요약+트리+깜빡이는 `❯` 커서 터미널 스타일로, Clear 실동작. 커버리지 표·패널 속성 폼은 우리 기능에 없어 제외(가짜 안 만듦). 아이콘 8종 인라인 SVG 추가(Play/Trash/SplitSquare/Refresh/FileCode/History/DataObject + DemoPanel grip). i18n `floating.{liveCanvas,activityLog.*}`·`jste.{clear,fileName,editorLabel,terminalLabel,status.*}` ko·en 추가. tsc/lint/build 통과(lint: useState 초기화 ref 접근 경고 → INIT 엔트리 인라인 생성으로 해결). /ko·/en × floating·js-te × desktop·mobile 브라우저 검수 통과, 콘솔 에러 0, 분할/추가→로그 기록·실행→PASS·Clear·mock readonly 동작 확인. (현재 사이클 모든 Phase 완료 — 남은 7·8 은 외부 공개 동작이라 사용자 진행 대기.)
+
+---
+
+## Phase 11 — 라이브러리 페이지 재구성: 사이드바(설명/API/시연) + 저장소 마크다운 문서 연동
+
+**목적**: 각 라이브러리를 하나의 "허브" 페이지로 묶고, 좌측 사이드바로 **설명(README) / API 문서 / 시연 화면** 3개 뷰를 전환하게 한다. 문서 원본은 **라이브러리 저장소가 유일한 출처**이며, 이 사이트는 raw 마크다운 URL 을 빌드/요청 시 fetch 해 렌더링만 한다(사본 0개). Stitch 산출물 `_1`(docs/Getting Started 레이아웃) 톤 참고.
+
+**확정된 결정 사항(2026-05-21 사용자 합의)**:
+- **fetch ref = `main` 최신** (배포 npm 버전 아님, 데모 사이트라 최신이면 충분. 버전 정확성 필요해지면 추후 태그 핀으로 전환 = B안).
+- **사이드바 = 3-뷰 전환** (README H2 자동 TOC 아님): `설명` / `API 문서` / `시연 화면`. 클릭 시 해당 화면 표시.
+- **갱신 = ISR 자동** (`fetch(url, { next: { revalidate: 3600 } })`). 라이브러리 push 후 재배포 없이 주기적 최신화.
+- 문서 출처(모두 공개 저장소 raw, ko/en 이중):
+  - floating 설명: `…/dannysir/floating-component/main/README.ko.md` · `/README.md`
+  - floating API: `…/dannysir/floating-component/main/doc/API.ko.md` · `/doc/API.md`  *(주의: 폴더명이 `doc/` 단수)*
+  - js-te 설명: `…/dannysir/js-te-package/main/README.ko.md` · `/README.md`
+  - js-te API: `…/dannysir/js-te-package/main/docs/reference/API.ko.md` · `/docs/reference/API.md`  *(CLI.{ko.,}md 도 있어 4번째 뷰로 추가 가능 — 우선 API 만)*
+  - (raw prefix = `https://raw.githubusercontent.com/`)
+
+**작업 내용**:
+1. **라우팅 재구성** — 정적 슬러그 폴더 2개(`floating-components/`, `js-te/`)를 **동적 `[slug]`** 로 통합. (정적·동적 세그먼트 공존 불가하므로 기존 폴더 제거 필수.)
+   ```
+   app/[locale]/libraries/[slug]/
+     layout.tsx        # 라이브러리 헤더(eyebrow+타이틀) + 사이드바 + 콘텐츠 프레임 (공유)
+     page.tsx          # 시연 화면 (= 기존 데모, 인덱스 라우트로 두어 기존 URL 유지)
+     readme/page.tsx   # 설명 (README fetch+렌더)
+     api/page.tsx      # API 문서 (API.md fetch+렌더)
+   ```
+   - `generateStaticParams` 는 `libraries` 목록에서 slug 생성.
+   - **URL 안정성**: 시연을 인덱스(`/libraries/[slug]`)로 유지 → 랜딩 CTA 링크와 Phase 8(npm `homepage`) 영향 없음. 사이드바 노출 순서는 사용자 요청대로 `API 문서 / 시연 화면 / 설명` 으로 두되 라우트 기본값만 시연.
+   - 데모 컴포넌트 매핑: slug 분기로 `floating-components → <FloatingDemo dict.floating>`, `js-te → <JsTeDemo dict.jste>`.
+2. **메타데이터 확장** — `lib/libraries.ts` 의 `Library` 에 `docs: { readme: {ko,en}; api: {ko,en} }` raw URL 필드 추가(위 출처).
+3. **마크다운 파이프라인** — `lib/docs.ts` 의 `fetchDoc(url)`(ISR revalidate) + `components/docs/Markdown.tsx`(서버 컴포넌트):
+   - `react-markdown` + `remark-gfm`(표/체크박스) + `rehype-slug`(헤딩 id) + `rehype-pretty-code`(Shiki, **빌드 시 하이라이트 → 클라이언트 JS 0**).
+   - 컴포넌트 오버라이드로 다크 토큰/JetBrains Mono/`code-bg` 적용(Phase 9·10 톤 일관).
+   - **상대 링크/이미지 보정**: README 내 상대경로를 해당 파일의 raw base(예 `…/main/`, API 는 `…/main/doc/`)로 절대화(rehype rewrite 또는 커스텀 transformer).
+4. **사이드바** — `components/libraries/LibrarySidebar.tsx`('use client', `usePathname` 로 활성 표시): Stitch `_1` 좌측 nav 톤(아이콘+라벨, 활성 하이라이트). 항목 = 설명/API 문서/시연(각 라우트로 링크). (선택: 버전 칩 / GitHub Star 버튼.)
+5. **로딩/실패 처리** — fetch 404/네트워크 실패 시 사용자용 fallback(“문서를 불러오지 못했습니다” + GitHub 링크). `main` 핀이라 라이브러리 README 가 깨지면 빌드 영향 가능 — 에러 메시지로 가시화.
+6. **의존성 추가** — `react-markdown remark-gfm rehype-slug rehype-pretty-code shiki`(모두 서버 측, 번들 영향 작음).
+7. **i18n** — `libraries.nav.{readme,api,demo}` 사이드바 라벨 + `docs.loadError` 등 ko·en 양쪽 추가. `Dictionary` 타입 갱신.
+
+**산출물**:
+- `/{ko,en}/libraries/{floating-components,js-te}` = 시연(기존 유지), `…/readme` = 저장소 README 렌더, `…/api` = 저장소 API 문서 렌더.
+- 사이드바로 3-뷰 전환, 활성 표시.
+- 라이브러리 저장소 문서만 고치면(이 사이트 수정 0) ISR 주기 후 반영.
+
+**검증**:
+- `npx tsc --noEmit` / `npm run lint` / `npm run build` 모두 통과(빌드 시 raw fetch 성공 포함).
+- preview 로 `/ko·/en × 2 라이브러리 × 3 뷰 × desktop·mobile` 순회: 마크다운 렌더(표/코드 하이라이트/링크)·사이드바 활성·시연 동작·콘솔 에러 0.
+- 문서 1줄 수정→push→재검증(또는 재빌드) 후 반영 확인(가능 범위에서).
+
+**열린 항목(Phase 진입 시 확인)**:
+- js-te `CLI` 문서를 4번째 뷰로 추가할지.
+- 사이드바에 버전 칩/GitHub Star 등 Stitch `_1` 부가 요소를 어디까지 가져올지.
+- 한 Phase(셸+파이프라인+콘텐츠)로 진행 vs 셸/파이프라인(11) → 콘텐츠 연동·검수(12) 분리.
+
+**결정(진입 시)**: CLI 뷰는 보류(우선 설명/API/시연 3-뷰). 사이드바 = 뷰 링크 + GitHub Star(데스크톱). 한 Phase 로 진행.
+
+**완료 메모**: 2026-05-21 A안(빌드/요청 시 GitHub raw fetch + ISR) 구현 완료. **라우트**: 정적 슬러그 폴더 2개 제거 → 동적 `app/[locale]/libraries/[slug]/{layout,page,readme/page,api/page}.tsx`. layout=라이브러리 배너(eyebrow+npm명+tagline)+`LibrarySidebar`+children, page=시연(slug 분기 FloatingDemo/JsTeDemo, 인덱스 유지로 기존 URL·랜딩 CTA·Phase8 영향 0), readme/api=fetch+렌더. `generateStaticParams`(slug) + 잘못된 slug `notFound`. **메타**: `lib/libraries.ts` 에 `docs.{readme,api}.{ko,en}` raw URL(8종 200 확인). **파이프라인**: `lib/docs.ts` `loadDoc`(`fetch` `revalidate:3600` ISR + raw→blob base 계산). `components/docs/Markdown.tsx` 는 **react-markdown 대신 unified 직접**(`remark-parse/gfm/rehype` + `remark-rehype{allowDangerousHtml}` + `rehype-raw`(HTML `<img>` 렌더) + `rehype-slug` + 커스텀 `rehypeAbsoluteUrls`(상대 `.md`→GitHub blob, 이미지/기타→raw) + `rehype-pretty-code`(Shiki github-dark, `keepBackground:false`) + `rehype-stringify` → `dangerouslySetInnerHTML`). **이유**: `rehype-pretty-code`(Shiki)가 비동기라 react-markdown 동기 렌더와 비호환. **스타일**: `.doc-prose` 다크 타이포 + 코드블록 `--color-code-bg`(globals.css). **사이드바**: `usePathname` 활성표시, 설명(base/readme)·시연(base, 인덱스)·API(base/api), 데스크톱 GitHub 링크(체인 아이콘), 모바일 가로 탭. i18n `libraries.{nav.*,githubStar,loadError}` ko·en + `Dictionary` 타입. 의존성 추가: `unified remark-parse remark-gfm remark-rehype rehype-raw rehype-slug rehype-pretty-code rehype-stringify shiki unist-util-visit`(react-markdown 제거). **함정 2건**: (1) **하이드레이션 에러**(Phase10 유입) — ActivityLog INIT `nowTime()` 가 서버/클라 다름 → 시간 span 에 `suppressHydrationWarning`. (2) **Turbopack CSS 스테일 캐시 재발** — globals.css 새 `.doc-prose` 블록이 컴파일 CSS 에서 누락(해시 동일) → `.next` 삭제 + dev 재시작 후 정상(캐너리로 위치성 아님 확인). 검증: tsc/lint/build(17 페이지, 빌드 시 raw fetch 성공) 통과, /ko·/en × 2 라이브러리 × 3 뷰 × desktop·mobile 검수 — 마크다운 렌더(이미지/표/코드 하이라이트/blockquote/인라인코드)·앵커 TOC 32/32 매칭(한글 슬러그 포함)·사이드바 활성·시연 동작·콘솔 에러 0·하이드레이션 이슈 0. (CLI 뷰는 추후 `docs` 메타에 항목 추가로 확장 가능.)
 
 ---
 

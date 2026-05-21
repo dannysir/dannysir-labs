@@ -8,6 +8,11 @@ export interface LibraryHighlights {
   en: string[];
 }
 
+export interface LibraryDocs {
+  readme: LibraryText;
+  api: LibraryText;
+}
+
 export interface Library {
   id: string;
   slug: string;
@@ -17,7 +22,10 @@ export interface Library {
   name: LibraryText;
   tagline: LibraryText;
   highlights: LibraryHighlights;
+  docs: LibraryDocs;
 }
+
+const RAW = 'https://raw.githubusercontent.com';
 
 export const libraries: Library[] = [
   {
@@ -38,6 +46,16 @@ export const libraries: Library[] = [
       ko: ['드래그 리사이즈', '패널 재배치', '동적 분할/추가'],
       en: ['Drag-resize borders', 'Reorder panels', 'Split/insert at runtime'],
     },
+    docs: {
+      readme: {
+        ko: `${RAW}/dannysir/floating-component/main/README.ko.md`,
+        en: `${RAW}/dannysir/floating-component/main/README.md`,
+      },
+      api: {
+        ko: `${RAW}/dannysir/floating-component/main/doc/API.ko.md`,
+        en: `${RAW}/dannysir/floating-component/main/doc/API.md`,
+      },
+    },
   },
   {
     id: 'js-te',
@@ -56,6 +74,16 @@ export const libraries: Library[] = [
     highlights: {
       ko: ['describe/test/expect', 'fn() 모킹', 'test.each'],
       en: ['describe/test/expect', 'fn() mocking', 'test.each'],
+    },
+    docs: {
+      readme: {
+        ko: `${RAW}/dannysir/js-te-package/main/README.ko.md`,
+        en: `${RAW}/dannysir/js-te-package/main/README.md`,
+      },
+      api: {
+        ko: `${RAW}/dannysir/js-te-package/main/docs/reference/API.ko.md`,
+        en: `${RAW}/dannysir/js-te-package/main/docs/reference/API.md`,
+      },
     },
   },
 ];

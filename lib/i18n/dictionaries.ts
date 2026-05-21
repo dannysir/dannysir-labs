@@ -43,6 +43,15 @@ export type Dictionary = {
     demo: string;
     comingSoon: string;
   };
+  libraries: {
+    nav: {
+      readme: string;
+      demo: string;
+      api: string;
+    };
+    github: string;
+    loadError: string;
+  };
   floating: {
     title: string;
     description: string;

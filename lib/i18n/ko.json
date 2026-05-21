@@ -37,6 +37,15 @@
     "demo": "시연 보기",
     "comingSoon": "곧 출시"
   },
+  "libraries": {
+    "nav": {
+      "readme": "설명",
+      "demo": "시연 화면",
+      "api": "API 문서"
+    },
+    "github": "GitHub",
+    "loadError": "문서를 불러오지 못했습니다. GitHub 에서 직접 확인해 주세요."
+  },
   "floating": {
     "title": "@dannysir/floating-components",
     "description": "VS Code 스타일 패널 트리. 패널 헤더를 다른 패널 위로 드래그하면 재배치, 경계선을 드래그하면 리사이즈됩니다. 아래 툴바로 분할·추가·초기화도 시도해 보세요.",

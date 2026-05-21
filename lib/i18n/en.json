@@ -37,6 +37,15 @@
     "demo": "Try demo",
     "comingSoon": "Coming soon"
   },
+  "libraries": {
+    "nav": {
+      "readme": "Overview",
+      "demo": "Demo",
+      "api": "API"
+    },
+    "github": "GitHub",
+    "loadError": "Couldn't load the docs. View them on GitHub instead."
+  },
   "floating": {
     "title": "@dannysir/floating-components",
     "description": "A VS Code-style panel tree. Drag a panel header onto another panel to reorder, drag the borders to resize. Try the toolbar to split, add, or reset.",

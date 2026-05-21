@@ -71,7 +71,9 @@ export function ActivityLog({
                 key={entry.id}
                 className="flex items-center gap-2 rounded px-2 py-1 transition-colors hover:bg-surface-high/40"
               >
-                <span className="text-on-surface-variant/40">{entry.time}</span>
+                <span className="text-on-surface-variant/40" suppressHydrationWarning>
+                  {entry.time}
+                </span>
                 <span className={`font-semibold ${KIND_COLOR[entry.kind]}`}>
                   {KIND_LABEL[entry.kind]}
                 </span>
