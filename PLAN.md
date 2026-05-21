@@ -99,8 +99,8 @@
 | 4 | js-te 미니 러너 (핵심 로직) | [x] 완료 |
 | 5 | js-te 시연 페이지 UI | [x] 완료 |
 | 6 | 다국어 사전 채우기 + 디자인 정돈 + README | [x] 완료 |
-| 7 | GitHub push + Vercel 배포 (사용자 사전 허락 필수) | [ ] |
-| 8 | 두 라이브러리 저장소에 `homepage` 필드 추가 PR (사용자 사전 허락 필수) | [ ] |
+| 7 | GitHub push + Vercel 배포 (사용자 사전 허락 필수) | [x] 완료 |
+| 8 | 두 라이브러리 저장소에 `homepage` 필드 추가 PR (사용자 사전 허락 필수) | [x] 완료 |
 | 9 | 다크-테크 전면 리디자인 (Stitch 기반) — 메인/랜딩 | [x] 완료 |
 | 10 | 시연 페이지 2개 디자인 정돈 (floating / js-te) | [x] 완료 |
 | 11 | 라이브러리 페이지 재구성: 사이드바(설명/API/시연) + 저장소 마크다운 문서 연동 | [x] 완료 |
@@ -312,7 +312,7 @@
 - `https://dannysir-labs.vercel.app/` 접속 가능
 - 첫 빌드 성공
 
-**완료 메모**: _(완료 시 한 줄 기록)_
+**완료 메모**: 2026-05-21 GitHub 저장소(`dannysir/dannysir-labs`)는 이미 존재·main 동기화 완료 상태였고, Vercel 대시보드 Import 방식으로 사용자가 직접 배포(Framework Next.js 자동 감지). 발급 도메인 = PLAN 가정대로 `https://dannysir-labs.vercel.app`. 배포 검증: `/` → `/ko` 307, `/ko`·`/en`·floating(시연/readme/api)·js-te·en/js-te/api 등 8개 경로 모두 200 (Node fetch 확인). 다음 = Phase 8 (이 URL 을 두 라이브러리 저장소 `homepage` 에 반영).
 
 ---
 
@@ -331,7 +331,7 @@
 - 두 저장소 모두 `homepage` 필드 갱신 PR
 - (다음 publish 시) npmjs.com 의 패키지 페이지에서 본 사이트로 이동 가능
 
-**완료 메모**: _(완료 시 한 줄 기록)_
+**완료 메모**: 2026-05-21 사용자 결정 = URL **en 고정** + **각 저장소 main 직접 push**(PR 아님). `dannysir/floating-component` homepage `…/#readme` → `https://dannysir-labs.vercel.app/en/libraries/floating-components` (커밋 683e0f5). `dannysir/js-te-package` 는 homepage 부재 → `https://dannysir-labs.vercel.app/en/libraries/js-te` 신규 추가 (커밋 8f2eae7). 둘 다 main push 완료. 다음 npm publish 부터 패키지 페이지 Homepage 링크가 본 사이트로 연결됨. (현재 사이클 Phase 0~11 전부 완료.)
 
 ---
 
