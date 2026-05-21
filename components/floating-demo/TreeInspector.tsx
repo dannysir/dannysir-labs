@@ -2,6 +2,8 @@
 
 import type { LayoutNode } from '@dannysir/floating-components';
 
+import { DataObjectIcon } from '@/components/site/icons';
+
 interface TreeInspectorProps {
   tree: LayoutNode;
   title: string;
@@ -33,11 +35,14 @@ export function TreeInspector({
 }: TreeInspectorProps): React.ReactElement {
   const serialized = JSON.stringify(stripComponents(tree), null, 2);
   return (
-    <aside className="flex flex-col overflow-hidden rounded-lg border border-outline-variant/30 bg-surface/40">
-      <div className="border-b border-outline-variant/30 px-3 py-2 font-mono text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-        {title}
+    <aside className="glass-card flex flex-col overflow-hidden rounded-xl">
+      <div className="flex items-center gap-2 border-b border-outline-variant/10 px-4 py-3 text-primary">
+        <DataObjectIcon className="h-4 w-4" />
+        <span className="font-mono text-xs font-semibold uppercase tracking-wider">
+          {title}
+        </span>
       </div>
-      <pre className="max-h-[480px] overflow-auto bg-code-bg px-3 py-2 font-mono text-[11px] leading-relaxed text-tertiary">
+      <pre className="max-h-[280px] overflow-auto bg-surface-lowest/60 px-4 py-3 font-mono text-[11px] leading-relaxed text-tertiary">
         {serialized}
       </pre>
     </aside>

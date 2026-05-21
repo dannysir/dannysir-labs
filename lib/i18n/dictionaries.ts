@@ -57,6 +57,20 @@ export type Dictionary = {
     inspector: {
       title: string;
     };
+    liveCanvas: string;
+    activityLog: {
+      title: string;
+      clear: string;
+      empty: string;
+      events: {
+        init: string;
+        split: string;
+        add: string;
+        move: string;
+        resize: string;
+        reset: string;
+      };
+    };
     panelLabel: string;
   };
   jste: {
@@ -72,6 +86,16 @@ export type Dictionary = {
     };
     run: string;
     running: string;
+    clear: string;
+    fileName: string;
+    editorLabel: string;
+    terminalLabel: string;
+    status: {
+      ready: string;
+      running: string;
+      pass: string;
+      fail: string;
+    };
     mockBanner: string;
     results: {
       heading: string;

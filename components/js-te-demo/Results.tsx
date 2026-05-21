@@ -92,72 +92,95 @@ function Tree({ nodes, depth, consoleHeading }: TreeProps): React.ReactElement {
   );
 }
 
-export function Results({ dict, state }: ResultsProps): React.ReactElement {
+function Cursor(): React.ReactElement {
   return (
-    <section
-      aria-label={dict.heading}
-      className="flex h-full flex-col rounded-lg border border-outline-variant/30 bg-surface/40"
-    >
-      <header className="border-b border-outline-variant/30 px-4 py-2">
-        <h2 className="font-mono text-sm font-semibold uppercase tracking-wider text-on-surface-variant">
-          {dict.heading}
-        </h2>
-      </header>
-      <div className="flex-1 overflow-auto px-4 py-3">
-        {state.kind === 'idle' ? (
-          <p className="text-sm text-on-surface-variant/70">{dict.idle}</p>
-        ) : null}
+    <div className="mt-4 flex items-center gap-1">
+      <span className="text-primary">❯</span>
+      <span className="inline-block h-4 w-2 animate-pulse bg-primary" />
+    </div>
+  );
+}
 
-        {state.kind === 'running' ? (
-          <p className="text-sm text-on-surface-variant">{dict.heading}…</p>
-        ) : null}
-
-        {state.kind === 'timeout' ? (
-          <p className="rounded-md border border-error/30 bg-error/10 px-3 py-2 text-sm text-error">
-            {dict.timeout}
-          </p>
-        ) : null}
-
-        {state.kind === 'result' ? (
-          <div className="space-y-3">
-            {state.noWorker ? (
-              <p className="rounded-md border border-outline-variant/30 bg-surface-high/40 px-3 py-2 text-xs text-on-surface-variant">
-                {dict.noWorker}
-              </p>
-            ) : null}
-            <p className="font-mono text-sm font-medium text-on-surface">
-              {formatSummary(
-                dict.summary,
-                state.result.passed,
-                state.result.failed,
-                state.result.durationMs,
-              )}
-            </p>
-            {state.result.usedNodeOnlyMock ? (
-              <p className="rounded-md border border-secondary/40 bg-secondary/10 px-3 py-2 text-xs text-secondary">
-                {dict.nodeOnlyMockDetected}
-              </p>
-            ) : null}
-            {state.result.runtimeError ? (
-              <div className="rounded-md border border-error/30 bg-error/10 px-3 py-2">
-                <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-error">
-                  {dict.runtimeError}
-                </p>
-                <pre className="whitespace-pre-wrap break-words font-mono text-xs text-error">
-                  {state.result.runtimeError.message}
-                </pre>
-              </div>
-            ) : null}
-            {state.result.tree.length > 0 ? (
-              <Tree
-                nodes={state.result.tree}
-                depth={0}
-                consoleHeading={dict.consoleHeading}
-              />
-            ) : null}
-          </div>
-        ) : null}
+export function Results({ dict, state }: ResultsProps): React.ReactElement {
+  if (state.kind === 'idle') {
+    return (
+      <div className="font-mono text-sm">
+        <p className="text-on-surface-variant/60">{dict.idle}</p>
+        <Cursor />
       </div>
-    </section>
+    );
+  }
+
+  if (state.kind === 'running') {
+    return (
+      <p className="flex items-center gap-2 font-mono text-sm text-on-surface-variant">
+        <span className="text-primary">❯</span>
+        {dict.heading}…
+      </p>
+    );
+  }
+
+  if (state.kind === 'timeout') {
+    return (
+      <div className="font-mono text-sm">
+        <p className="rounded-md border border-error/30 bg-error/10 px-3 py-2 text-error">
+          {dict.timeout}
+        </p>
+        <Cursor />
+      </div>
+    );
+  }
+
+  const passOk = state.result.failed === 0 && !state.result.runtimeError;
+  return (
+    <div className="space-y-3">
+      {state.noWorker ? (
+        <p className="rounded-md border border-outline-variant/30 bg-surface-high/40 px-3 py-2 text-xs text-on-surface-variant">
+          {dict.noWorker}
+        </p>
+      ) : null}
+      <div className="flex items-center gap-2">
+        <span
+          className={`rounded px-2 py-0.5 text-xs font-bold ${
+            passOk
+              ? 'bg-tertiary/20 text-tertiary'
+              : 'bg-error/20 text-error'
+          }`}
+        >
+          {passOk ? 'PASS' : 'FAIL'}
+        </span>
+        <span className="font-mono text-sm font-medium text-on-surface">
+          {formatSummary(
+            dict.summary,
+            state.result.passed,
+            state.result.failed,
+            state.result.durationMs,
+          )}
+        </span>
+      </div>
+      {state.result.usedNodeOnlyMock ? (
+        <p className="rounded-md border border-secondary/40 bg-secondary/10 px-3 py-2 text-xs text-secondary">
+          {dict.nodeOnlyMockDetected}
+        </p>
+      ) : null}
+      {state.result.runtimeError ? (
+        <div className="rounded-md border border-error/30 bg-error/10 px-3 py-2">
+          <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-error">
+            {dict.runtimeError}
+          </p>
+          <pre className="whitespace-pre-wrap break-words font-mono text-xs text-error">
+            {state.result.runtimeError.message}
+          </pre>
+        </div>
+      ) : null}
+      {state.result.tree.length > 0 ? (
+        <Tree
+          nodes={state.result.tree}
+          depth={0}
+          consoleHeading={dict.consoleHeading}
+        />
+      ) : null}
+      <Cursor />
+    </div>
   );
 }

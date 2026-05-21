@@ -51,6 +51,20 @@
     "inspector": {
       "title": "Tree state"
     },
+    "liveCanvas": "Live canvas",
+    "activityLog": {
+      "title": "Activity log",
+      "clear": "Clear",
+      "empty": "Split, move, or resize panels and they show up here.",
+      "events": {
+        "init": "Tree structure rendered",
+        "split": "Split panel {{id}}",
+        "add": "Added panel {{id}}",
+        "move": "Panel moved",
+        "resize": "Panel resized",
+        "reset": "Tree reset"
+      }
+    },
     "panelLabel": "Panel {{id}}"
   },
   "jste": {
@@ -64,12 +78,22 @@
       "fn": "fn() mocking",
       "mock": "mock() (Node only)"
     },
-    "run": "▶ Run",
+    "run": "Run tests",
     "running": "Running...",
+    "clear": "Clear console",
+    "fileName": "demo.test.js",
+    "editorLabel": "Editor",
+    "terminalLabel": "Terminal",
+    "status": {
+      "ready": "Ready",
+      "running": "Running",
+      "pass": "Pass",
+      "fail": "Fail"
+    },
     "mockBanner": "This example uses Node.js module mocking (mock()), which can't run in the browser — code is shown for reference only.",
     "results": {
       "heading": "Results",
-      "idle": "Click ▶ Run to see results",
+      "idle": "Click Run tests to see results",
       "summary": "{{passed}} passed · {{failed}} failed · {{ms}}ms",
       "timeout": "Execution exceeded 5s and was terminated. Check for infinite loops.",
       "runtimeError": "Error while evaluating code",

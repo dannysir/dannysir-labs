@@ -102,7 +102,7 @@
 | 7 | GitHub push + Vercel 배포 (사용자 사전 허락 필수) | [ ] |
 | 8 | 두 라이브러리 저장소에 `homepage` 필드 추가 PR (사용자 사전 허락 필수) | [ ] |
 | 9 | 다크-테크 전면 리디자인 (Stitch 기반) — 메인/랜딩 | [x] 완료 |
-| 10 | 시연 페이지 2개 디자인 정돈 (floating / js-te) | [ ] |
+| 10 | 시연 페이지 2개 디자인 정돈 (floating / js-te) | [x] 완료 |
 
 > **Phase 를 완료할 때마다 위 표의 `[ ]` 를 `[x]` 로 바꾸고, 그 Phase 섹션 끝의 "완료 메모" 에 한 줄 기록**해 두세요. 그래야 새 세션에서 어디까지 했는지 빠르게 파악됩니다.
 
@@ -360,7 +360,7 @@
 - js-te: 에디터/결과 패널 비율·프레임, Run 버튼·예제 셀렉터 정돈.
 - 새 디자인 참고가 있으면 그에 맞춤(메인처럼 Stitch 산출물 활용 가능).
 
-**완료 메모**: _(완료 시 한 줄 기록)_
+**완료 메모**: 2026-05-21 Stitch 3차 산출물(`stitch_library_showcase_lab-3`: `_2`=floating, `js_testing`=js-te, `_1`=docs 참고용) 기반으로 두 시연 페이지 디자인 정돈. 사이트 공통 크롬(Header/Footer)·docs 사이드바는 차용 안 하고 **콘텐츠 영역만** 디자인 언어 적용. 공통: 페이지 헤더에 모노 eyebrow(heroBadge)+시안 글로우 모노 타이틀, 컨테이너 max-w-7xl. **floating**: 캔버스를 glass-card 프레임+도트그리드 radial 배경(TreeLayout `backgroundColor="transparent"`+DemoPanel 반투명 `${accent}0f`)으로, Toolbar 를 캔버스 헤더(아이콘 버튼+선택 pill+"라이브 캔버스 활성" pulse)로 재구성, 우측 칼럼은 TREE_STATE(glass)+**실제 동작하는 활동 로그**(resize/move 콜백 래핑+split/add/reset 로깅, resize 연속 dedupe, 최신순 50개). **js-te**: glass 프레임 안에 컨트롤 바(파일 라벨+예제 셀렉터+Clear+Run play 아이콘)+`에디터 | 터미널` 2-페인(`#010409`/surface-lowest), 터미널 헤더에 상태 배지(준비됨/실행 중/통과/실패), Results 를 PASS·FAIL 배지+요약+트리+깜빡이는 `❯` 커서 터미널 스타일로, Clear 실동작. 커버리지 표·패널 속성 폼은 우리 기능에 없어 제외(가짜 안 만듦). 아이콘 8종 인라인 SVG 추가(Play/Trash/SplitSquare/Refresh/FileCode/History/DataObject + DemoPanel grip). i18n `floating.{liveCanvas,activityLog.*}`·`jste.{clear,fileName,editorLabel,terminalLabel,status.*}` ko·en 추가. tsc/lint/build 통과(lint: useState 초기화 ref 접근 경고 → INIT 엔트리 인라인 생성으로 해결). /ko·/en × floating·js-te × desktop·mobile 브라우저 검수 통과, 콘솔 에러 0, 분할/추가→로그 기록·실행→PASS·Clear·mock readonly 동작 확인. (현재 사이클 모든 Phase 완료 — 남은 7·8 은 외부 공개 동작이라 사용자 진행 대기.)
 
 ---
 
