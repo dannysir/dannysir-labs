@@ -16,10 +16,10 @@ export function Footer({ dict }: FooterProps) {
         </div>
         <div className="flex items-center gap-3 font-mono text-xs text-on-surface-variant">
           <a
-            href="mailto:dannysir0105@gmail.com"
+            href="mailto:dannysir@naver.com"
             className="transition-colors hover:text-secondary"
           >
-            dannysir0105@gmail.com
+            dannysir@naver.com
           </a>
           <span aria-hidden="true" className="text-outline-variant">|</span>
           <a
