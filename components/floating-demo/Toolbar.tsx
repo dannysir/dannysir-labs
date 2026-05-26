@@ -66,9 +66,12 @@ export function Toolbar({
           : dict.noSelection}
       </span>
       <div className="ml-auto flex items-center gap-3">
-        <span className="flex items-center gap-1.5 font-mono text-xs text-secondary">
+        <span
+          className="flex items-center font-mono text-xs text-secondary"
+          title={liveCanvasLabel}
+          aria-label={liveCanvasLabel}
+        >
           <span className="h-2 w-2 animate-pulse rounded-full bg-secondary" />
-          {liveCanvasLabel}
         </span>
         <button type="button" className={actionClass} onClick={onReset}>
           <RefreshIcon className="h-3.5 w-3.5" />
