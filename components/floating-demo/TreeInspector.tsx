@@ -9,31 +9,11 @@ interface TreeInspectorProps {
   title: string;
 }
 
-interface SerializableNode {
-  type: 'panel' | 'split';
-  id?: string;
-  direction?: 'horizontal' | 'vertical';
-  size: number;
-  children?: SerializableNode[];
-}
-
-const stripComponents = (node: LayoutNode): SerializableNode => {
-  if (node.type === 'panel') {
-    return { type: 'panel', id: node.id, size: node.size };
-  }
-  return {
-    type: 'split',
-    direction: node.direction,
-    size: node.size,
-    children: node.children.map(stripComponents),
-  };
-};
-
 export function TreeInspector({
   tree,
   title,
 }: TreeInspectorProps): React.ReactElement {
-  const serialized = JSON.stringify(stripComponents(tree), null, 2);
+  const serialized = JSON.stringify(tree, null, 2);
   return (
     <aside className="glass-card flex flex-col overflow-hidden rounded-xl">
       <div className="flex items-center gap-2 border-b border-outline-variant/10 px-4 py-3 text-primary">

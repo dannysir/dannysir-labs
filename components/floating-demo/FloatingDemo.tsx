@@ -1,8 +1,13 @@
 'use client';
 
-import { TreeLayout, useLayoutTree } from '@dannysir/floating-components';
+import {
+  TreeLayout,
+  useLayoutTree,
+  createComponentStore,
+  getPanelIds,
+} from '@dannysir/floating-components';
 import type { LayoutNode } from '@dannysir/floating-components';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 
@@ -18,6 +23,8 @@ interface FloatingDemoProps {
 
 const MAX_LOG_ENTRIES = 50;
 
+const STORAGE_KEY = 'floating-demo:tree';
+
 const formatLabel = (template: string, id: string): string =>
   template.replace('{{id}}', id);
 
@@ -28,50 +35,38 @@ const nowTime = (): string => {
     .join(':');
 };
 
-const buildInitialTree = (panelLabelTemplate: string): LayoutNode => ({
+const INITIAL_PANEL_IDS = ['a', 'b', 'c'] as const;
+
+const buildInitialTree = (): LayoutNode => ({
   type: 'split',
   direction: 'horizontal',
   size: 1,
   children: [
-    {
-      type: 'panel',
-      id: 'a',
-      size: 1,
-      component: (
-        <DemoPanel id="a" label={formatLabel(panelLabelTemplate, 'a')} />
-      ),
-    },
+    { type: 'panel', id: 'a', size: 1, componentKey: 'a' },
     {
       type: 'split',
       direction: 'vertical',
       size: 2,
       children: [
-        {
-          type: 'panel',
-          id: 'b',
-          size: 1,
-          component: (
-            <DemoPanel id="b" label={formatLabel(panelLabelTemplate, 'b')} />
-          ),
-        },
-        {
-          type: 'panel',
-          id: 'c',
-          size: 1,
-          component: (
-            <DemoPanel id="c" label={formatLabel(panelLabelTemplate, 'c')} />
-          ),
-        },
+        { type: 'panel', id: 'b', size: 1, componentKey: 'b' },
+        { type: 'panel', id: 'c', size: 1, componentKey: 'c' },
       ],
     },
   ],
 });
 
 export function FloatingDemo({ dict }: FloatingDemoProps): React.ReactElement {
-  const initialTree = useMemo(
-    () => buildInitialTree(dict.panelLabel),
-    [dict.panelLabel],
-  );
+  const initialTree = useMemo(() => buildInitialTree(), []);
+
+  const store = useMemo(() => {
+    const renderPanel = (id: string) => (
+      <DemoPanel id={id} label={formatLabel(dict.panelLabel, id)} />
+    );
+    return createComponentStore(
+      Object.fromEntries(INITIAL_PANEL_IDS.map((id) => [id, renderPanel(id)])),
+    );
+  }, [dict.panelLabel]);
+
   const {
     tree,
     setTree,
@@ -144,11 +139,14 @@ export function FloatingDemo({ dict }: FloatingDemoProps): React.ReactElement {
     return candidate;
   }, [panelIds]);
 
-  const makeContent = useCallback(
-    (id: string) => (
-      <DemoPanel id={id} label={formatLabel(dict.panelLabel, id)} />
-    ),
-    [dict.panelLabel],
+  const registerPanel = useCallback(
+    (id: string) => {
+      store.register(
+        id,
+        <DemoPanel id={id} label={formatLabel(dict.panelLabel, id)} />,
+      );
+    },
+    [store, dict.panelLabel],
   );
 
   const formatEvent = useCallback(
@@ -156,36 +154,73 @@ export function FloatingDemo({ dict }: FloatingDemoProps): React.ReactElement {
     [],
   );
 
+  const [hydrated, setHydrated] = useState(false);
+
+  // Restore the saved layout once on mount. Runs after the first render so the
+  // server and initial client render both use the default tree (no hydration mismatch).
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const restored = JSON.parse(saved) as LayoutNode;
+        getPanelIds(restored).forEach(registerPanel);
+        setTree(restored);
+        const ids = getPanelIds(restored);
+        const maxN = Math.max(
+          0,
+          ...ids
+            .map((id) => /^n(\d+)$/.exec(id)?.[1])
+            .filter((n): n is string => n != null)
+            .map(Number),
+        );
+        counterRef.current = maxN;
+        setSelectedIdRaw(ids[0] ?? null);
+      }
+    } catch {
+      // Corrupt/incompatible saved data — fall back to the default tree.
+    }
+    setHydrated(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tree));
+  }, [tree, hydrated]);
+
   const handleSplitH = useCallback(() => {
     if (!selectedId) return;
     const id = nextId();
+    registerPanel(id);
     splitPanel(selectedId, 'horizontal', {
-      newPanel: { id, component: makeContent(id) },
+      newPanel: { id, componentKey: id },
     });
     setSelectedIdRaw(id);
     pushLog('split', formatEvent(events.split, id));
-  }, [selectedId, splitPanel, nextId, makeContent, pushLog, formatEvent, events.split]);
+  }, [selectedId, splitPanel, nextId, registerPanel, pushLog, formatEvent, events.split]);
 
   const handleSplitV = useCallback(() => {
     if (!selectedId) return;
     const id = nextId();
+    registerPanel(id);
     splitPanel(selectedId, 'vertical', {
-      newPanel: { id, component: makeContent(id) },
+      newPanel: { id, componentKey: id },
     });
     setSelectedIdRaw(id);
     pushLog('split', formatEvent(events.split, id));
-  }, [selectedId, splitPanel, nextId, makeContent, pushLog, formatEvent, events.split]);
+  }, [selectedId, splitPanel, nextId, registerPanel, pushLog, formatEvent, events.split]);
 
   const handleAddPanel = useCallback(() => {
     if (!selectedId) return;
     const id = nextId();
+    registerPanel(id);
     insertPanel({
-      panel: { id, component: makeContent(id) },
+      panel: { id, componentKey: id },
       at: { anchorId: selectedId, position: 'right' },
     });
     setSelectedIdRaw(id);
     pushLog('add', formatEvent(events.add, id));
-  }, [selectedId, insertPanel, nextId, makeContent, pushLog, formatEvent, events.add]);
+  }, [selectedId, insertPanel, nextId, registerPanel, pushLog, formatEvent, events.add]);
 
   const handleReset = useCallback(() => {
     counterRef.current = 0;
@@ -234,6 +269,7 @@ export function FloatingDemo({ dict }: FloatingDemoProps): React.ReactElement {
           <div className="relative flex-1 overflow-hidden bg-surface-lowest bg-[radial-gradient(#222a3d_1px,transparent_1px)] [background-size:24px_24px]">
             <TreeLayout
               tree={tree}
+              components={store}
               onResizeBorder={handleResizeBorder}
               onMovePanel={handleMovePanel}
               dragHandleSelector="[data-drag-handle]"
