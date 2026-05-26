@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.2.5",
-    "@dannysir/floating-components": "^0.2.4",
+    "@dannysir/floating-components": "^0.3.0",
     "@dannysir/js-te": "^0.7.3",
     "@uiw/react-codemirror": "^4.25.9",
     "next": "16.2.4",
