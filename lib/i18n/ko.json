@@ -71,9 +71,11 @@
         "add": "{{id}} 패널 추가",
         "move": "패널 이동됨",
         "resize": "패널 크기 조정됨",
-        "reset": "트리 초기화됨"
+        "reset": "트리 초기화됨",
+        "close": "{{id}} 패널 닫힘"
       }
     },
+    "closePanel": "패널 {{id}} 닫기",
     "panelLabel": "Panel {{id}}"
   },
   "jste": {

@@ -50,8 +50,8 @@
     "title": "@dannysir/floating-components",
     "description": "A VS Code-style panel tree. Drag a panel header onto another panel to reorder, drag the borders to resize. Try the toolbar to split, add, or reset.",
     "toolbar": {
-      "splitH": "Split horizontal",
-      "splitV": "Split vertical",
+      "splitH": "Split H",
+      "splitV": "Split V",
       "addPanel": "Add panel",
       "reset": "Reset",
       "selectedHint": "Selected: {{id}}",
@@ -71,9 +71,11 @@
         "add": "Added panel {{id}}",
         "move": "Panel moved",
         "resize": "Panel resized",
-        "reset": "Tree reset"
+        "reset": "Tree reset",
+        "close": "Closed panel {{id}}"
       }
     },
+    "closePanel": "Close panel {{id}}",
     "panelLabel": "Panel {{id}}"
   },
   "jste": {

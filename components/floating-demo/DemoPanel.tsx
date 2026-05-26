@@ -2,6 +2,8 @@
 
 import { useContext } from 'react';
 
+import { CloseIcon } from '@/components/site/icons';
+
 import { SelectionContext } from './SelectionContext';
 
 const ACCENT_PALETTE = ['#22d3ee', '#ddb7ff', '#68f5b8', '#8aebff', '#a2eeff', '#4edea3'];
@@ -20,16 +22,33 @@ interface DemoPanelProps {
 }
 
 export function DemoPanel({ id, label }: DemoPanelProps): React.ReactElement {
-  const { selectedId, setSelectedId } = useContext(SelectionContext);
+  const { selectedId, setSelectedId, closePanel, closable, closeLabel } =
+    useContext(SelectionContext);
   const accent = accentForId(id);
   const isSelected = selectedId === id;
+
+  const handleSelect = (): void => setSelectedId(id);
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>): void => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      setSelectedId(id);
+    }
+  };
+  const handleClose = (event: React.MouseEvent<HTMLButtonElement>): void => {
+    event.stopPropagation();
+    closePanel(id);
+  };
+  const stopDrag = (event: React.SyntheticEvent): void => event.stopPropagation();
+
   return (
-    <button
-      type="button"
-      onClick={() => setSelectedId(id)}
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={handleSelect}
+      onKeyDown={handleKeyDown}
       data-drag-handle
       className={[
-        'group flex h-full w-full cursor-grab flex-col items-stretch border-0 p-0 text-left outline-none transition-shadow active:cursor-grabbing',
+        'group flex h-full w-full cursor-grab flex-col items-stretch outline-none transition-shadow active:cursor-grabbing',
         isSelected ? 'shadow-[inset_0_0_0_2px_var(--color-primary)]' : '',
       ].join(' ')}
       style={{ backgroundColor: `${accent}0f` }}
@@ -62,6 +81,18 @@ export function DemoPanel({ id, label }: DemoPanelProps): React.ReactElement {
             <circle cx="9" cy="18" r="1.6" />
             <circle cx="15" cy="18" r="1.6" />
           </svg>
+          {closable ? (
+            <button
+              type="button"
+              onClick={handleClose}
+              onMouseDown={stopDrag}
+              onPointerDown={stopDrag}
+              aria-label={closeLabel.replace('{{id}}', id)}
+              className="flex h-5 w-5 items-center justify-center rounded text-on-surface-variant transition-colors hover:bg-error/15 hover:text-error"
+            >
+              <CloseIcon className="h-3.5 w-3.5" />
+            </button>
+          ) : null}
         </span>
       </div>
       <div className="flex flex-1 items-center justify-center">
@@ -69,6 +100,6 @@ export function DemoPanel({ id, label }: DemoPanelProps): React.ReactElement {
           {label}
         </span>
       </div>
-    </button>
+    </div>
   );
 }

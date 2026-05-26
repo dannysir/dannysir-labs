@@ -3,7 +3,7 @@
 import { HistoryIcon } from '@/components/site/icons';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 
-export type LogKind = 'init' | 'split' | 'add' | 'move' | 'resize' | 'reset';
+export type LogKind = 'init' | 'split' | 'add' | 'move' | 'resize' | 'reset' | 'close';
 
 export interface LogEntry {
   id: number;
@@ -19,6 +19,7 @@ const KIND_LABEL: Record<LogKind, string> = {
   move: 'MOVE',
   resize: 'RESIZE',
   reset: 'RESET',
+  close: 'CLOSE',
 };
 
 const KIND_COLOR: Record<LogKind, string> = {
@@ -28,6 +29,7 @@ const KIND_COLOR: Record<LogKind, string> = {
   move: 'text-secondary',
   resize: 'text-tertiary',
   reset: 'text-secondary',
+  close: 'text-error',
 };
 
 interface ActivityLogProps {
