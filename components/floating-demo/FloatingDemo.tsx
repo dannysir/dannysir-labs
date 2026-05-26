@@ -79,6 +79,7 @@ export function FloatingDemo({ dict }: FloatingDemoProps): React.ReactElement {
     movePanel,
     splitPanel,
     insertPanel,
+    removePanel,
     panelIds,
   } = useLayoutTree(initialTree);
 
@@ -193,9 +194,28 @@ export function FloatingDemo({ dict }: FloatingDemoProps): React.ReactElement {
     pushLog('reset', events.reset);
   }, [setTree, initialTree, pushLog, events.reset]);
 
+  const handleClosePanel = useCallback(
+    (id: string) => {
+      removePanel(id);
+      setSelectedIdRaw((prev) => {
+        if (prev !== id) return prev;
+        const remaining = panelIds.filter((pid) => pid !== id);
+        return remaining[0] ?? null;
+      });
+      pushLog('close', formatEvent(events.close, id));
+    },
+    [removePanel, panelIds, pushLog, formatEvent, events.close],
+  );
+
   const selectionValue = useMemo(
-    () => ({ selectedId, setSelectedId }),
-    [selectedId, setSelectedId],
+    () => ({
+      selectedId,
+      setSelectedId,
+      closePanel: handleClosePanel,
+      closable: panelIds.length > 1,
+      closeLabel: dict.closePanel,
+    }),
+    [selectedId, setSelectedId, handleClosePanel, panelIds.length, dict.closePanel],
   );
 
   return (

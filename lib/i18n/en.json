@@ -71,9 +71,11 @@
         "add": "Added panel {{id}}",
         "move": "Panel moved",
         "resize": "Panel resized",
-        "reset": "Tree reset"
+        "reset": "Tree reset",
+        "close": "Closed panel {{id}}"
       }
     },
+    "closePanel": "Close panel {{id}}",
     "panelLabel": "Panel {{id}}"
   },
   "jste": {

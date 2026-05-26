@@ -78,8 +78,10 @@ export type Dictionary = {
         move: string;
         resize: string;
         reset: string;
+        close: string;
       };
     };
+    closePanel: string;
     panelLabel: string;
   };
   jste: {
