@@ -2,7 +2,7 @@
 
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 
-import type { RunResult, TestNode } from './runner';
+import type { RunResult, TestNode, TestNodeStatus } from './runner';
 
 export type ResultsState =
   | { kind: 'idle' }
@@ -19,11 +19,41 @@ const formatSummary = (
   template: string,
   passed: number,
   failed: number,
+  skipped: number,
+  todo: number,
   ms: number,
 ): string => template
   .replace('{{passed}}', String(passed))
   .replace('{{failed}}', String(failed))
+  .replace('{{skipped}}', String(skipped))
+  .replace('{{todo}}', String(todo))
   .replace('{{ms}}', String(ms));
+
+interface LeafVisual {
+  icon: string;
+  classes: string;
+}
+
+const leafVisual = (status: TestNodeStatus): LeafVisual => {
+  switch (status) {
+    case 'pass':
+      return { icon: '✓', classes: 'text-tertiary' };
+    case 'fail':
+      return { icon: '✗', classes: 'text-error' };
+    case 'skipped':
+      return { icon: '⊘', classes: 'text-on-surface-variant/50' };
+    case 'todo':
+      return { icon: '☐', classes: 'text-secondary' };
+    default:
+      return { icon: '·', classes: 'text-on-surface-variant' };
+  }
+};
+
+const describeVisual = (status: TestNodeStatus): LeafVisual => (
+  status === 'fail'
+    ? { icon: '▾', classes: 'text-error' }
+    : { icon: '▾', classes: 'text-tertiary' }
+);
 
 interface TreeProps {
   nodes: TestNode[];
@@ -35,22 +65,23 @@ function Tree({ nodes, depth, consoleHeading }: TreeProps): React.ReactElement {
   return (
     <ul className="space-y-1">
       {nodes.map((node) => {
-        const pass = node.status === 'pass';
-        const statusClass = pass ? 'text-tertiary' : 'text-error';
-        const icon = node.type === 'describe' ? '▾' : pass ? '✓' : '✗';
+        const visual = node.type === 'describe'
+          ? describeVisual(node.status)
+          : leafVisual(node.status);
         return (
           <li key={node.id} style={{ paddingLeft: depth * 14 }}>
-            <div className={`flex items-baseline gap-2 text-sm ${statusClass}`}>
-              <span className="font-mono">{icon}</span>
+            <div className={`flex items-baseline gap-2 text-sm ${visual.classes}`}>
+              <span className="font-mono">{visual.icon}</span>
               <span className={node.type === 'describe' ? 'font-semibold' : ''}>
                 {node.name}
               </span>
-              {node.type === 'test' ? (
+              {node.type === 'test'
+              && (node.status === 'pass' || node.status === 'fail') ? (
                 <span className="text-xs text-on-surface-variant/60">
                   ({node.durationMs}
                   ms)
                 </span>
-              ) : null}
+                ) : null}
             </div>
             {node.type === 'test' && node.error ? (
               <pre className="ml-6 mt-1 whitespace-pre-wrap break-words rounded-md border border-error/30 bg-error/10 px-3 py-2 font-mono text-xs text-error">
@@ -154,6 +185,8 @@ export function Results({ dict, state }: ResultsProps): React.ReactElement {
             dict.summary,
             state.result.passed,
             state.result.failed,
+            state.result.skipped,
+            state.result.todo,
             state.result.durationMs,
           )}
         </span>

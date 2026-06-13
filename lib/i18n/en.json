@@ -87,6 +87,9 @@
       "matchers": "Matchers",
       "each": "test.each",
       "fn": "fn() mocking",
+      "only": ".only — focus",
+      "skip": ".skip — skipped",
+      "todo": ".todo — pending",
       "mock": "mock() (Node only)"
     },
     "run": "Run tests",
@@ -105,7 +108,7 @@
     "results": {
       "heading": "Results",
       "idle": "Click Run tests to see results",
-      "summary": "{{passed}} passed · {{failed}} failed · {{ms}}ms",
+      "summary": "{{passed}} passed · {{failed}} failed · {{skipped}} skipped · {{todo}} todo · {{ms}}ms",
       "timeout": "Execution exceeded 5s and was terminated. Check for infinite loops.",
       "runtimeError": "Error while evaluating code",
       "nodeOnlyMockDetected": "mock() call detected but ignored (Node.js only).",

@@ -93,6 +93,9 @@ export type Dictionary = {
       matchers: string;
       each: string;
       fn: string;
+      only: string;
+      skip: string;
+      todo: string;
       mock: string;
     };
     run: string;

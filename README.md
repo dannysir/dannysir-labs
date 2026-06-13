@@ -85,7 +85,7 @@ proxy.ts                             # locale redirect + x-locale 헤더 (Next.j
 
 ## js-te 미니 러너의 한계
 
-`@dannysir/js-te` 의 원본은 Node.js native loader hooks(`module.registerHooks`) 위에서 동작합니다. 이 사이트의 시연은 라이브러리의 `@dannysir/js-te/browser` entry 를 위임받아 `describe` / `test`(`test.each` 포함) / `beforeEach` / `expect` / `fn()` 을 브라우저·Web Worker 에서 실행합니다.
+`@dannysir/js-te` 의 원본은 Node.js native loader hooks(`module.registerHooks`) 위에서 동작합니다. 이 사이트의 시연은 라이브러리의 `@dannysir/js-te/browser` entry 를 위임받아 `describe`(`describe.only` / `describe.skip` 포함) / `test`(`test.each` / `test.only` / `test.skip` / `test.todo` 포함) / `beforeEach` / `expect` / `fn()` 을 브라우저·Web Worker 에서 실행합니다. 포커스(`.only`) / 건너뜀(`.skip`) / 예정(`.todo`) 모디파이어는 0.9.0 에서 브라우저 entry 에 추가됐고, 데모의 `.only` / `.skip` / `.todo` 예제로 시연합니다.
 
 - **모듈 모킹(`mock()`)은 모사할 수 없습니다.** loader hook 에 의존하므로 브라우저에서 동작 불가 — 해당 예제는 읽기 전용으로 코드만 보여주고 실행은 비활성화됩니다.
 - 사용자 코드는 Web Worker 안에서 실행되며 **5초 타임아웃**이 걸려 있습니다(무한 루프 보호). Web Worker 미지원 브라우저에서는 메인 스레드 fallback 으로 실행되며 타임아웃 보호가 없습니다.
