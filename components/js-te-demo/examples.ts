@@ -1,4 +1,12 @@
-export type ExampleId = 'hello' | 'matchers' | 'each' | 'fn' | 'mock';
+export type ExampleId =
+  | 'hello'
+  | 'matchers'
+  | 'each'
+  | 'fn'
+  | 'only'
+  | 'skip'
+  | 'todo'
+  | 'mock';
 
 export interface Example {
   id: ExampleId;
@@ -76,6 +84,37 @@ const fnExample = `describe('fn() mocking', () => {
 });
 `;
 
+const onlyExample = `// test.only — 같은 파일의 일반 테스트는 자동으로 skipped 됩니다.
+describe('focus', () => {
+  test('normal test (demoted to skipped)', () => {
+    expect('not run').toBe('not run');
+  });
+
+  test.only('only this runs', () => {
+    expect(2 + 2).toBe(4);
+  });
+});
+`;
+
+const skipExample = `// test.skip — 함수는 등록만 되고 실행되지 않습니다.
+test('runs normally', () => {
+  expect(1 + 1).toBe(2);
+});
+
+test.skip('known broken — fix later', () => {
+  expect(true).toBe(false);
+});
+`;
+
+const todoExample = `// test.todo — 아직 작성하지 않은 테스트를 todo 로 보고합니다 (함수 인자 없음).
+test('addition works', () => {
+  expect(1 + 1).toBe(2);
+});
+
+test.todo('handle empty list');
+test.todo('handle very large list');
+`;
+
 const mockExample = `// Node.js 전용 예제 — 브라우저에서는 실행되지 않습니다.
 // The real @dannysir/js-te runs on Node.js loader hooks,
 // so module mocking with mock() works natively.
@@ -93,7 +132,19 @@ export const examples: Record<ExampleId, Example> = {
   matchers: { id: 'matchers', source: matchers, readOnly: false },
   each: { id: 'each', source: each, readOnly: false },
   fn: { id: 'fn', source: fnExample, readOnly: false },
+  only: { id: 'only', source: onlyExample, readOnly: false },
+  skip: { id: 'skip', source: skipExample, readOnly: false },
+  todo: { id: 'todo', source: todoExample, readOnly: false },
   mock: { id: 'mock', source: mockExample, readOnly: true },
 };
 
-export const exampleOrder: ExampleId[] = ['hello', 'matchers', 'each', 'fn', 'mock'];
+export const exampleOrder: ExampleId[] = [
+  'hello',
+  'matchers',
+  'each',
+  'fn',
+  'only',
+  'skip',
+  'todo',
+  'mock',
+];

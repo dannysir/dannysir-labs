@@ -1,6 +1,6 @@
-# dannysir-labs — 라이브러리 시연 사이트 구축 계획
+# dannysir-labs — js-te 0.9.0 시연 사이클
 
-> **이 문서는 여러 세션에 걸쳐 단계적으로 진행하기 위한 작업 명세서입니다.**
+> **이 문서는 dannysir-labs 의 현재 작업 사이클 명세서입니다.**
 > 새 세션을 시작할 때마다 이 문서를 먼저 읽고, "현재 진행 상태" 표를 보고 다음 미완료 Phase 를 이어서 진행하세요.
 
 ---
@@ -11,32 +11,36 @@
 
 1. **이 문서를 먼저 읽으세요.** 가장 신뢰할 수 있는 작업 명세는 이 파일입니다.
 2. 아래 "현재 진행 상태" 표에서 **마지막으로 완료된 Phase 와 다음 Phase** 를 확인합니다.
-3. 해당 Phase 의 "작업 내용" / "산출물 (Deliverables)" / "검증" 을 읽고, 사용자에게 "Phase N 을 이어서 진행해도 될까요?" 라고 확인한 뒤 진행합니다.
+3. 해당 Phase 의 "작업 내용" / "산출물" / "검증" 을 읽고, 사용자에게 "Phase N 을 이어서 진행해도 될까요?" 라고 확인한 뒤 진행합니다.
 4. Phase 를 완료하면 **이 문서의 진행 상태 표 체크박스를 갱신**하고, 그 Phase 섹션 끝의 "완료 메모" 에 한 줄 기록한 뒤 사용자에게 결과를 보고합니다.
 5. 사용자의 글로벌 규칙 준수:
    - 모든 대화는 존댓말
-   - 파일 수정·생성·리팩토링 전에 **플랜 모드** 진입 (이 문서가 이미 메인 플랜이므로, 각 Phase 진입 시에는 "이 Phase 의 작업을 시작하겠습니다" 정도 확인이면 충분)
+   - 파일 수정·생성·리팩토링 전에 **플랜 모드** (이 문서가 이미 메인 플랜이므로, 각 Phase 진입 시에는 "이 Phase 의 작업을 시작하겠습니다" 정도 확인이면 충분)
    - **`git commit` / `git push` / PR 생성 전에는 매번 사전 허락**
 
 작업 디렉터리: `/Users/san/dannysir-labs`
-참조 라이브러리 (로컬 경로):
-- `/Users/san/floating-component` (`@dannysir/floating-components`)
-- `/Users/san/js-te-package` (`@dannysir/js-te`)
-- `/Users/san/floating-demo` (Vite 기반 기존 데모 — 패턴 참고용)
+참조 라이브러리 (로컬): `/Users/san/js-te-package` (`@dannysir/js-te`, 현재 0.9.0)
 
-플랜 원본 사본 위치: `/Users/san/.claude/plans/witty-jingling-lobster.md` (둘 중 하나를 갱신하면 다른 쪽도 동기화)
+플랜 사본 위치: `/Users/san/.claude/plans/reflective-hatching-sutton.md`. 이 파일과 항상 동기 유지.
+
+이전 사이클 사본 (아카이브): `/Users/san/.claude/plans/witty-jingling-lobster.md`
 
 ---
 
 ## Context (왜 이걸 만드는가)
 
-사용자(dannysir)가 본인의 npm 라이브러리들을 **인터랙티브하게 시연**할 수 있는 단일 사이트가 필요합니다.
+`@dannysir/js-te` 가 0.7.3 → 0.9.0 으로 두 단계 minor 업데이트를 거쳤습니다.
 
-- `@dannysir/floating-components` — VS Code 스타일 패널 레이아웃 (React 19, 브라우저 직접 사용 가능)
-- `@dannysir/js-te` — Node 22.15+ `module.registerHooks` 를 쓰는 Jest 스타일 테스트 프레임워크 (브라우저 직접 실행 불가 → 클라이언트 미니 러너로 모사)
-- 향후 라이브러리 2개 추가 예정 → **확장 가능한 구조** 필수
-- 각 라이브러리의 npm `homepage` 필드를 본 사이트의 시연 페이지로 연결할 예정
-- 인터랙티브 시연이 핵심. README/API 레퍼런스 페이지는 만들지 않음 (각 라이브러리 저장소에 이미 존재).
+- **0.7.4** — `homepage` 메타데이터만. 시연 영향 없음
+- **0.8.0** — `--testLocation`, JSON reporter (CLI 전용). 브라우저 데모와 무관
+- **0.9.0** — `test.only / .skip / .todo`, `describe.only / .skip`. **브라우저 entry 에 노출되는 코어 API 변경.** 시연에 추가해야 할 신기능
+
+dannysir-labs 는 자신의 라이브러리들을 인터랙티브하게 시연하는 사이트이므로, 0.9.0 의 핵심 사용자-노출 기능인 focus/skip 모디파이어를 데모에 반영해야 합니다.
+
+동시에 현재 데모 코드에 **0.7.3 도입 시점에 정리됐어야 할 잔재**가 남아 있어 함께 정리합니다:
+
+- `components/js-te-demo/runner/dannysirJsTe.d.ts` — `declare module '@dannysir/js-te/browser'` 형태의 손글씨 shim. 라이브러리가 0.7.3 부터 공식 `.d.ts` 를 ship 하므로 (`package.json#exports` 의 `types` 조건) 셰도잉 상태
+- `runner/types.ts` 의 일부 타입 — 라이브러리에서 import 가능하지만 자체 정의 중
 
 ---
 
@@ -44,47 +48,31 @@
 
 | 항목 | 결정 |
 | --- | --- |
-| 프레임워크 | Next.js 16 (App Router) + React 19 + TypeScript |
-| 스타일 | Tailwind v4 (CSS-first, `@import "tailwindcss"`) |
-| 패키지 매니저 | npm |
-| 라이브러리 연결 | npm published 버전 dependency (`@dannysir/floating-components`). `@dannysir/js-te` 는 Node 전용이라 dependency 에 포함하지 않고 미니 러너로 모사. |
-| 다국어 | 자체 dictionary (`lib/i18n/{ko,en}.json`) + `app/[locale]/...` 라우팅. 한국어 기본. 헤더 우측의 **드롭다운 버튼**으로 전환. 사용자 선택은 쿠키 `NEXT_LOCALE` 에 저장 (다음 방문 유지). **`Accept-Language` 자동 감지는 사용하지 않음** — 사용자가 명시적으로 버튼으로 바꿔야 함. |
-| js-te 시연 방식 | 클라이언트 측 미니 러너. `mock()` 모킹은 코드 미리보기만, 실행 비활성. |
-| 코드 에디터 | CodeMirror 6 (`@uiw/react-codemirror`, 다크 테마) |
-| 사이트 이름 | `dannysir-labs` (Vercel: `dannysir-labs.vercel.app`) |
-| 디자인 테마 | **다크-테크 단일 테마** (2026-05-20 결정). Stitch 디자인 기반 — 딥 네이비(`#0b1326`) + 네온 시안/퍼플/에메랄드 + 글래스모피즘. 폰트: 본문/한글 Pretendard, 코드/라벨 JetBrains Mono(next/font). 아이콘은 인라인 SVG. (이전 "다크 모드 제외" 결정을 의도적으로 뒤집음 — 라이트/토글 아님.) |
+| 의존성 | `@dannysir/js-te: ^0.7.3` → `^0.9.0` (caret 규칙상 0.x 의 minor 변경은 자동 업데이트 안 되므로 명시적 bump) |
+| `@dannysir/js-te/browser` 타입 | 라이브러리 공식 `.d.ts` (types/browser.d.ts) 사용. 데모의 shim 파일 삭제 |
+| 데모 미니 러너의 모드 처리 전략 | **Option B 자체 실행 유지 + 모드 직접 처리.** 라이브러리 `Reporter` 인터페이스에 per-test start 훅이 없어 console 캡처와 호환되지 않음. `testManager.getTests()` 가 `mode: TestMode` 가 이미 resolved 된 `TestCase[]` 를 반환하므로 (`describe.only/.skip` 전파는 라이브러리가 처리), 데모는 file-scoped only-demotion 한 줄만 모사 |
+| `.only` demotion 규칙 | `tests.some(t => t.mode === 'only')` 면 `mode === 'normal'` 을 `'skip'` 으로 demote. `skip`/`todo` 는 그대로. 라이브러리 testManager.js:141-144 룰과 동일 |
+| 데모 타입 이름 충돌 | 라이브러리 `RunResult` 는 import 하지 않음 (collector 에서 사용처 없음). 데모의 `RunResult` 는 그대로 둠 (데모 트리·console·duration 필드 포함, 라이브러리 결과와는 별개 모델) |
+| 새 상태 색 | Skipped = `text-on-surface-variant/50` (dim/회색 계열, 기존 토큰 재사용). Todo = `text-secondary` + 점선 보더. **Tailwind purge 회피 위해 literal class 만 사용**, 동적 문자열 금지 |
+| 의도적 제외 | 0.8.0 의 `--testLocation`, JSON reporter — CLI 전용으로 브라우저 데모와 무관. 라이브러리 `Reporter` import — Option B 에서 사용처 없음 (dead weight) |
+| 브랜치 | `feat/jste-0.9-only-skip-todo` |
 
 ---
 
-## 디렉터리 구조 (목표)
+## 영향 받는 파일 (요약)
 
-```
-/Users/san/dannysir-labs
-├── PLAN.md                           # 본 문서
-├── app/
-│   ├── [locale]/
-│   │   ├── layout.tsx
-│   │   ├── page.tsx                  # 랜딩
-│   │   └── libraries/
-│   │       ├── floating-components/page.tsx
-│   │       └── js-te/page.tsx
-│   ├── layout.tsx
-│   └── globals.css
-├── components/
-│   ├── site/                         # Header, Footer, LocaleSwitcher, LibraryCard
-│   ├── floating-demo/                # 'use client' 시연
-│   └── js-te-demo/                   # Editor, Results, JsTeDemo (+ runner.ts, examples.ts)
-├── lib/
-│   ├── libraries.ts                  # 라이브러리 메타데이터 (확장 포인트)
-│   └── i18n/{config.ts,dictionaries.ts,ko.json,en.json}
-├── proxy.ts                          # locale 라우팅 (Next.js 16: 구 middleware.ts)
-├── public/
-├── package.json
-├── tsconfig.json
-├── next.config.ts
-├── postcss.config.mjs
-└── README.md
-```
+| 파일 | 변경 |
+| --- | --- |
+| `package.json` | dep `@dannysir/js-te: ^0.7.3 → ^0.9.0`. lockfile 갱신 |
+| `components/js-te-demo/runner/dannysirJsTe.d.ts` | **삭제** |
+| `components/js-te-demo/runner/types.ts` | `TestMode` import. `TestNodeStatus` 확장 (`'pass' \| 'fail' \| 'skipped' \| 'todo'`). `TestLeafNode` 에 `mode: TestMode` 추가. `RunResult` 에 `skipped: number`, `todo: number` 추가 |
+| `components/js-te-demo/runner/index.ts` | only-demotion 패스 추가. leaf 실행 루프에서 `mode` 분기 (todo/skip → fn 호출 안 함, 카운터만). rollupStatuses 가 새 상태들과 호환 (describe 노드는 child 가 fail 일 때만 fail, 그 외엔 pass 유지). 데모 트리 타입 변경에 따라 빌드 부분 조정 |
+| `components/js-te-demo/runner/runner.worker.ts` | 변경 없음 (RunResult 새 필드는 structured-clone 안전한 number) |
+| `components/js-te-demo/Results.tsx` | 상태 아이콘·색 확장 (▾·✓·✗ 외에 ↷ skipped, ☐ todo 등 ASCII). summary 4 카운터 + ms. PASS/FAIL 배지 로직은 그대로 (`failed > 0 \|\| runtimeError` 면 FAIL) |
+| `components/js-te-demo/examples.ts` | 3개 예제 추가: `only` (normal 테스트 1개 + `.only` 1개로 demotion 시연), `skip` (`.skip` + 일반 비교), `todo` (`.todo` 단독 + 옆에 일반 1개). `ExampleId` 유니온, `exampleOrder` 갱신 |
+| `lib/i18n/{ko,en}.json` | `jste.examples.{only,skip,todo}` 라벨 + 설명. `jste.results.{skipped,todo}` 뱃지·summary 템플릿 4 카운터로 갱신 |
+| `README.md` | "미니 러너 한계" 섹션의 0.7.3 언급을 0.9.0 으로. (선택) 새 시연 항목 한 줄 언급 |
+| `~/.claude/projects/-Users-san-dannysir-labs/memory/project_js_te_mini_runner_rationale.md` | 0.9.0 전환 + shim 제거 사실 갱신 |
 
 ---
 
@@ -92,378 +80,217 @@
 
 | Phase | 제목 | 상태 |
 | --- | --- | --- |
-| 0 | 조사 + 결정 + 본 플랜 작성 | [x] 완료 |
-| 1 | Next.js 프로젝트 생성 + i18n 골격 | [x] 완료 |
-| 2 | 사이트 셸 (헤더/푸터/언어 토글) + 랜딩 페이지 | [x] 완료 |
-| 3 | floating-components 시연 페이지 | [x] 완료 |
-| 4 | js-te 미니 러너 (핵심 로직) | [x] 완료 |
-| 5 | js-te 시연 페이지 UI | [x] 완료 |
-| 6 | 다국어 사전 채우기 + 디자인 정돈 + README | [x] 완료 |
-| 7 | GitHub push + Vercel 배포 (사용자 사전 허락 필수) | [x] 완료 |
-| 8 | 두 라이브러리 저장소에 `homepage` 필드 추가 PR (사용자 사전 허락 필수) | [x] 완료 |
-| 9 | 다크-테크 전면 리디자인 (Stitch 기반) — 메인/랜딩 | [x] 완료 |
-| 10 | 시연 페이지 2개 디자인 정돈 (floating / js-te) | [x] 완료 |
-| 11 | 라이브러리 페이지 재구성: 사이드바(설명/API/시연) + 저장소 마크다운 문서 연동 | [x] 완료 |
+| 1 | 의존성 bump + shim 삭제 | [x] |
+| 2 | 러너 타입·로직 확장 (모드 4종) | [x] |
+| 3 | Results UI: 상태 4종 + 카운터 4종 | [x] |
+| 4 | examples 3종 추가 (only / skip / todo) | [x] |
+| 5 | i18n 키 추가 (ko/en 동시) | [x] |
+| 6 | 검증 + 메모리 동기화 + PR | [ ] |
 
-> **Phase 를 완료할 때마다 위 표의 `[ ]` 를 `[x]` 로 바꾸고, 그 Phase 섹션 끝의 "완료 메모" 에 한 줄 기록**해 두세요. 그래야 새 세션에서 어디까지 했는지 빠르게 파악됩니다.
+> Phase 완료 시 체크박스 갱신 + 해당 섹션 끝 "완료 메모" 한 줄 기록.
 
 ---
 
-## Phase 1 — Next.js 프로젝트 생성 + i18n 골격
+## Phase 1 — 의존성 bump + shim 삭제
 
-**목적**: 빈 디렉터리에 Next.js 16 / Tailwind v4 / TypeScript 프로젝트를 새로 생성하고, `app/[locale]/...` 구조와 proxy (구 middleware) locale redirect 까지 동작하는 최소 골격을 만듭니다.
+**목적**: 라이브러리 버전 올리고, 0.7.3 부터 무의미해진 손글씨 타입 shim 을 제거합니다. 후속 Phase 의 전제 조건.
 
-**작업 내용**:
-1. 프로젝트 초기 생성 (`npx create-next-app@latest .` — Next/React/TS/ESLint/Tailwind 의존성과 기본 설정 파일·디렉터리 구조를 한 번에 생성)
-   - `npx create-next-app@latest .` (TypeScript, App Router, Tailwind v4, ESLint, src dir 미사용, alias `@/*`)
-   - 생성된 기본 보일러플레이트 페이지 정리 (홈 페이지를 빈 placeholder 로)
-2. `app/[locale]/layout.tsx` + `app/[locale]/page.tsx` (placeholder "ko/en" 표시) 생성
-3. `lib/i18n/config.ts` — `locales = ['ko', 'en'] as const; defaultLocale = 'ko'`
-4. `lib/i18n/dictionaries.ts` — `getDictionary(locale)` 동적 import
-5. `lib/i18n/{ko,en}.json` — 빈 객체 또는 최소 키 (`siteName`)
-6. `proxy.ts` (Next.js 16 에서 `middleware.ts` 가 `proxy.ts` 로 이름 변경됨) — 경로에 locale 이 없으면 쿠키 `NEXT_LOCALE` 우선, 쿠키도 없으면 기본값 `ko` 로 redirect. (`Accept-Language` 자동 감지는 쓰지 않음 — 사용자가 헤더 LocaleSwitcher 로 명시 변경)
+**작업 내용**
 
-**산출물 (Deliverables)**:
-- `npm run dev` 실행 시 `/` → `/ko` redirect, `/ko` 와 `/en` 모두 200 응답
-- `/ko/<무관경로>` 라도 `[locale]/page.tsx` 가 잡혀야 함 (현재는 페이지 한 개만 있어도 OK)
-- `npm run build` 통과
+1. `package.json` 의 `"@dannysir/js-te": "^0.7.3"` → `"^0.9.0"`. `npm install` 로 lockfile 갱신
+2. `components/js-te-demo/runner/dannysirJsTe.d.ts` 삭제
+3. `tsconfig.json` 의 `include` / `types` 에 shim 파일 명시 참조가 없는지 확인 (없으면 통과). 있으면 제거
+4. 즉시 `npx tsc --noEmit` 으로 타입 깨짐 여부 확인. **shim 삭제만으로 컴파일 깨질 수 있음** — `runner/index.ts` 가 라이브러리 공식 타입의 `testManager.getTests()` 반환을 사용하므로, 데모 `LibraryCollectedTest` 인터페이스가 라이브러리 `TestCase` 와 정합한지 점검 (양쪽 다 `description`, `path`, `fn` 보유, 추가로 라이브러리는 `mode`/`location` 보유)
+
+**산출물**
+
+- 업데이트된 `package.json`, `package-lock.json`
+- `dannysirJsTe.d.ts` 삭제
+
+**검증**
+
+- `npx tsc --noEmit` 통과 (Phase 2 시작 전 OK 여야 함. shim 삭제로 깨지면 Phase 2 의 타입 작업을 일부 앞당겨 처리)
+- `node_modules/@dannysir/js-te/types/browser.d.ts` 가 실제로 export 되는지 확인 (`package.json#exports."./browser".types`)
+
+**완료 메모**: 2026-06-08 `@dannysir/js-te ^0.7.3 → ^0.9.0` (lockfile changed 1 package), `dannysirJsTe.d.ts` 삭제. `tsconfig.json#include` 는 `**/*.ts` 와일드카드라 별도 정리 불필요. `npx tsc --noEmit` 깨끗하게 통과 — shim 삭제 후 `testManager.getTests()` 반환이 라이브러리 공식 `TestCase[]` 로 잡혀도 데모의 `LibraryCollectedTest` 와 structural 호환. lint/build 는 Phase 6 에서 일괄.
+
+---
+
+## Phase 2 — 러너 타입·로직 확장 (모드 4종)
+
+**목적**: `.only` / `.skip` / `.todo` 4 모드를 데모 트리 모델과 실행 루프에 반영합니다.
+
+**작업 내용**
+
+1. `runner/types.ts`:
+   - `import type { TestMode } from '@dannysir/js-te/browser';` 추가
+   - `TestNodeStatus = 'pass' | 'fail' | 'skipped' | 'todo'`
+   - `TestLeafNode` 에 `mode: TestMode` 필드 추가
+   - `RunResult` 에 `skipped: number`, `todo: number` 추가 (기존 `passed`, `failed` 유지)
+2. `runner/index.ts`:
+   - `buildTree` 에서 leaf 생성 시 `mode: t.mode` 보존 (라이브러리 `TestCase.mode` 그대로 복사)
+   - **only-demotion 패스** — `getTests()` 직후, `hasOnly = collected.some(t => t.mode === 'only')` 면 normal → skip 으로 demote (라이브러리와 동일 룰, testManager.js:141-144 의 6줄). 로컬 변수 사본에서 처리해 부수효과 최소화
+   - 실행 루프에서 `node.mode` 분기:
+     - `'todo'` → `node.status = 'todo'`, fn 호출 안 함, `todo += 1`
+     - `'skip'` → `node.status = 'skipped'`, fn 호출 안 함, `skipped += 1`
+     - `'normal'` / `'only'` → 기존대로 실행, pass/fail 카운터 갱신
+   - 반환 객체에 `skipped`, `todo` 포함
+3. `rollupStatuses` — describe 의 status 는 child 중 하나라도 fail 이면 fail, 그 외엔 pass 로 유지 (현재 로직 그대로). skipped/todo 만 있는 describe 도 pass 표시 — 실패가 아니므로 자연스러움. 별도 변경 불필요
+4. 한 가지 export 정리: `runner/index.ts` 의 `export type` 재export 에서 누락된 타입이 없는지 점검
+
+**산출물**
+
+- 업데이트된 `runner/types.ts`, `runner/index.ts`
+
+**검증**
+
 - `npx tsc --noEmit` 통과
+- 임시 콘솔 출력으로 다음 3가지 결과 확인:
+  - `test('a', ...)` + `test.only('b', ...)` → a 는 skipped, b 는 pass
+  - `test.skip('a', ...)` + `test('b', ...)` → a 는 skipped, b 는 pass
+  - `test.todo('a')` + `test('b', ...)` → a 는 todo, b 는 pass
 
-**검증**:
-- 브라우저로 `http://localhost:3000/` → `/ko` 로 자동 이동 확인
-- `http://localhost:3000/en` 직접 접근 가능 확인
-
-**완료 메모**: 2026-05-05 Next.js 16.2.4 부트스트랩 + Tailwind v4 + i18n 골격 + proxy.ts (Next.js 16 에서 middleware → proxy 로 rename) 동작. tsc/lint/build 통과, dev 서버에서 / → /ko 307 redirect, /ko·/en 200, /zh → /ko/zh → 404, 쿠키 우선 redirect 모두 확인.
-
----
-
-## Phase 2 — 사이트 셸 + 랜딩 페이지
-
-**목적**: 모든 페이지에서 공통으로 쓸 헤더(언어 토글 포함)/푸터를 만들고, 랜딩 페이지에 라이브러리 카드 그리드를 띄웁니다.
-
-**작업 내용**:
-1. `lib/libraries.ts` — 라이브러리 메타데이터 모델과 초기 2개 항목
-   ```ts
-   export type Library = {
-     id: string;
-     slug: string;
-     npmName: string;
-     githubUrl: string;
-     status: 'live' | 'coming-soon';
-     name: { ko: string; en: string };
-     tagline: { ko: string; en: string };
-     highlights: { ko: string[]; en: string[] };
-   };
-   export const libraries: Library[] = [/* floating-components, js-te */];
-   ```
-2. `components/site/Header.tsx` — 좌측 사이트명 (홈 링크), 우측 `<LocaleSwitcher>` (현재 경로의 locale 만 바꿔 이동)
-3. `components/site/Footer.tsx` — GitHub 프로필 / 저작권 한 줄
-4. `components/site/LocaleSwitcher.tsx` — 헤더 우측의 **드롭다운 버튼** (현재 locale 을 라벨에 표시: 예 `🌐 KO ▾`). 클릭 시 `ko` / `en` 메뉴 노출 → 선택 시 (a) 쿠키 `NEXT_LOCALE` 저장, (b) `useRouter` + `usePathname` 으로 현재 경로의 locale 세그먼트만 치환해 이동. 메뉴 외부 클릭 시 닫힘, ESC 로도 닫힘. 접근성: `aria-haspopup="menu"`, 키보드 화살표로 항목 이동.
-5. `components/site/LibraryCard.tsx` — name, tagline, npm/GitHub 보조 링크, 시연 버튼 (status 가 `coming-soon` 이면 비활성 + "곧 출시" 배지)
-6. `app/[locale]/layout.tsx` 에 `<Header>` / `<Footer>` 배치
-7. `app/[locale]/page.tsx` — `getDictionary(locale)` 로 hero 문구 가져오고, `libraries.map` 으로 카드 그리드 렌더
-
-**산출물**:
-- `/ko`, `/en` 모두 헤더/푸터 표시
-- 언어 토글 동작 (현재 경로의 locale 세그먼트만 바뀌어야 함)
-- 라이브러리 카드 2장 렌더 (시연 버튼은 다음 Phase 에서 만드는 라우트로 링크 — 이 시점에는 404 여도 OK)
-
-**검증**:
-- `npm run dev` 후 양 언어로 카드 표시 확인
-- 모바일 폭(375px) 에서도 그리드 깨지지 않음
-- `npm run build` / `tsc --noEmit` 통과
-
-**완료 메모**: 2026-05-05 lib/libraries.ts + Header/Footer/LocaleSwitcher/LibraryCard + 사전 키 확장 + 랜딩 페이지 카드 그리드. tsc/lint/build 통과, /ko·/en 양쪽 hero/footer/카드 모두 렌더 확인. `<html lang>` 동적 처리는 Phase 6 으로 미룸 (옵션 1 권장: proxy → x-locale 헤더 → 루트 layout headers() 읽기).
+**완료 메모**: 2026-06-08 `runner/types.ts` 에 `TestMode = TestCase['mode']` (browser entry 가 0.9.0 에서 `TestMode` 를 직접 re-export 안 함 — 인덱스 액세스로 우회. 추후 라이브러리에 PR 가능). `TestNodeStatus` 4종 + `TestLeafNode.mode` + `RunResult.{skipped,todo}` 추가. `runner/index.ts` 는 `LibraryCollectedTest` 자체 인터페이스 제거하고 라이브러리 `TestCase` 직접 사용. `applyOnlyDemotion` 패스 추가 (라이브러리 룰 testManager.js:141-144 와 동일, 라이브러리 객체 mutation 없이 사본 처리). 실행 루프 mode 분기 (todo/skip 은 fn 미호출). `runWithWorker.ts` 의 worker.onerror fallback 객체에도 `skipped/todo: 0` 추가. tsc 통과.
 
 ---
 
-## Phase 3 — floating-components 시연 페이지
+## Phase 3 — Results UI: 상태 4종 + 카운터 4종
 
-**목적**: 라이브러리의 핵심 기능(드래그 리사이즈 / 패널 재배치 / 동적 분할·추가) 을 사용자가 직접 만져볼 수 있는 페이지를 만듭니다.
+**목적**: 새 상태와 카운터를 결과 패널에 시각적으로 표시합니다.
 
-**작업 내용**:
-1. `npm i @dannysir/floating-components` (peer: react>=18 충족)
-2. `components/floating-demo/FloatingDemo.tsx` (`'use client'`)
-   - 초기 트리 정의 (참조: `floating-demo/src/App.tsx` 의 패턴)
-   - `useLayoutTree(initial)` 사용 → `tree`, `resizeBorder`, `movePanel`, `splitPanel`, `insertPanel`, `removePanel`
-   - `<TreeLayout tree={tree} onResizeBorder={resizeBorder} onMovePanel={movePanel} ...>` 렌더
-   - 패널 콘텐츠는 색상 + 라벨이 들어간 단순 div
-3. `components/floating-demo/Toolbar.tsx`
-   - "Split horizontal", "Split vertical", "Add panel", "Reset" 버튼
-4. `components/floating-demo/TreeInspector.tsx` — 우측(또는 하단)에 현재 `tree` 상태를 JSON 으로 실시간 표시 (학습용)
-5. `app/[locale]/libraries/floating-components/page.tsx` — 위 컴포넌트들을 배치
-   - 페이지 자체는 서버 컴포넌트, 시연만 `'use client'` 자식
+**작업 내용**
 
-**산출물**:
-- `/ko/libraries/floating-components`, `/en/...` 모두 동작
-- 드래그 리사이즈, 패널 헤더 드래그 → 다른 패널 위로 드롭 시 재배치 동작
-- 툴바 버튼 동작
-- 트리 상태 인스펙터가 변경마다 갱신
+1. `Results.tsx` `Tree` 컴포넌트의 leaf 렌더에서 status 4종 대응:
+   - `pass` → `text-tertiary` + `✓` (기존)
+   - `fail` → `text-error` + `✗` (기존)
+   - `skipped` → `text-on-surface-variant/60` + `↷` (또는 `⊘`). 톤 다운
+   - `todo` → `text-secondary` + `☐` + 점선 보더는 leaf 박스 자체에 적용 안 함 (텍스트만 톤). 일관성 우선
+   - duration 표시는 pass/fail 만. skipped/todo 는 (실행 안 했으므로) 표시 안 함
+2. PASS/FAIL 배지 로직: `passOk = state.result.failed === 0 && !state.result.runtimeError`. **skipped/todo 만 있는 경우도 PASS.** 변경 없음
+3. summary 라인: 4 카운터 + ms 로 확장. 새 문자열은 i18n 에서 처리하지만 Results 의 `formatSummary` 가 4개 키 (`{{passed}}`, `{{failed}}`, `{{skipped}}`, `{{todo}}`, `{{ms}}`) 를 replace 하도록 시그니처 변경
+4. **모든 클래스명은 literal** — 동적 보간 금지 (Tailwind purge 회피)
 
-**검증**:
-- 브라우저에서 직접 인터랙션 (마우스 드래그 / 드롭 / 버튼 클릭)
-- `npm run build` 통과 (특히 SSR 측 `window`/`document` 참조 에러 없는지)
+**산출물**
 
-**완료 메모**: 2026-05-06 @dannysir/floating-components ^0.2.4 도입 + FloatingDemo/Toolbar/TreeInspector/DemoPanel + i18n floating.* 키. 시연 중 라이브러리 루트 div 가 부모 크기를 못 채우는 이슈 발견 → 라이브러리 본체에 `width/height: 100%` 기본값(+ prop override) 도입해 0.2.4 publish 로 해결. 선택 표시는 inset box-shadow + 항상 렌더되는 뱃지(visibility 토글)로 사이즈 흔들림 제거. tsc/lint/build 통과. 디자인 톤 정돈은 Phase 6 으로 미룸.
+- 업데이트된 `Results.tsx`
+
+**검증**
+
+- `npx tsc --noEmit`, `npm run lint` 통과
+- (Phase 4·5 이후) 브라우저에서 4가지 상태가 모두 의도된 색·아이콘으로 렌더
+
+**완료 메모**: 2026-06-08 `Results.tsx` 에 `leafVisual` / `describeVisual` 헬퍼로 status 4종 비주얼 분기. pass `✓` tertiary / fail `✗` error / skipped `⊘` on-surface-variant/50 / todo `☐` secondary. duration 표시는 pass/fail 한정. `formatSummary` 4 카운터 + ms 시그니처로 확장. PASS/FAIL 배지 로직은 `failed === 0 && !runtimeError` 그대로 — skipped/todo 만 있어도 PASS. tsc 통과. (브라우저 시각 검증은 Phase 6.)
 
 ---
 
-## Phase 4 — js-te 미니 러너 (핵심 로직)
+## Phase 4 — examples 3종 추가 (only / skip / todo)
 
-**목적**: 브라우저에서 사용자가 작성한 JS 코드를 받아 `describe`/`test`/`expect`/`fn` 을 평가하고 결과 트리를 반환하는 자체 러너를 구현합니다. UI 는 다음 Phase 에서.
+**목적**: 사용자가 데모에서 신기능을 한 번에 시연할 수 있는 예제를 제공합니다.
 
-**작업 내용**:
-1. `components/js-te-demo/runner.ts`
-   - `runUserCode(source: string): RunResult` 동기 인터페이스
-   - 글로벌 주입: `describe`, `test` (`test.each` 포함), `beforeEach`, `expect`, `fn`
-   - matchers 13종 (`toBe`, `toEqual` deep, `toThrow`, `toBeTruthy`, `toBeFalsy`, `toContain`, `toBeInstanceOf`, `toBeNull`, `toBeUndefined`, `toBeDefined`, `toHaveBeenCalled`, `toHaveBeenCalledWith`, `toHaveBeenCalledTimes`) + `.not` 체이닝
-   - `fn(impl?)` — `mockImplementation`, `mockReturnValue`, `mockReturnValueOnce`, `mockClear`, `mock.calls` 추적
-   - 트리 수집: `{ id, name, status: 'pass'|'fail', error?, children }`
-   - 사용자 코드 평가: `new Function('describe','test','beforeEach','expect','fn', source)(...injected)`
-   - `console.log` 캡처 → 결과에 동봉
-   - `mock(` 패턴 감지 → 결과에 `usedNodeOnlyMock: true` 플래그
-2. (Phase 5 에서 사용할) Web Worker 변형 준비 — `runner.worker.ts`. 메인 스레드 fallback 도 export. *(Phase 4 에서는 메시지 핸들러 스캐폴드만 작성. timeout / terminate 는 Phase 5.)*
+**작업 내용**
 
-**산출물**:
-- `runner.ts` 단독으로 호출 가능 (UI 없이도 단위 시나리오 실행 가능)
-- 임시 검증 페이지 `app/[locale]/runner-check/page.tsx` 에서 하드코딩한 코드 문자열 5종(통과/실패/throw/fn/test.each) 을 돌려 결과를 console 또는 화면에 출력. **이 페이지는 Phase 5 끝에서 삭제.** *(Next.js 의 `_` prefix private 폴더 규칙 때문에 PLAN 초안의 `__runner-check` 대신 `runner-check` 로 작성)*
+1. `components/js-te-demo/examples.ts`:
+   - `ExampleId` 유니온에 `'only' | 'skip' | 'todo'` 추가
+   - 3개 예제 추가. `readOnly: false` 로 모두 실행 가능
+   - `exampleOrder` 에 적절한 위치 (예: hello → matchers → each → fn → **only → skip → todo** → mock) 로 삽입
 
-**검증**:
-- 검증 페이지에서 5종 시나리오 모두 의도대로 동작 (통과·실패·error 메시지 적절)
-- `tsc --noEmit` 통과
+2. 각 예제 source 코드 가이드라인 — **`.only` 의 file-scoped demotion 효과를 명확히 보여주기 위해 반드시 normal 테스트 1개 이상을 함께 포함**:
 
-**완료 메모**: 2026-05-06 `components/js-te-demo/runner/{types,deepEqual,createMockFn,matchers,collector,index,runner.worker}.ts` 작성. `runUserCode(source)` 가 describe-children 트리, 13 matcher (with `.not`), `fn(impl?)` mock helpers, `test.each` `%s/%o` 치환, beforeEach 스코프, console.log 캡처, `mock(` 정규식 감지를 모두 처리. Web Worker 진입점은 스캐폴드만 (5초 타임아웃 / terminate 는 Phase 5). 임시 검증 페이지는 `app/[locale]/runner-check/{page,RunnerCheck}.tsx` (Next.js 의 `_` prefix private 폴더 회피 위해 PLAN 의 `__runner-check` 대신 `runner-check` 사용. Phase 5 끝에서 삭제). tsc/lint/build 통과, /ko·/en 양쪽 6개 시나리오 (pass / fail / throw / fn / each / mock-detection) 의도대로 결과 출력 확인.
+   - **`only`**: `describe('focus', () => { test('this is skipped', ...); test.only('only this runs', ...); })`. 결과 트리에서 첫 테스트가 skipped 표시되는 것을 시연
+   - **`skip`**: `test('runs normally', ...); test.skip('this is pending', () => { /* TODO */ });`. skip 의 의미와 동작 시연
+   - **`todo`**: `test('runs normally', ...); test.todo('write the empty-list edge case');`. todo 의 시그니처 (fn 인자 없음) 와 표시 시연
 
----
+3. 각 예제는 짧고 (10줄 내외) 의도가 자명하게
 
-## Phase 5 — js-te 시연 페이지 UI
+**산출물**
 
-**목적**: Phase 4 의 러너를 둘러싼 사용자 인터페이스 (에디터 / 예제 셀렉터 / 결과 패널 / 실행 버튼) 를 완성합니다.
+- 업데이트된 `examples.ts`
 
-**작업 내용**:
-1. `npm i @uiw/react-codemirror @codemirror/lang-javascript`
-2. `components/js-te-demo/examples.ts` — 5종 예제
-   - `'hello'` (첫 테스트), `'matchers'`, `'each'`, `'fn'`, `'mock'`(Node 전용 — readonly)
-3. `components/js-te-demo/Editor.tsx` — CodeMirror, JavaScript 모드, value/onChange
-4. `components/js-te-demo/Results.tsx` — describe/test 트리 (들여쓰기, 통과 녹색·실패 빨강·에러 메시지·콘솔 캡처)
-5. `components/js-te-demo/JsTeDemo.tsx` (`'use client'`)
-   - 좌측: 에디터 + 상단 예제 셀렉터 + "Run" 버튼
-   - 우측: 결과 패널
-   - 모킹 예제 선택 시 에디터 readonly + 실행 비활성 + 안내 배너
-   - Web Worker 안에서 러너 실행 + 5초 타임아웃 → terminate. 사용자에게 "무한 루프 의심" 안내. Worker 미지원 fallback 은 메인 스레드.
-6. `app/[locale]/libraries/js-te/page.tsx` — 위 컴포넌트 배치
-7. Phase 4 의 임시 검증 페이지 삭제
+**검증**
 
-**산출물**:
-- `/ko/libraries/js-te`, `/en/...` 모두 동작
-- 5종 예제 토글 가능, mock 예제는 실행 불가 안내 정상 표시
-- 통과/실패가 시각적으로 구분, 에러 메시지가 보임
-- 무한 루프 코드(`while(true){}`) 입력 시 5초 후 타임아웃
+- `JsTeDemo.tsx` 의 셀렉터에서 3개 예제가 노출되고 클릭 시 에디터에 로드되는지
+- 각 예제 Run 시 의도된 카운터·트리 상태가 나오는지
 
-**검증**:
-- 브라우저에서 직접 코드 작성 → 실행 → 결과 확인
-- `npm run build` 통과
-
-**완료 메모**: 2026-05-16 `components/js-te-demo/{examples,Editor,Results,JsTeDemo,runWithWorker}.tsx` + `app/[locale]/libraries/js-te/page.tsx` + i18n `jste.*` 키. `@uiw/react-codemirror` + `@codemirror/lang-javascript` 도입. Worker 5초 타임아웃 (UI 레이어 `setTimeout` + `worker.terminate()`) 동작, mock 예제 readonly + Run 비활성 + 배너 정상. Phase 4 임시 검증 페이지 (`app/[locale]/runner-check/`) 삭제. tsc/lint/build 통과. /ko·/en 양쪽 hello/matchers/each/fn 예제 통과, 무한 루프 입력 시 ~5초 후 타임아웃 메시지 + UI 복구 확인.
+**완료 메모**: 2026-06-08 `examples.ts` 에 only/skip/todo 3개 추가 (모두 `readOnly: false`). only 예제는 `describe('focus')` 내 normal + `.only` 로 file-scoped demotion 효과 시연. skip 은 normal + `.skip`, todo 는 normal + `.todo` 2개. `ExampleId` 유니온·`exampleOrder` 갱신 (hello/matchers/each/fn/**only/skip/todo**/mock). 브라우저 시각 검증은 Phase 6.
 
 ---
 
-## Phase 6 — 번역 사전 채우기 + 디자인 정돈 + README
+## Phase 5 — i18n 키 추가 (ko/en 동시)
 
-**목적**: 한국어/영어 사전을 채우고, Tailwind 로 전체 시각적 톤을 정돈하고, 프로젝트 README 에 새 라이브러리 추가 절차를 문서화합니다.
+**목적**: 새 상태·예제·summary 가 양쪽 로케일에서 동일하게 동작.
 
-**작업 내용**:
-1. `lib/i18n/{ko,en}.json` — 헤더/푸터/랜딩 hero/카드 라벨/시연 페이지 UI 라벨/결과 라벨 모두 채우기. 사용자 코드와 예제 코드 자체는 번역 X.
-2. Tailwind 디자인 정돈 — 색상 팔레트, 타이포 스케일, 카드/버튼 일관성, 모바일 반응형 (375px / 768px / 1280px 검수)
-3. 다크 모드는 이번 범위에서 제외 (확장 시 별도 작업)
-4. **`<html lang>` 동적 처리** — 현재 루트 `app/layout.tsx` 가 `lang="ko"` 로 고정. App Router 제약상 루트 레이아웃이 `params` 를 못 받음. 권장 옵션: `proxy.ts` 에서 응답 헤더 `x-locale` 를 설정 → 루트 레이아웃에서 `headers()` 로 읽어 `<html lang>` 에 반영. (Phase 2 에서 옵션 3 — 고정 — 으로 미뤄둔 항목)
-5. `README.md` 작성:
-   - 프로젝트 소개
-   - 로컬 개발 / 빌드 / 린트 / 타입체크 명령
-   - **새 라이브러리 추가 절차** (= `lib/libraries.ts` 항목 추가 → 시연 페이지 추가 → 번역 키 추가)
-   - 미니 러너의 한계 (모듈 모킹은 모사 불가)
-6. (선택) `eslint-config-airbnb-typescript` 의 ESLint 9 flat config 호환 도입 검토 — CLAUDE.md 코드 스타일을 정식 린팅으로 자동 강제
+**작업 내용**
 
-**산출물**:
-- 한·영 모두 빠진 텍스트 없음
-- 모바일에서 레이아웃 깨짐 없음
-- README 만 보고도 새 라이브러리 추가 가능
+1. `lib/i18n/ko.json`, `lib/i18n/en.json` 양쪽에 동시에 추가:
 
-**검증**:
-- 양 locale 페이지 직접 순회 점검
-- `npm run build` / `lint` / `tsc --noEmit` 모두 통과
+   - `jste.examples.only` / `.skip` / `.todo` — 셀렉터 라벨
+   - `jste.results.skipped` — Skipped 뱃지·카운터 라벨
+   - `jste.results.todo` — Todo 뱃지·카운터 라벨
+   - `jste.results.summary` — 4 카운터 + ms 로 변경 (기존 키 갱신)
 
-**완료 메모**: 2026-05-20 i18n 사전은 Phase 2~5 에서 이미 완비돼 있어 누락/하드코딩 0건 확인(검증만). `<html lang>` 동적화 — `proxy.ts` 가 locale 포함 요청에 `x-locale` 응답 헤더(`LOCALE_HEADER`, config.ts) 를 실어 보내고 루트 `app/layout.tsx` 가 `await headers()` 로 읽어 반영(이로 인해 전 라우트가 SSG→동적 ƒ 로 전환 — 데모 사이트라 무방). README 전면 재작성(소개/개발·검증 명령/구조/새 라이브러리 추가 절차/미니 러너 한계). 디자인은 기존 cream/forest 팔레트가 일관돼 추가 정돈 불필요 — desktop·mobile(375) × ko·en 3페이지 브라우저 검수 통과, 콘솔 에러 0, js-te 러너 npm 0.7.3 으로 "통과 1·실패 0" 동작 확인. tsc/lint/build 통과. (eslint-airbnb 정식 도입은 보류.)
+2. summary 템플릿 예시:
+   - ko: `"통과 {{passed}} · 실패 {{failed}} · 건너뜀 {{skipped}} · 예정 {{todo}} · {{ms}}ms"`
+   - en: `"{{passed}} passed · {{failed}} failed · {{skipped}} skipped · {{todo}} todo · {{ms}}ms"`
 
----
+3. **두 파일을 동시에 편집한 뒤 키 셋 diff 로 누락 확인** (`jq 'paths(scalars) | join(".")'` 또는 단순 grep). i18n 누락 시 화면에 빈 문자열 표시되는 게 알려진 함정
 
-## Phase 7 — GitHub push + Vercel 배포
+**산출물**
 
-**⚠️ 사용자 사전 허락 필수** (외부 공개 동작)
+- 업데이트된 ko/en 사전
 
-**작업 내용**:
-1. (필요 시) GitHub 저장소 `dannysir-labs` 생성
-2. 첫 커밋 (사용자 허락 후) → push
-3. Vercel 프로젝트 연결 (사용자가 직접 진행하거나, `vercel` CLI 안내)
-4. 배포 후 preview URL 에서 양 locale + 두 시연 페이지 동작 확인
-5. (선택) 커스텀 도메인 연결
+**검증**
 
-**산출물**:
-- `https://dannysir-labs.vercel.app/` 접속 가능
-- 첫 빌드 성공
+- `npm run lint`, `npm run build` 통과
+- /ko, /en 양쪽에서 새 라벨이 모두 정상 표시
 
-**완료 메모**: 2026-05-21 GitHub 저장소(`dannysir/dannysir-labs`)는 이미 존재·main 동기화 완료 상태였고, Vercel 대시보드 Import 방식으로 사용자가 직접 배포(Framework Next.js 자동 감지). 발급 도메인 = PLAN 가정대로 `https://dannysir-labs.vercel.app`. 배포 검증: `/` → `/ko` 307, `/ko`·`/en`·floating(시연/readme/api)·js-te·en/js-te/api 등 8개 경로 모두 200 (Node fetch 확인). 다음 = Phase 8 (이 URL 을 두 라이브러리 저장소 `homepage` 에 반영).
+**완료 메모**: 2026-06-08 `lib/i18n/dictionaries.ts` 의 `jste.examples` 타입에 only/skip/todo 추가, ko/en.json 양쪽에 라벨 동시 추가 (".only — 포커스" / ".only — focus" 등). `jste.results.summary` 를 4 카운터 + ms 로 갱신 ("통과 X · 실패 Y · 건너뜀 Z · 예정 W · Vms" / "X passed · Y failed · Z skipped · W todo · Vms"). 별도 `results.skipped/todo` 키는 summary 안에 라벨이 포함돼 사용처가 없어 추가하지 않음. tsc 통과 — `satisfies Dictionary` 양쪽 OK.
 
 ---
 
-## Phase 8 — 라이브러리 저장소에 `homepage` 필드 추가 PR
+## Phase 6 — 검증 + 메모리 동기화 + PR
 
-**⚠️ 사용자 사전 허락 필수** (외부 공개 동작 — 별도 저장소에 PR)
+**목적**: 표준 검증 통과 후 사용자 사전 허락 받고 PR 까지.
 
-**작업 내용**:
-1. `dannysir/floating-component` 저장소의 `package.json` `homepage` →
-   `https://dannysir-labs.vercel.app/ko/libraries/floating-components` (또는 영어 버전 — 사용자와 상의)
-2. `dannysir/js-te-package` 저장소의 `package.json` `homepage` 갱신
-3. 각각 별도 PR / 변경사항 + 사용자 검토 후 머지
-4. 다음 npm publish 부터 npm 페이지의 "Homepage" 링크가 본 사이트로 연결됨
+**작업 내용**
 
-**산출물**:
-- 두 저장소 모두 `homepage` 필드 갱신 PR
-- (다음 publish 시) npmjs.com 의 패키지 페이지에서 본 사이트로 이동 가능
+1. **표준 검증 3종**: `npx tsc --noEmit`, `npm run lint`, `npm run build` — 셋 다 통과
+2. **브라우저 스모크**:
+   - dev 서버 (`preview_start`) 실행
+   - /ko, /en 각각 `/libraries/js-te` 에서:
+     - 기존 5개 예제 (hello/matchers/each/fn/mock) 모두 동작 변화 없는지 (regression)
+     - 새 3개 예제 (only/skip/todo) 각각 의도된 상태·카운터로 표시되는지
+     - summary 4 카운터 라인 표시 확인
+   - 콘솔 에러 0 확인
+3. **메모리 갱신**:
+   - `~/.claude/projects/-Users-san-dannysir-labs/memory/project_js_te_mini_runner_rationale.md` 에 0.9.0 전환·shim 삭제·모드 처리 방식 (Option B) 한두 줄 추가
+4. **README 갱신**: "미니 러너 한계" 섹션의 0.7.3 언급을 0.9.0 으로. 새 시연 한 줄 언급 (선택)
+5. **PLAN 사본 동기화**: 이 파일과 `/Users/san/.claude/plans/reflective-hatching-sutton.md` 가 동일한지 마지막 확인
+6. **사용자 사전 허락 받고**:
+   - 커밋 (작업 단위별 분리 또는 한 묶음)
+   - 브랜치 `feat/jste-0.9-only-skip-todo` push
+   - PR 생성. 제목·본문 초안 미리 제시
 
-**완료 메모**: 2026-05-21 사용자 결정 = URL **en 고정** + **각 저장소 main 직접 push**(PR 아님). `dannysir/floating-component` homepage `…/#readme` → `https://dannysir-labs.vercel.app/en/libraries/floating-components` (커밋 683e0f5). `dannysir/js-te-package` 는 homepage 부재 → `https://dannysir-labs.vercel.app/en/libraries/js-te` 신규 추가 (커밋 8f2eae7). 둘 다 main push 완료. 다음 npm publish 부터 패키지 페이지 Homepage 링크가 본 사이트로 연결됨. (현재 사이클 Phase 0~11 전부 완료.)
+**산출물**
 
----
+- 모든 검증 통과
+- PR 한 건
 
-## Phase 9 — 다크-테크 전면 리디자인 (Stitch 기반)
+**진행 메모 (대기 중)**: 2026-06-08 표준 검증 3종 (tsc/lint/build) 모두 통과. 단 브라우저 스모크에서 회귀 발견 — 라이브러리 0.9.0 의 `dist/browser.mjs` 1번 라인이 `import { fileURLToPath } from 'node:url'` 을 포함 (0.8.0 의 `--testLocation` 도입 시 `SELF_FILE = fileURLToPath(import.meta.url)` 가 그대로 browser 빌드에 번들됨). Turbopack worker 가 이 Node 빌트인을 풀지 못해 silent hang → 모든 예제가 5초 타임아웃으로 실패. 본 사이트 측에서 우회 불가. 라이브러리 0.9.1 patch ship 대기 중 (별도 세션 spawn_task 로 분리 — `js-te-package` 의 testManager.js 의 SELF_FILE 계산을 환경별 분기). 0.9.1 ship 후 본 세션에서 `^0.9.0` → `^0.9.1` bump, 브라우저 스모크 재개, 메모리·README 갱신, 사용자 사전 허락 받고 commit/push/PR. 한편 본 사이클 진행 중 무관한 lint 회귀 발견 — `FloatingDemo.tsx:177` 의 `setState in effect` 위반. main 에도 존재하는 사전 위반이라 한 줄 `eslint-disable-next-line react-hooks/set-state-in-effect` 로 임시 통과시키고 본질적 effect 리팩토링은 별도 fix 태스크로 spawn (사용자 결정).
 
-**목적**: 사용자가 Stitch 로 생성한 다크-테크 디자인(`/tmp/stitch_design/`)을 사이트 전체에 적용. 라이트 cream/forest → 딥 네이비 + 네온 + 글래스모피즘. 텍스트는 우리 프로젝트(실제 라이브러리)에 맞게 유지.
+**진행 메모 (2026-06-13)**: 0.9.1 ship 확인 → `node:url` 회귀 해결 (기존 예제 hello/matchers/each/fn 전부 PASS). 그러나 새 only/skip/todo 는 여전히 FAIL — **별개의 라이브러리 버그** 발견: browser entry (`js-te-package/browser.js`) 가 `test.only/.skip/.todo`·`describe.only/.skip` 부착을 누락 (메인 `index.js` 엔 있음 — 0.9.0 모디파이어 추가 시 browser 만 빠뜨림). 데모 러너가 browser entry 의 `test` 를 그대로 주입하므로 `test.only is not a function` 런타임 에러. **사용자 결정 = 우회 대신 라이브러리 패치 0.9.2.** 사용자가 `browser.js` 에 모디파이어 5줄 추가 + 빌드 + npm link 완료. 본 세션에서 패치 사전검증: npm link / `npm pack --no-save` tarball 둘 다 Turbopack symlink·hidden-lockfile 트랩으로 실패 → **오버레이**(레지스트리 0.9.1 깨끗이 설치 후 패치 `dist/browser.mjs`+map+`browser.js` 만 node_modules 에 cp)로 검증 성공: only(통과1·건너뜀1)/skip(통과1·건너뜀1)/todo(통과1·예정2) 전부 PASS, 트리 `⊘`(skipped)·`✓`(pass) 정상 렌더. **다음 액션 (0.9.2 publish 후 새 세션)**: `^0.9.1`→`^0.9.2`, 레지스트리 clean `npm install`(오버레이 제거), /ko·/en 전체 스모크, 메모리·README 갱신, 사용자 사전 허락 받고 commit/push/PR. **현재 dannysir-labs 상태**: `package.json` `^0.9.1`(← `^0.9.0` bump, 미커밋), `node_modules/@dannysir/js-te` 는 임시 오버레이. 상세는 메모리 `project_jste_09_browser_entry_bug.md`.
 
-**작업 내용 (완료)**:
-1. `app/globals.css` — 다크 팔레트 `@theme` 토큰(background/surface\*/on-surface/outline/primary cyan/secondary purple/tertiary emerald/error/code-bg), `--font-mono` = next/font JetBrains Mono var, `.glass-card`/`.glass-card-hover`/`.glow-text`/`animate-float` 유틸.
-2. 사이트 셸 — Header(다크 nav + mono 네브 링크), Footer(다크 + 이메일/GitHub), LocaleSwitcher(다크 드롭다운), LibraryCard(글래스 카드 + highlight 칩).
-3. 랜딩 `app/[locale]/page.tsx` — hero(배지+글로우 타이틀+CTA 2버튼+배경 글로우) → 라이브러리 글래스 bento 2개 → **피처 트리오 3개**(브라우저 실행/실제 npm 패키지/오픈소스) → **"이 사이트에 사용한 기술" 로고 월**(Next.js/React/TS/Tailwind/Claude Code, muted→hover) → install CTA(`CopyCommand` 클라이언트 컴포넌트, max-w-5xl). i18n `landing.*` 키 추가(heroBadge/tryFloating/tryJsTe/features.*/builtWith/ctaTitle/ctaSubtitle, ko·en).
-4. 데모 컴포넌트 — DemoPanel 네온 팔레트, FloatingDemo TreeLayout 색, Toolbar/TreeInspector/JsTeDemo/Results 다크 토큰, Editor CodeMirror `theme="dark"`, 시연 페이지 헤더 색 + max-w-6xl 정렬. (※ 시연 페이지 *레이아웃/디자인 정돈*은 Phase 10 으로 분리.)
-5. 폰트/아이콘 — JetBrains Mono 는 `next/font/google`(Material Symbols 는 next/font 미지원이라 제외), 아이콘은 `components/site/icons.tsx` 인라인 SVG(Sparkle/ArrowRight/Copy/Check/Bolt/Package/Code + 브랜드 로고 React·Next·TS·Tailwind·Claude).
-6. 디테일 — Header 활성 네브 표시(`HeaderNav` 클라이언트, `usePathname`, 시안+언더라인, 기본 bold/활성 extrabold), 로고·네브 baseline 정렬, LibraryCard 전체 클릭(stretched-link), Footer 이메일`|`GitHub 구분자.
+**진행 메모 (2026-06-13, 0.9.2 적용)**: 0.9.2 publish 확인 (`npm view` latest=0.9.2, browser.mjs 에 `test.only/.skip/.todo`·`describe.only/.skip` 부착 확인). dannysir-labs 정리 — `package.json` `^0.9.1`→`^0.9.2`, 오버레이 node_modules 제거 후 레지스트리 clean install (symlink 아닌 정규 dir, lockfile 0.9.2), 전역 npm link `@dannysir/js-te` 제거(`npm rm -g`). 표준 검증 3종 (tsc/lint/build) 모두 통과. 브라우저 스모크 (/ko·/en): only(통과1·건너뜀1)/skip(통과1·건너뜀1)/todo(통과1·예정2) 전부 PASS, 트리 `⊘`(skipped)·`✓`(pass)·`☐`(todo) 정상, 기존 hello/matchers/each/fn 회귀 없음, 콘솔 에러 0. 메모리(`project_js_te_mini_runner_rationale`, `project_jste_09_browser_entry_bug`)·README 갱신 완료. 사용자 허락 받고 **로컬 단일 feat 커밋 완료** (Phase 1~6 작업 트리 전체를 한 커밋으로). **남은 것: push/PR — 사용자 추가 지시 대기.** PR merge 시 체크박스 [x].
 
-**완료 메모**: 2026-05-20 전체 다크-테크 전환 완료 (메인/랜딩 디자인 확정). **함정 2건**: (1) 외부 `@import url(...)` 폰트를 `@import "tailwindcss"` 뒤에 두면 Lightning CSS 가 "@import must precede all rules" 로 깨짐 → 폰트는 next/font 로 이동. (2) `Material_Symbols_Outlined` 는 `next/font/google` 미export → 아이콘 폰트 버리고 인라인 SVG. **Turbopack 함정**: CSS 파싱 에러가 한 번 나면 HMR 이 stale 캐시로 고착 → `.next` 삭제 후 dev 재시작 필요(여러 번 발생). tsc/lint/build(경고 0) 통과, /ko·/en × 랜딩·floating·js-te × desktop·mobile 브라우저 검수 통과, js-te 러너 다크 결과 정상, 콘솔 에러 0. **다음**: 시연 페이지 2개의 디자인 정돈 = Phase 10.
-
----
-
-## Phase 10 — 시연 페이지 2개 디자인 정돈
-
-**목적**: Phase 9 에서 다크 토큰으로 색만 맞춰둔 두 시연 페이지(`/libraries/floating-components`, `/libraries/js-te`)의 **레이아웃/디자인을 메인 페이지 수준으로 정돈**. (다음 세션에서 진행 — 사용자가 메인 디자인 확정 후 시연 페이지로 넘어가기로 함, 2026-05-20.)
-
-**대상 (예상)**:
-- 시연 영역 컨테이너/헤더의 글래스·여백·타이포 톤을 랜딩과 일관되게.
-- floating: 패널/툴바/트리 인스펙터 배치·간격, 데모 영역 프레임.
-- js-te: 에디터/결과 패널 비율·프레임, Run 버튼·예제 셀렉터 정돈.
-- 새 디자인 참고가 있으면 그에 맞춤(메인처럼 Stitch 산출물 활용 가능).
-
-**완료 메모(Phase 10)**: 2026-05-21 Stitch 3차 산출물(`stitch_library_showcase_lab-3`: `_2`=floating, `js_testing`=js-te, `_1`=docs 참고용) 기반으로 두 시연 페이지 디자인 정돈. 사이트 공통 크롬(Header/Footer)·docs 사이드바는 차용 안 하고 **콘텐츠 영역만** 디자인 언어 적용. 공통: 페이지 헤더에 모노 eyebrow(heroBadge)+시안 글로우 모노 타이틀, 컨테이너 max-w-7xl. **floating**: 캔버스를 glass-card 프레임+도트그리드 radial 배경(TreeLayout `backgroundColor="transparent"`+DemoPanel 반투명 `${accent}0f`)으로, Toolbar 를 캔버스 헤더(아이콘 버튼+선택 pill+"라이브 캔버스 활성" pulse)로 재구성, 우측 칼럼은 TREE_STATE(glass)+**실제 동작하는 활동 로그**(resize/move 콜백 래핑+split/add/reset 로깅, resize 연속 dedupe, 최신순 50개). **js-te**: glass 프레임 안에 컨트롤 바(파일 라벨+예제 셀렉터+Clear+Run play 아이콘)+`에디터 | 터미널` 2-페인(`#010409`/surface-lowest), 터미널 헤더에 상태 배지(준비됨/실행 중/통과/실패), Results 를 PASS·FAIL 배지+요약+트리+깜빡이는 `❯` 커서 터미널 스타일로, Clear 실동작. 커버리지 표·패널 속성 폼은 우리 기능에 없어 제외(가짜 안 만듦). 아이콘 8종 인라인 SVG 추가(Play/Trash/SplitSquare/Refresh/FileCode/History/DataObject + DemoPanel grip). i18n `floating.{liveCanvas,activityLog.*}`·`jste.{clear,fileName,editorLabel,terminalLabel,status.*}` ko·en 추가. tsc/lint/build 통과(lint: useState 초기화 ref 접근 경고 → INIT 엔트리 인라인 생성으로 해결). /ko·/en × floating·js-te × desktop·mobile 브라우저 검수 통과, 콘솔 에러 0, 분할/추가→로그 기록·실행→PASS·Clear·mock readonly 동작 확인. (현재 사이클 모든 Phase 완료 — 남은 7·8 은 외부 공개 동작이라 사용자 진행 대기.)
+**완료 메모**: 
 
 ---
 
-## Phase 11 — 라이브러리 페이지 재구성: 사이드바(설명/API/시연) + 저장소 마크다운 문서 연동
+## 검증 명령어 (작업 단위 마무리 표준)
 
-**목적**: 각 라이브러리를 하나의 "허브" 페이지로 묶고, 좌측 사이드바로 **설명(README) / API 문서 / 시연 화면** 3개 뷰를 전환하게 한다. 문서 원본은 **라이브러리 저장소가 유일한 출처**이며, 이 사이트는 raw 마크다운 URL 을 빌드/요청 시 fetch 해 렌더링만 한다(사본 0개). Stitch 산출물 `_1`(docs/Getting Started 레이아웃) 톤 참고.
-
-**확정된 결정 사항(2026-05-21 사용자 합의)**:
-- **fetch ref = `main` 최신** (배포 npm 버전 아님, 데모 사이트라 최신이면 충분. 버전 정확성 필요해지면 추후 태그 핀으로 전환 = B안).
-- **사이드바 = 3-뷰 전환** (README H2 자동 TOC 아님): `설명` / `API 문서` / `시연 화면`. 클릭 시 해당 화면 표시.
-- **갱신 = ISR 자동** (`fetch(url, { next: { revalidate: 3600 } })`). 라이브러리 push 후 재배포 없이 주기적 최신화.
-- 문서 출처(모두 공개 저장소 raw, ko/en 이중):
-  - floating 설명: `…/dannysir/floating-component/main/README.ko.md` · `/README.md`
-  - floating API: `…/dannysir/floating-component/main/doc/API.ko.md` · `/doc/API.md`  *(주의: 폴더명이 `doc/` 단수)*
-  - js-te 설명: `…/dannysir/js-te-package/main/README.ko.md` · `/README.md`
-  - js-te API: `…/dannysir/js-te-package/main/docs/reference/API.ko.md` · `/docs/reference/API.md`  *(CLI.{ko.,}md 도 있어 4번째 뷰로 추가 가능 — 우선 API 만)*
-  - (raw prefix = `https://raw.githubusercontent.com/`)
-
-**작업 내용**:
-1. **라우팅 재구성** — 정적 슬러그 폴더 2개(`floating-components/`, `js-te/`)를 **동적 `[slug]`** 로 통합. (정적·동적 세그먼트 공존 불가하므로 기존 폴더 제거 필수.)
-   ```
-   app/[locale]/libraries/[slug]/
-     layout.tsx        # 라이브러리 헤더(eyebrow+타이틀) + 사이드바 + 콘텐츠 프레임 (공유)
-     page.tsx          # 시연 화면 (= 기존 데모, 인덱스 라우트로 두어 기존 URL 유지)
-     readme/page.tsx   # 설명 (README fetch+렌더)
-     api/page.tsx      # API 문서 (API.md fetch+렌더)
-   ```
-   - `generateStaticParams` 는 `libraries` 목록에서 slug 생성.
-   - **URL 안정성**: 시연을 인덱스(`/libraries/[slug]`)로 유지 → 랜딩 CTA 링크와 Phase 8(npm `homepage`) 영향 없음. 사이드바 노출 순서는 사용자 요청대로 `API 문서 / 시연 화면 / 설명` 으로 두되 라우트 기본값만 시연.
-   - 데모 컴포넌트 매핑: slug 분기로 `floating-components → <FloatingDemo dict.floating>`, `js-te → <JsTeDemo dict.jste>`.
-2. **메타데이터 확장** — `lib/libraries.ts` 의 `Library` 에 `docs: { readme: {ko,en}; api: {ko,en} }` raw URL 필드 추가(위 출처).
-3. **마크다운 파이프라인** — `lib/docs.ts` 의 `fetchDoc(url)`(ISR revalidate) + `components/docs/Markdown.tsx`(서버 컴포넌트):
-   - `react-markdown` + `remark-gfm`(표/체크박스) + `rehype-slug`(헤딩 id) + `rehype-pretty-code`(Shiki, **빌드 시 하이라이트 → 클라이언트 JS 0**).
-   - 컴포넌트 오버라이드로 다크 토큰/JetBrains Mono/`code-bg` 적용(Phase 9·10 톤 일관).
-   - **상대 링크/이미지 보정**: README 내 상대경로를 해당 파일의 raw base(예 `…/main/`, API 는 `…/main/doc/`)로 절대화(rehype rewrite 또는 커스텀 transformer).
-4. **사이드바** — `components/libraries/LibrarySidebar.tsx`('use client', `usePathname` 로 활성 표시): Stitch `_1` 좌측 nav 톤(아이콘+라벨, 활성 하이라이트). 항목 = 설명/API 문서/시연(각 라우트로 링크). (선택: 버전 칩 / GitHub Star 버튼.)
-5. **로딩/실패 처리** — fetch 404/네트워크 실패 시 사용자용 fallback(“문서를 불러오지 못했습니다” + GitHub 링크). `main` 핀이라 라이브러리 README 가 깨지면 빌드 영향 가능 — 에러 메시지로 가시화.
-6. **의존성 추가** — `react-markdown remark-gfm rehype-slug rehype-pretty-code shiki`(모두 서버 측, 번들 영향 작음).
-7. **i18n** — `libraries.nav.{readme,api,demo}` 사이드바 라벨 + `docs.loadError` 등 ko·en 양쪽 추가. `Dictionary` 타입 갱신.
-
-**산출물**:
-- `/{ko,en}/libraries/{floating-components,js-te}` = 시연(기존 유지), `…/readme` = 저장소 README 렌더, `…/api` = 저장소 API 문서 렌더.
-- 사이드바로 3-뷰 전환, 활성 표시.
-- 라이브러리 저장소 문서만 고치면(이 사이트 수정 0) ISR 주기 후 반영.
-
-**검증**:
-- `npx tsc --noEmit` / `npm run lint` / `npm run build` 모두 통과(빌드 시 raw fetch 성공 포함).
-- preview 로 `/ko·/en × 2 라이브러리 × 3 뷰 × desktop·mobile` 순회: 마크다운 렌더(표/코드 하이라이트/링크)·사이드바 활성·시연 동작·콘솔 에러 0.
-- 문서 1줄 수정→push→재검증(또는 재빌드) 후 반영 확인(가능 범위에서).
-
-**열린 항목(Phase 진입 시 확인)**:
-- js-te `CLI` 문서를 4번째 뷰로 추가할지.
-- 사이드바에 버전 칩/GitHub Star 등 Stitch `_1` 부가 요소를 어디까지 가져올지.
-- 한 Phase(셸+파이프라인+콘텐츠)로 진행 vs 셸/파이프라인(11) → 콘텐츠 연동·검수(12) 분리.
-
-**결정(진입 시)**: CLI 뷰는 보류(우선 설명/API/시연 3-뷰). 사이드바 = 뷰 링크 + GitHub Star(데스크톱). 한 Phase 로 진행.
-
-**완료 메모**: 2026-05-21 A안(빌드/요청 시 GitHub raw fetch + ISR) 구현 완료. **라우트**: 정적 슬러그 폴더 2개 제거 → 동적 `app/[locale]/libraries/[slug]/{layout,page,readme/page,api/page}.tsx`. layout=라이브러리 배너(eyebrow+npm명+tagline)+`LibrarySidebar`+children, page=시연(slug 분기 FloatingDemo/JsTeDemo, 인덱스 유지로 기존 URL·랜딩 CTA·Phase8 영향 0), readme/api=fetch+렌더. `generateStaticParams`(slug) + 잘못된 slug `notFound`. **메타**: `lib/libraries.ts` 에 `docs.{readme,api}.{ko,en}` raw URL(8종 200 확인). **파이프라인**: `lib/docs.ts` `loadDoc`(`fetch` `revalidate:3600` ISR + raw→blob base 계산). `components/docs/Markdown.tsx` 는 **react-markdown 대신 unified 직접**(`remark-parse/gfm/rehype` + `remark-rehype{allowDangerousHtml}` + `rehype-raw`(HTML `<img>` 렌더) + `rehype-slug` + 커스텀 `rehypeAbsoluteUrls`(상대 `.md`→GitHub blob, 이미지/기타→raw) + `rehype-pretty-code`(Shiki github-dark, `keepBackground:false`) + `rehype-stringify` → `dangerouslySetInnerHTML`). **이유**: `rehype-pretty-code`(Shiki)가 비동기라 react-markdown 동기 렌더와 비호환. **스타일**: `.doc-prose` 다크 타이포 + 코드블록 `--color-code-bg`(globals.css). **사이드바**: `usePathname` 활성표시, 설명(base/readme)·시연(base, 인덱스)·API(base/api), 데스크톱 GitHub 링크(체인 아이콘), 모바일 가로 탭. i18n `libraries.{nav.*,githubStar,loadError}` ko·en + `Dictionary` 타입. 의존성 추가: `unified remark-parse remark-gfm remark-rehype rehype-raw rehype-slug rehype-pretty-code rehype-stringify shiki unist-util-visit`(react-markdown 제거). **함정 2건**: (1) **하이드레이션 에러**(Phase10 유입) — ActivityLog INIT `nowTime()` 가 서버/클라 다름 → 시간 span 에 `suppressHydrationWarning`. (2) **Turbopack CSS 스테일 캐시 재발** — globals.css 새 `.doc-prose` 블록이 컴파일 CSS 에서 누락(해시 동일) → `.next` 삭제 + dev 재시작 후 정상(캐너리로 위치성 아님 확인). 검증: tsc/lint/build(17 페이지, 빌드 시 raw fetch 성공) 통과, /ko·/en × 2 라이브러리 × 3 뷰 × desktop·mobile 검수 — 마크다운 렌더(이미지/표/코드 하이라이트/blockquote/인라인코드)·앵커 TOC 32/32 매칭(한글 슬러그 포함)·사이드바 활성·시연 동작·콘솔 에러 0·하이드레이션 이슈 0. (CLI 뷰는 추후 `docs` 메타에 항목 추가로 확장 가능.)
-
----
-
-## 의존성 (예정)
-
-```json
-{
-  "dependencies": {
-    "next": "^15",
-    "react": "^19",
-    "react-dom": "^19",
-    "@dannysir/floating-components": "^0.2.3",
-    "@uiw/react-codemirror": "^4",
-    "@codemirror/lang-javascript": "^6"
-  },
-  "devDependencies": {
-    "typescript": "^5",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@types/node": "^22",
-    "tailwindcss": "^4",
-    "@tailwindcss/postcss": "^4",
-    "eslint": "^9",
-    "eslint-config-next": "^15"
-  }
-}
+```bash
+npx tsc --noEmit
+npm run lint
+npm run build
 ```
 
-> `@dannysir/js-te` 는 dependency 가 아닙니다 (Node 전용). 미니 러너로 모사.
-
----
-
-## 향후 추가 예정 라이브러리 (메모)
-
-현재 사이트에는 포함하지 않지만, 추후 시연 페이지를 추가할 예정인 라이브러리들입니다. `lib/libraries.ts` 에 본격적으로 등록하기 전까지는 이 목록에만 보관합니다.
-
-- **SharedWorker 기반 WebSocket 연결 관리 라이브러리** — 여러 탭이 하나의 워커/소켓을 공유하는 형태. 시연 차례가 오면 별도 결정사항(시연용 WebSocket 서버 호스팅 위치, Safari 미지원 안내, iframe 멀티 인스턴스 데모 구성)을 그때 정리.
-
----
-
-## 운영 메모
-
-- 본 파일과 `/Users/san/.claude/plans/witty-jingling-lobster.md` 은 같은 내용의 사본입니다. Phase 마무리 시 둘 다 갱신해 동기화하세요.
-- 글로벌 사용자 규칙 재확인:
-  - 모든 대화는 존댓말
-  - 구현·변경 작업 시작 전 플랜 모드 진입 (이 문서가 메인 플랜이므로 각 Phase 시작 시 사용자 확인 한 마디면 충분)
-  - `git commit` / `git push` / PR 생성은 매번 사전 허락
+세 명령이 **모두 통과** 해야 작업 단위 "완료" 처리.

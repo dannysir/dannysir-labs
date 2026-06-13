@@ -174,6 +174,7 @@ export function FloatingDemo({ dict }: FloatingDemoProps): React.ReactElement {
             .map(Number),
         );
         counterRef.current = maxN;
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- 사전 존재 위반, 별도 리팩토링 예정
         setSelectedIdRaw(ids[0] ?? null);
       }
     } catch {

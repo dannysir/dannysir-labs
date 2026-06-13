@@ -1,3 +1,5 @@
+import type { TestCase } from '@dannysir/js-te/browser';
+
 import type {
   ConsoleEntry,
   ConsoleLevel,
@@ -58,21 +60,15 @@ const buildCapturingConsole = (
   return proxyConsole as Console;
 };
 
-interface LibraryCollectedTest {
-  description: string;
-  path: string;
-  fn: () => Promise<void>;
-}
-
 interface BuiltTree {
   roots: TestNode[];
-  leaves: { test: LibraryCollectedTest; node: TestLeafNode }[];
+  leaves: { test: TestCase; node: TestLeafNode }[];
 }
 
-const buildTree = (collected: readonly LibraryCollectedTest[]): BuiltTree => {
+const buildTree = (collected: readonly TestCase[]): BuiltTree => {
   const roots: TestNode[] = [];
   const describeIndex = new Map<string, DescribeNode>();
-  const leaves: { test: LibraryCollectedTest; node: TestLeafNode }[] = [];
+  const leaves: { test: TestCase; node: TestLeafNode }[] = [];
   let idCounter = 0;
   const nextId = (): string => {
     idCounter += 1;
@@ -108,6 +104,7 @@ const buildTree = (collected: readonly LibraryCollectedTest[]): BuiltTree => {
       type: 'test',
       name: t.description,
       status: 'pass',
+      mode: t.mode,
       consoleLogs: [],
       durationMs: 0,
     };
@@ -116,6 +113,18 @@ const buildTree = (collected: readonly LibraryCollectedTest[]): BuiltTree => {
   }
 
   return { roots, leaves };
+};
+
+/**
+ * 라이브러리 testManager.run() 룰과 동일:
+ * 같은 파일(데모는 가상의 한 파일) 안에 `.only` 가 하나라도 있으면
+ * `mode === 'normal'` 인 케이스를 'skip' 으로 demote 합니다.
+ * 사본을 만들어 라이브러리 객체를 mutate 하지 않습니다.
+ */
+const applyOnlyDemotion = (tests: readonly TestCase[]): TestCase[] => {
+  const hasOnly = tests.some((t) => t.mode === 'only');
+  if (!hasOnly) return tests.map((t) => ({ ...t }));
+  return tests.map((t) => (t.mode === 'normal' ? { ...t, mode: 'skip' as const } : { ...t }));
 };
 
 const rollupStatuses = (nodes: TestNode[]): boolean => {
@@ -192,19 +201,34 @@ export const runUserCode = async (
       tree: [],
       passed: 0,
       failed: 0,
+      skipped: 0,
+      todo: 0,
       usedNodeOnlyMock,
       runtimeError,
       durationMs: Math.round(now() - startedAt),
     };
   }
 
-  const collected = testManager.getTests();
-  const { roots, leaves } = buildTree(collected);
+  const resolved = applyOnlyDemotion(testManager.getTests());
+  const { roots, leaves } = buildTree(resolved);
 
   let passed = 0;
   let failed = 0;
+  let skipped = 0;
+  let todo = 0;
 
   for (const { test: t, node } of leaves) {
+    if (node.mode === 'todo') {
+      node.status = 'todo';
+      todo += 1;
+      continue;
+    }
+    if (node.mode === 'skip') {
+      node.status = 'skipped';
+      skipped += 1;
+      continue;
+    }
+
     const ts = now();
     setActiveLogs(node.consoleLogs);
     try {
@@ -228,6 +252,8 @@ export const runUserCode = async (
     tree: roots,
     passed,
     failed,
+    skipped,
+    todo,
     usedNodeOnlyMock,
     durationMs: Math.round(now() - startedAt),
   };

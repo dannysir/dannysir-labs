@@ -66,6 +66,8 @@ export const runWithWorker = async (
           tree: [],
           passed: 0,
           failed: 0,
+          skipped: 0,
+          todo: 0,
           usedNodeOnlyMock: false,
           runtimeError: { message: event.message || 'worker error' },
           durationMs: 0,

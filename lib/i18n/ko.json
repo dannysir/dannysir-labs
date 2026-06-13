@@ -87,6 +87,9 @@
       "matchers": "Matchers",
       "each": "test.each",
       "fn": "fn() 모킹",
+      "only": ".only — 포커스",
+      "skip": ".skip — 건너뜀",
+      "todo": ".todo — 예정",
       "mock": "mock() (Node.js 전용)"
     },
     "run": "테스트 실행",
@@ -105,7 +108,7 @@
     "results": {
       "heading": "결과",
       "idle": "테스트 실행을 눌러 결과를 확인하세요",
-      "summary": "통과 {{passed}} · 실패 {{failed}} · {{ms}}ms",
+      "summary": "통과 {{passed}} · 실패 {{failed}} · 건너뜀 {{skipped}} · 예정 {{todo}} · {{ms}}ms",
       "timeout": "5초가 지나도 완료되지 않아 강제 종료했습니다. 무한 루프를 확인해 보세요.",
       "runtimeError": "코드 평가 중 오류 발생",
       "nodeOnlyMockDetected": "코드에 mock() 호출이 감지되었지만 무시되었습니다 (Node.js 전용)",
