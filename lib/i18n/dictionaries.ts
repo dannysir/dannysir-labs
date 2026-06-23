@@ -94,7 +94,9 @@ export type Dictionary = {
       each: string;
       fn: string;
       only: string;
+      onlyEach: string;
       skip: string;
+      skipEach: string;
       todo: string;
       mock: string;
     };

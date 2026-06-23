@@ -88,7 +88,9 @@
       "each": "test.each",
       "fn": "fn() 모킹",
       "only": ".only — 포커스",
+      "onlyEach": ".only.each — 묶음 포커스",
       "skip": ".skip — 건너뜀",
+      "skipEach": ".skip.each — 묶음 건너뜀",
       "todo": ".todo — 예정",
       "mock": "mock() (Node.js 전용)"
     },

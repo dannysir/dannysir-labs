@@ -88,7 +88,9 @@
       "each": "test.each",
       "fn": "fn() mocking",
       "only": ".only — focus",
+      "onlyEach": ".only.each — focus batch",
       "skip": ".skip — skipped",
+      "skipEach": ".skip.each — skip batch",
       "todo": ".todo — pending",
       "mock": "mock() (Node only)"
     },

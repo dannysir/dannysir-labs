@@ -4,7 +4,9 @@ export type ExampleId =
   | 'each'
   | 'fn'
   | 'only'
+  | 'onlyEach'
   | 'skip'
+  | 'skipEach'
   | 'todo'
   | 'mock';
 
@@ -96,6 +98,20 @@ describe('focus', () => {
 });
 `;
 
+const onlyEachExample = `// test.only.each — 생성된 케이스 묶음 전체를 only 로 등록.
+// 같은 파일의 일반 test() 는 자동으로 skipped 됩니다.
+test('normal test (demoted to skipped)', () => {
+  expect('not run').toBe('not run');
+});
+
+test.only.each([
+  [2, 3, 5],
+  [10, 20, 30],
+])('only: add(%s, %s) = %s', (a, b, expected) => {
+  expect(a + b).toBe(expected);
+});
+`;
+
 const skipExample = `// test.skip — 함수는 등록만 되고 실행되지 않습니다.
 test('runs normally', () => {
   expect(1 + 1).toBe(2);
@@ -103,6 +119,20 @@ test('runs normally', () => {
 
 test.skip('known broken — fix later', () => {
   expect(true).toBe(false);
+});
+`;
+
+const skipEachExample = `// test.skip.each — 생성된 모든 케이스를 실행 없이 skipped 로 보고.
+test('runs normally', () => {
+  expect(1 + 1).toBe(2);
+});
+
+test.skip.each([
+  [1, 2, 3],
+  [5, 5, 10],
+  [100, 200, 300],
+])('skipped: add(%s, %s) = %s', (a, b, expected) => {
+  expect(a + b).toBe(expected);
 });
 `;
 
@@ -133,7 +163,9 @@ export const examples: Record<ExampleId, Example> = {
   each: { id: 'each', source: each, readOnly: false },
   fn: { id: 'fn', source: fnExample, readOnly: false },
   only: { id: 'only', source: onlyExample, readOnly: false },
+  onlyEach: { id: 'onlyEach', source: onlyEachExample, readOnly: false },
   skip: { id: 'skip', source: skipExample, readOnly: false },
+  skipEach: { id: 'skipEach', source: skipEachExample, readOnly: false },
   todo: { id: 'todo', source: todoExample, readOnly: false },
   mock: { id: 'mock', source: mockExample, readOnly: true },
 };
@@ -144,7 +176,9 @@ export const exampleOrder: ExampleId[] = [
   'each',
   'fn',
   'only',
+  'onlyEach',
   'skip',
+  'skipEach',
   'todo',
   'mock',
 ];
