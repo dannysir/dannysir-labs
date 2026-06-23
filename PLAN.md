@@ -1,4 +1,4 @@
-# dannysir-labs — js-te 0.9.0 시연 사이클
+# dannysir-labs — 라이브러리 동시 업데이트 사이클 (floating 0.4.0 + js-te 0.9.3)
 
 > **이 문서는 dannysir-labs 의 현재 작업 사이클 명세서입니다.**
 > 새 세션을 시작할 때마다 이 문서를 먼저 읽고, "현재 진행 상태" 표를 보고 다음 미완료 Phase 를 이어서 진행하세요.
@@ -15,32 +15,28 @@
 4. Phase 를 완료하면 **이 문서의 진행 상태 표 체크박스를 갱신**하고, 그 Phase 섹션 끝의 "완료 메모" 에 한 줄 기록한 뒤 사용자에게 결과를 보고합니다.
 5. 사용자의 글로벌 규칙 준수:
    - 모든 대화는 존댓말
-   - 파일 수정·생성·리팩토링 전에 **플랜 모드** (이 문서가 이미 메인 플랜이므로, 각 Phase 진입 시에는 "이 Phase 의 작업을 시작하겠습니다" 정도 확인이면 충분)
+   - 파일 수정·생성·리팩토링 전에 **플랜 모드** (이 문서가 이미 메인 플랜이므로, 각 Phase 진입 시에는 "이 Phase 를 시작하겠습니다" 정도 확인이면 충분)
    - **`git commit` / `git push` / PR 생성 전에는 매번 사전 허락**
 
 작업 디렉터리: `/Users/san/dannysir-labs`
-참조 라이브러리 (로컬): `/Users/san/js-te-package` (`@dannysir/js-te`, 현재 0.9.0)
+참조 라이브러리 (로컬): `/Users/san/floating-component` (`@dannysir/floating-components`, 0.4.0) · `/Users/san/js-te-package` (`@dannysir/js-te`, 0.9.3)
 
-플랜 사본 위치: `/Users/san/.claude/plans/reflective-hatching-sutton.md`. 이 파일과 항상 동기 유지.
-
-이전 사이클 사본 (아카이브): `/Users/san/.claude/plans/witty-jingling-lobster.md`
+플랜 사본 위치: `/Users/san/.claude/plans/greedy-snacking-swan.md` (= 프로젝트 `PLAN.md` 와 항상 동기 유지).
+이전 사이클 사본 (아카이브): `/Users/san/.claude/plans/reflective-hatching-sutton.md`
 
 ---
 
-## Context (왜 이걸 만드는가)
+## Context (왜 이걸 하는가)
 
-`@dannysir/js-te` 가 0.7.3 → 0.9.0 으로 두 단계 minor 업데이트를 거쳤습니다.
+두 라이브러리가 **동시에** 새 버전을 ship 했고, 둘 다 npm 레지스트리에 publish 됨. dannysir-labs 는 자신의 라이브러리를 인터랙티브하게 시연하는 사이트이므로 두 신기능을 데모에 반영한다.
 
-- **0.7.4** — `homepage` 메타데이터만. 시연 영향 없음
-- **0.8.0** — `--testLocation`, JSON reporter (CLI 전용). 브라우저 데모와 무관
-- **0.9.0** — `test.only / .skip / .todo`, `describe.only / .skip`. **브라우저 entry 에 노출되는 코어 API 변경.** 시연에 추가해야 할 신기능
+- **`@dannysir/floating-components` 0.3.0 → 0.4.0** (2026-06-17)
+  - 신규: `minWidth`/`minHeight`/`maxWidth`/`maxHeight` (px) — 패널의 split 방향(main-axis) 크기 제약. window resize·border drag 양쪽에서 일관 적용. 패널 wrapper `overflow: auto` — 콘텐츠가 패널보다 크면 잘리지 않고 스크롤.
+  - **BREAKING**: `minSize`/`maxSize` 제거 → 위 4개로 대체. 단 **데모는 size 제약을 전혀 안 써서**(grep 0건) 코드가 깨지지 않음. 마이그레이션 부담 없음.
+- **`@dannysir/js-te` 0.9.2 → 0.9.3** (2026-06-23)
+  - 신규: `test.only.each` / `test.skip.each` — 모디파이어 + 데이터주도 `.each` 조합. main·`/browser` 양쪽 노출. 직전 0.9 사이클(`.only`/`.skip`/`.todo` 시연, PR #6)의 자연스러운 연장. 보류 메모 `project_floating_demo_csr_refactor.md` 의 "다음 사이클 후보 C" 가 실현된 것.
 
-dannysir-labs 는 자신의 라이브러리들을 인터랙티브하게 시연하는 사이트이므로, 0.9.0 의 핵심 사용자-노출 기능인 focus/skip 모디파이어를 데모에 반영해야 합니다.
-
-동시에 현재 데모 코드에 **0.7.3 도입 시점에 정리됐어야 할 잔재**가 남아 있어 함께 정리합니다:
-
-- `components/js-te-demo/runner/dannysirJsTe.d.ts` — `declare module '@dannysir/js-te/browser'` 형태의 손글씨 shim. 라이브러리가 0.7.3 부터 공식 `.d.ts` 를 ship 하므로 (`package.json#exports` 의 `types` 조건) 셰도잉 상태
-- `runner/types.ts` 의 일부 타입 — 라이브러리에서 import 가능하지만 자체 정의 중
+**시연 방식 (사용자 확정)**: floating 은 "툴바에 제약 설정 컨트롤 추가"(인터랙티브). PR 은 **라이브러리별 2개로 분리** (직전 PR #5 floating / #6 js-te 패턴과 동일).
 
 ---
 
@@ -48,240 +44,176 @@ dannysir-labs 는 자신의 라이브러리들을 인터랙티브하게 시연�
 
 | 항목 | 결정 |
 | --- | --- |
-| 의존성 | `@dannysir/js-te: ^0.7.3` → `^0.9.0` (caret 규칙상 0.x 의 minor 변경은 자동 업데이트 안 되므로 명시적 bump) |
-| `@dannysir/js-te/browser` 타입 | 라이브러리 공식 `.d.ts` (types/browser.d.ts) 사용. 데모의 shim 파일 삭제 |
-| 데모 미니 러너의 모드 처리 전략 | **Option B 자체 실행 유지 + 모드 직접 처리.** 라이브러리 `Reporter` 인터페이스에 per-test start 훅이 없어 console 캡처와 호환되지 않음. `testManager.getTests()` 가 `mode: TestMode` 가 이미 resolved 된 `TestCase[]` 를 반환하므로 (`describe.only/.skip` 전파는 라이브러리가 처리), 데모는 file-scoped only-demotion 한 줄만 모사 |
-| `.only` demotion 규칙 | `tests.some(t => t.mode === 'only')` 면 `mode === 'normal'` 을 `'skip'` 으로 demote. `skip`/`todo` 는 그대로. 라이브러리 testManager.js:141-144 룰과 동일 |
-| 데모 타입 이름 충돌 | 라이브러리 `RunResult` 는 import 하지 않음 (collector 에서 사용처 없음). 데모의 `RunResult` 는 그대로 둠 (데모 트리·console·duration 필드 포함, 라이브러리 결과와는 별개 모델) |
-| 새 상태 색 | Skipped = `text-on-surface-variant/50` (dim/회색 계열, 기존 토큰 재사용). Todo = `text-secondary` + 점선 보더. **Tailwind purge 회피 위해 literal class 만 사용**, 동적 문자열 금지 |
-| 의도적 제외 | 0.8.0 의 `--testLocation`, JSON reporter — CLI 전용으로 브라우저 데모와 무관. 라이브러리 `Reporter` import — Option B 에서 사용처 없음 (dead weight) |
-| 브랜치 | `feat/jste-0.9-only-skip-todo` |
+| 트랙 구성 | 두 라이브러리 = 두 브랜치·두 PR. 순서: **js-te 먼저**(작고 위험 낮음) → floating(방안 B, 작업량 큼) |
+| 브랜치 | `feat/jste-0.9.3-only-skip-each`, `feat/floating-0.4-minmax-overflow` |
+| **js-te 러너** | **코드 무수정.** 라이브러리가 `.only.each`/`.skip.each` 의 각 케이스에 `mode`('only'/'skip')를 부착(`testManager.testEach(cases, mode)` → `#registerTest(..., mode)`). 데모의 `applyOnlyDemotion` + 실행 루프 mode 분기가 이미 generic 하게 커버. 결과도 기존 4상태(pass/fail/skipped/todo) 안에 떨어짐. Phase A1 에서 "무수정으로 동작" 을 검증으로 확인 |
+| js-te 예제 ID | 점 회피 **camelCase** `onlyEach` / `skipEach` (기존 `only`/`skip`/`todo` 와 일관. 라벨만 `.only.each` 표기). 셀렉터는 `dict.examples[id]` 직접 인덱싱(점 split 아님)이라 안전 |
+| **floating 시연** | **방안 B — 툴바 제약 컨트롤.** 선택 패널의 **부모 split 방향**(가로→width, 세로→height)을 인식해 그 축의 min/max 숫자 입력 2개 + Clear (+ 프리셋·overflow 토글)만 노출. 4개 전부 노출은 cross-axis 가 silently 무시돼 교육상 오해 → 기각 |
+| floating patch 방법 | 라이브러리가 노드 update API 미제공(`useLayoutTree` 반환에 없음, 내부 유틸 비공개) → **데모에 `treeConstraints.ts` 신규**: `setTree` 기반 불변 patch 헬퍼 + 부모 방향 조회 헬퍼 |
+| floating 제약값 표시 | 별도 state 없이 `tree`+`selectedId` 에서 `useMemo` derive (제어 컴포넌트). 새 effect 0 → line 177 의 set-state-in-effect 영역 안 건드림 |
+| floating overflow 시연 | `DemoPanel` 에 `showOverflowContent?` opt-in prop(기본 false) + 툴바 토글. 특정 패널만 큰 콘텐츠 → cross-axis 축소 시 wrapper `overflow:auto` 로 스크롤. 다른 패널은 깨끗이 유지 |
+| floating localStorage | `STORAGE_KEY` `'floating-demo:tree'` → `'floating-demo:tree:v2'` 로 bump (제약 없는 구 저장본 자연 무효화, 신기능 첫 진입에 깨끗한 캔버스) |
+| **범위 밖 (건드리지 않음)** | 보류 리팩토링 "B-2"(FloatingDemo 영속화 client-only 전환, `FloatingDemo.tsx:177` 의 `react-hooks/set-state-in-effect` disable 제거)는 별개 사이클. 이번엔 같은 파일을 만지더라도 그 disable/effect 구조는 유지 |
 
 ---
 
 ## 영향 받는 파일 (요약)
 
+### Track A — js-te 0.9.3
+
 | 파일 | 변경 |
 | --- | --- |
-| `package.json` | dep `@dannysir/js-te: ^0.7.3 → ^0.9.0`. lockfile 갱신 |
-| `components/js-te-demo/runner/dannysirJsTe.d.ts` | **삭제** |
-| `components/js-te-demo/runner/types.ts` | `TestMode` import. `TestNodeStatus` 확장 (`'pass' \| 'fail' \| 'skipped' \| 'todo'`). `TestLeafNode` 에 `mode: TestMode` 추가. `RunResult` 에 `skipped: number`, `todo: number` 추가 |
-| `components/js-te-demo/runner/index.ts` | only-demotion 패스 추가. leaf 실행 루프에서 `mode` 분기 (todo/skip → fn 호출 안 함, 카운터만). rollupStatuses 가 새 상태들과 호환 (describe 노드는 child 가 fail 일 때만 fail, 그 외엔 pass 유지). 데모 트리 타입 변경에 따라 빌드 부분 조정 |
-| `components/js-te-demo/runner/runner.worker.ts` | 변경 없음 (RunResult 새 필드는 structured-clone 안전한 number) |
-| `components/js-te-demo/Results.tsx` | 상태 아이콘·색 확장 (▾·✓·✗ 외에 ↷ skipped, ☐ todo 등 ASCII). summary 4 카운터 + ms. PASS/FAIL 배지 로직은 그대로 (`failed > 0 \|\| runtimeError` 면 FAIL) |
-| `components/js-te-demo/examples.ts` | 3개 예제 추가: `only` (normal 테스트 1개 + `.only` 1개로 demotion 시연), `skip` (`.skip` + 일반 비교), `todo` (`.todo` 단독 + 옆에 일반 1개). `ExampleId` 유니온, `exampleOrder` 갱신 |
-| `lib/i18n/{ko,en}.json` | `jste.examples.{only,skip,todo}` 라벨 + 설명. `jste.results.{skipped,todo}` 뱃지·summary 템플릿 4 카운터로 갱신 |
-| `README.md` | "미니 러너 한계" 섹션의 0.7.3 언급을 0.9.0 으로. (선택) 새 시연 항목 한 줄 언급 |
-| `~/.claude/projects/-Users-san-dannysir-labs/memory/project_js_te_mini_runner_rationale.md` | 0.9.0 전환 + shim 제거 사실 갱신 |
+| `package.json` | `@dannysir/js-te: ^0.9.2 → ^0.9.3`. lockfile 갱신 |
+| `components/js-te-demo/examples.ts` | `ExampleId` 유니온에 `'onlyEach'`/`'skipEach'`. `onlyEachExample`/`skipEachExample` 소스 추가. `examples` 레코드·`exampleOrder`(only 뒤 onlyEach, skip 뒤 skipEach) 갱신 |
+| `lib/i18n/dictionaries.ts` | `jste.examples` 타입에 `onlyEach`/`skipEach` 추가 |
+| `lib/i18n/{ko,en}.json` | `jste.examples.onlyEach`/`skipEach` 라벨 동시 추가 |
+| 러너(`runner/*`, `Results.tsx`) | **무수정** (검증으로 확인) |
+| `README.md` / 메모리 | 0.9.3 한 줄 갱신 |
+
+### Track B — floating 0.4.0
+
+| 파일 | 변경 |
+| --- | --- |
+| `package.json` | `@dannysir/floating-components: ^0.3.0 → ^0.4.0`. lockfile 갱신 |
+| `components/floating-demo/treeConstraints.ts` | **신규** — `PanelConstraints` interface + `applyPanelConstraints`/`getParentSplitDirection`/`getPanelConstraints` 순수 헬퍼(불변, reference-stable) |
+| `components/floating-demo/Toolbar.tsx` | 축 인식 제약 그룹(min/max number input + Clear + 프리셋 + overflow 토글 + 축 배지). `flex-wrap` 으로 좁을 때 둘째 줄 |
+| `components/floating-demo/FloatingDemo.tsx` | `STORAGE_KEY` v2. 헬퍼 import. `parentDir`/`currentConstraints` derive. overflow 토글 state. `handleSetConstraint`/`handleClearConstraints`/`handlePreset`/`handleToggleOverflow`(각 `setTree(applyPanelConstraints)` + `pushLog('constraint', …)`). Toolbar 에 새 props. **line 177 영역 불변** |
+| `components/floating-demo/DemoPanel.tsx` | `showOverflowContent?: boolean` prop. true 면 고정 크기 블록(literal Tailwind 크기 상수) 렌더 |
+| `components/floating-demo/ActivityLog.tsx` | `LogKind` 에 `'constraint'`. `KIND_LABEL.constraint='LIMIT'` / `KIND_COLOR.constraint='text-tertiary'` |
+| `lib/i18n/dictionaries.ts` | `floating.constraints` 서브객체 타입 추가 |
+| `lib/i18n/{ko,en}.json` | `floating.constraints.*` 동시 추가(label/min/max/clear/preset/overflowToggle/axisWidth/axisHeight/axisNone/hint/events.{set,clear}) |
+| `TreeInspector.tsx` / `SelectionContext.ts` / 데모 페이지 | **무변경** (min/max 는 JSON 에 자동 표시) |
+| `README.md` / 메모리 | 0.4.0 한 줄 갱신 |
 
 ---
 
 ## 현재 진행 상태 (체크리스트)
 
-| Phase | 제목 | 상태 |
-| --- | --- | --- |
-| 1 | 의존성 bump + shim 삭제 | [x] |
-| 2 | 러너 타입·로직 확장 (모드 4종) | [x] |
-| 3 | Results UI: 상태 4종 + 카운터 4종 | [x] |
-| 4 | examples 3종 추가 (only / skip / todo) | [x] |
-| 5 | i18n 키 추가 (ko/en 동시) | [x] |
-| 6 | 검증 + 메모리 동기화 + PR | [ ] |
+| Phase | 트랙 | 제목 | 상태 |
+| --- | --- | --- | --- |
+| A1 | js-te | 0.9.3 bump + only.each/skip.each 예제 + i18n | [x] |
+| A2 | js-te | 검증 + 메모리/README + PR | [ ] |
+| B1 | floating | 0.4.0 bump + treeConstraints 헬퍼 | [ ] |
+| B2 | floating | Toolbar 제약 컨트롤 + 데모 통합 + overflow + ActivityLog | [ ] |
+| B3 | floating | i18n(constraints) + STORAGE_KEY v2 | [ ] |
+| B4 | floating | 검증 + 메모리/README + PR | [ ] |
 
 > Phase 완료 시 체크박스 갱신 + 해당 섹션 끝 "완료 메모" 한 줄 기록.
 
 ---
 
-## Phase 1 — 의존성 bump + shim 삭제
-
-**목적**: 라이브러리 버전 올리고, 0.7.3 부터 무의미해진 손글씨 타입 shim 을 제거합니다. 후속 Phase 의 전제 조건.
+## Phase A1 — js-te 0.9.3 bump + only.each/skip.each 예제 + i18n
 
 **작업 내용**
 
-1. `package.json` 의 `"@dannysir/js-te": "^0.7.3"` → `"^0.9.0"`. `npm install` 로 lockfile 갱신
-2. `components/js-te-demo/runner/dannysirJsTe.d.ts` 삭제
-3. `tsconfig.json` 의 `include` / `types` 에 shim 파일 명시 참조가 없는지 확인 (없으면 통과). 있으면 제거
-4. 즉시 `npx tsc --noEmit` 으로 타입 깨짐 여부 확인. **shim 삭제만으로 컴파일 깨질 수 있음** — `runner/index.ts` 가 라이브러리 공식 타입의 `testManager.getTests()` 반환을 사용하므로, 데모 `LibraryCollectedTest` 인터페이스가 라이브러리 `TestCase` 와 정합한지 점검 (양쪽 다 `description`, `path`, `fn` 보유, 추가로 라이브러리는 `mode`/`location` 보유)
-
-**산출물**
-
-- 업데이트된 `package.json`, `package-lock.json`
-- `dannysirJsTe.d.ts` 삭제
+1. `package.json` `@dannysir/js-te` `^0.9.2 → ^0.9.3`. `npm install` 로 lockfile 갱신.
+2. `examples.ts`:
+   - `ExampleId` 에 `'onlyEach' | 'skipEach'` 추가.
+   - 두 예제 소스 추가(기존 only/skip 톤의 한글 주석 포함):
+     - **onlyEach**: 일반 `test()` 1개 + `test.only.each([[2,3,5],[10,20,30]])('only: add(%s, %s) = %s', …)`. → 일반 테스트는 demote 되어 skipped, only.each 2케이스 pass.
+     - **skipEach**: 일반 `test()` 1개 + `test.skip.each([...3+ 케이스])('skipped: …', …)`. → 일반 pass, skip.each 전부 skipped.
+   - `examples` 레코드에 두 엔트리(`readOnly: false`), `exampleOrder` 를 `hello/matchers/each/fn/only/onlyEach/skip/skipEach/todo/mock` 로 갱신.
+3. i18n (3곳 동시): `dictionaries.ts` 의 `jste.examples` 타입에 `onlyEach`/`skipEach`; `ko.json`·`en.json` 에 라벨.
+   - en: `"onlyEach": ".only.each — focus batch"`, `"skipEach": ".skip.each — skip batch"`
+   - ko: `"onlyEach": ".only.each — 묶음 포커스"`, `"skipEach": ".skip.each — 묶음 건너뜀"`
 
 **검증**
 
-- `npx tsc --noEmit` 통과 (Phase 2 시작 전 OK 여야 함. shim 삭제로 깨지면 Phase 2 의 타입 작업을 일부 앞당겨 처리)
-- `node_modules/@dannysir/js-te/types/browser.d.ts` 가 실제로 export 되는지 확인 (`package.json#exports."./browser".types`)
+- `npx tsc --noEmit` 통과.
+- **러너 무수정 동작 확인**: dev 서버에서 onlyEach 예제 Run → 통과 N·건너뜀 1, skipEach → 통과 1·건너뜀 N. (러너 코드 변경 없이 의도대로 나오면 핵심 결정 확정.) 정식 브라우저 스모크는 A2.
 
-**완료 메모**: 2026-06-08 `@dannysir/js-te ^0.7.3 → ^0.9.0` (lockfile changed 1 package), `dannysirJsTe.d.ts` 삭제. `tsconfig.json#include` 는 `**/*.ts` 와일드카드라 별도 정리 불필요. `npx tsc --noEmit` 깨끗하게 통과 — shim 삭제 후 `testManager.getTests()` 반환이 라이브러리 공식 `TestCase[]` 로 잡혀도 데모의 `LibraryCollectedTest` 와 structural 호환. lint/build 는 Phase 6 에서 일괄.
-
----
-
-## Phase 2 — 러너 타입·로직 확장 (모드 4종)
-
-**목적**: `.only` / `.skip` / `.todo` 4 모드를 데모 트리 모델과 실행 루프에 반영합니다.
-
-**작업 내용**
-
-1. `runner/types.ts`:
-   - `import type { TestMode } from '@dannysir/js-te/browser';` 추가
-   - `TestNodeStatus = 'pass' | 'fail' | 'skipped' | 'todo'`
-   - `TestLeafNode` 에 `mode: TestMode` 필드 추가
-   - `RunResult` 에 `skipped: number`, `todo: number` 추가 (기존 `passed`, `failed` 유지)
-2. `runner/index.ts`:
-   - `buildTree` 에서 leaf 생성 시 `mode: t.mode` 보존 (라이브러리 `TestCase.mode` 그대로 복사)
-   - **only-demotion 패스** — `getTests()` 직후, `hasOnly = collected.some(t => t.mode === 'only')` 면 normal → skip 으로 demote (라이브러리와 동일 룰, testManager.js:141-144 의 6줄). 로컬 변수 사본에서 처리해 부수효과 최소화
-   - 실행 루프에서 `node.mode` 분기:
-     - `'todo'` → `node.status = 'todo'`, fn 호출 안 함, `todo += 1`
-     - `'skip'` → `node.status = 'skipped'`, fn 호출 안 함, `skipped += 1`
-     - `'normal'` / `'only'` → 기존대로 실행, pass/fail 카운터 갱신
-   - 반환 객체에 `skipped`, `todo` 포함
-3. `rollupStatuses` — describe 의 status 는 child 중 하나라도 fail 이면 fail, 그 외엔 pass 로 유지 (현재 로직 그대로). skipped/todo 만 있는 describe 도 pass 표시 — 실패가 아니므로 자연스러움. 별도 변경 불필요
-4. 한 가지 export 정리: `runner/index.ts` 의 `export type` 재export 에서 누락된 타입이 없는지 점검
-
-**산출물**
-
-- 업데이트된 `runner/types.ts`, `runner/index.ts`
-
-**검증**
-
-- `npx tsc --noEmit` 통과
-- 임시 콘솔 출력으로 다음 3가지 결과 확인:
-  - `test('a', ...)` + `test.only('b', ...)` → a 는 skipped, b 는 pass
-  - `test.skip('a', ...)` + `test('b', ...)` → a 는 skipped, b 는 pass
-  - `test.todo('a')` + `test('b', ...)` → a 는 todo, b 는 pass
-
-**완료 메모**: 2026-06-08 `runner/types.ts` 에 `TestMode = TestCase['mode']` (browser entry 가 0.9.0 에서 `TestMode` 를 직접 re-export 안 함 — 인덱스 액세스로 우회. 추후 라이브러리에 PR 가능). `TestNodeStatus` 4종 + `TestLeafNode.mode` + `RunResult.{skipped,todo}` 추가. `runner/index.ts` 는 `LibraryCollectedTest` 자체 인터페이스 제거하고 라이브러리 `TestCase` 직접 사용. `applyOnlyDemotion` 패스 추가 (라이브러리 룰 testManager.js:141-144 와 동일, 라이브러리 객체 mutation 없이 사본 처리). 실행 루프 mode 분기 (todo/skip 은 fn 미호출). `runWithWorker.ts` 의 worker.onerror fallback 객체에도 `skipped/todo: 0` 추가. tsc 통과.
+**완료 메모**: 2026-06-23 `@dannysir/js-te ^0.9.2 → ^0.9.3` (레지스트리 clean install, `dist/browser.mjs` 에 `only.each`/`skip.each`/`testEach` 확인). `examples.ts` 에 onlyEach/skipEach 2종(camelCase id, 점 회피) + `ExampleId`·`exampleOrder` 갱신. i18n 3곳(dictionaries 타입 + ko/en) 동시 추가, 키 양쪽 일치. **러너 무수정 확정** — dev 스모크 /en onlyEach(통과2·건너뜀1)/skipEach(통과1·건너뜀3) 전부 PASS, 트리 `⊘`(demote/skip)·`✓` 정상. tsc 통과.
 
 ---
 
-## Phase 3 — Results UI: 상태 4종 + 카운터 4종
-
-**목적**: 새 상태와 카운터를 결과 패널에 시각적으로 표시합니다.
+## Phase A2 — js-te 검증 + 메모리/README + PR
 
 **작업 내용**
 
-1. `Results.tsx` `Tree` 컴포넌트의 leaf 렌더에서 status 4종 대응:
-   - `pass` → `text-tertiary` + `✓` (기존)
-   - `fail` → `text-error` + `✗` (기존)
-   - `skipped` → `text-on-surface-variant/60` + `↷` (또는 `⊘`). 톤 다운
-   - `todo` → `text-secondary` + `☐` + 점선 보더는 leaf 박스 자체에 적용 안 함 (텍스트만 톤). 일관성 우선
-   - duration 표시는 pass/fail 만. skipped/todo 는 (실행 안 했으므로) 표시 안 함
-2. PASS/FAIL 배지 로직: `passOk = state.result.failed === 0 && !state.result.runtimeError`. **skipped/todo 만 있는 경우도 PASS.** 변경 없음
-3. summary 라인: 4 카운터 + ms 로 확장. 새 문자열은 i18n 에서 처리하지만 Results 의 `formatSummary` 가 4개 키 (`{{passed}}`, `{{failed}}`, `{{skipped}}`, `{{todo}}`, `{{ms}}`) 를 replace 하도록 시그니처 변경
-4. **모든 클래스명은 literal** — 동적 보간 금지 (Tailwind purge 회피)
+1. **표준 검증 3종**: `npx tsc --noEmit`, `npm run lint`, `npm run build`.
+2. **브라우저 스모크** (/ko·/en, `/libraries/js-te`): 새 onlyEach/skipEach 의도대로(트리 `✓`/`⊘`, summary 카운터). 기존 8개 예제 회귀 없음. 콘솔 0.
+3. **메모리**: `project_js_te_mini_runner_rationale.md` 에 0.9.3 only.each/skip.each(러너 무수정) 한 줄.
+4. **README**: js-te 시연 항목/버전 언급 갱신(있으면).
+5. **PLAN 사본 동기화** 확인.
+6. **사용자 사전 허락 받고**: 커밋 → `feat/jste-0.9.3-only-skip-each` push → PR. 제목·본문 초안 선제시.
 
-**산출물**
+**검증**: 3종 통과 + 스모크 OK. PR 한 건.
 
-- 업데이트된 `Results.tsx`
+**진행 메모 (2026-06-23)**: 표준검증 3종(tsc/lint/build) 모두 통과. 브라우저 스모크 — /en onlyEach(통과2·실패0·건너뜀1·예정0)·skipEach(통과1·건너뜀3) 전부 PASS, /ko 한글 라벨 정상(`.only.each — 묶음 포커스`/`.skip.each — 묶음 건너뜀`, 빈 문자열 0)·onlyEach(통과2·건너뜀1)·기존 hello 회귀 없음, 콘솔 에러 0. 메모리(`project_js_te_mini_runner_rationale`·`MEMORY.md`)·README(미니 러너 한계 섹션) 갱신 완료. **남은 것: 커밋/push/PR — 사용자 사전 허락 대기.** PR 머지 시 체크박스 [x].
 
-**검증**
-
-- `npx tsc --noEmit`, `npm run lint` 통과
-- (Phase 4·5 이후) 브라우저에서 4가지 상태가 모두 의도된 색·아이콘으로 렌더
-
-**완료 메모**: 2026-06-08 `Results.tsx` 에 `leafVisual` / `describeVisual` 헬퍼로 status 4종 비주얼 분기. pass `✓` tertiary / fail `✗` error / skipped `⊘` on-surface-variant/50 / todo `☐` secondary. duration 표시는 pass/fail 한정. `formatSummary` 4 카운터 + ms 시그니처로 확장. PASS/FAIL 배지 로직은 `failed === 0 && !runtimeError` 그대로 — skipped/todo 만 있어도 PASS. tsc 통과. (브라우저 시각 검증은 Phase 6.)
+**완료 메모**:
 
 ---
 
-## Phase 4 — examples 3종 추가 (only / skip / todo)
-
-**목적**: 사용자가 데모에서 신기능을 한 번에 시연할 수 있는 예제를 제공합니다.
+## Phase B1 — floating 0.4.0 bump + treeConstraints 헬퍼
 
 **작업 내용**
 
-1. `components/js-te-demo/examples.ts`:
-   - `ExampleId` 유니온에 `'only' | 'skip' | 'todo'` 추가
-   - 3개 예제 추가. `readOnly: false` 로 모두 실행 가능
-   - `exampleOrder` 에 적절한 위치 (예: hello → matchers → each → fn → **only → skip → todo** → mock) 로 삽입
+1. (A 트랙 머지/분리 후 새 브랜치 `feat/floating-0.4-minmax-overflow`.) `package.json` `@dannysir/floating-components` `^0.3.0 → ^0.4.0`. `npm install`.
+2. `components/floating-demo/treeConstraints.ts` 신규:
+   - `interface PanelConstraints { minWidth?: number; minHeight?: number; maxWidth?: number; maxHeight?: number; }`
+   - `applyPanelConstraints(tree, targetId, next): LayoutNode` — `id===targetId` 인 PanelNode 의 4개 제약 필드를 **replace**(undefined ⇒ 키 삭제) 하는 불변 재귀. 변경 없는 노드는 참조 유지.
+   - `getParentSplitDirection(tree, targetId): SplitDirection | undefined` — 선택 패널의 부모 SplitNode.direction(루트 ⇒ undefined). DFS 로 가장 가까운 enclosing split 방향 carry.
+   - `getPanelConstraints(tree, targetId): PanelConstraints` — 현재 제약 읽기(없으면 `{}`).
 
-2. 각 예제 source 코드 가이드라인 — **`.only` 의 file-scoped demotion 효과를 명확히 보여주기 위해 반드시 normal 테스트 1개 이상을 함께 포함**:
+**검증**: `npx tsc --noEmit` (헬퍼는 `any` 금지, `T[]`, non-null assertion 금지).
 
-   - **`only`**: `describe('focus', () => { test('this is skipped', ...); test.only('only this runs', ...); })`. 결과 트리에서 첫 테스트가 skipped 표시되는 것을 시연
-   - **`skip`**: `test('runs normally', ...); test.skip('this is pending', () => { /* TODO */ });`. skip 의 의미와 동작 시연
-   - **`todo`**: `test('runs normally', ...); test.todo('write the empty-list edge case');`. todo 의 시그니처 (fn 인자 없음) 와 표시 시연
-
-3. 각 예제는 짧고 (10줄 내외) 의도가 자명하게
-
-**산출물**
-
-- 업데이트된 `examples.ts`
-
-**검증**
-
-- `JsTeDemo.tsx` 의 셀렉터에서 3개 예제가 노출되고 클릭 시 에디터에 로드되는지
-- 각 예제 Run 시 의도된 카운터·트리 상태가 나오는지
-
-**완료 메모**: 2026-06-08 `examples.ts` 에 only/skip/todo 3개 추가 (모두 `readOnly: false`). only 예제는 `describe('focus')` 내 normal + `.only` 로 file-scoped demotion 효과 시연. skip 은 normal + `.skip`, todo 는 normal + `.todo` 2개. `ExampleId` 유니온·`exampleOrder` 갱신 (hello/matchers/each/fn/**only/skip/todo**/mock). 브라우저 시각 검증은 Phase 6.
+**완료 메모**:
 
 ---
 
-## Phase 5 — i18n 키 추가 (ko/en 동시)
-
-**목적**: 새 상태·예제·summary 가 양쪽 로케일에서 동일하게 동작.
+## Phase B2 — Toolbar 제약 컨트롤 + 데모 통합 + overflow + ActivityLog
 
 **작업 내용**
 
-1. `lib/i18n/ko.json`, `lib/i18n/en.json` 양쪽에 동시에 추가:
+1. `Toolbar.tsx`: 기존 액션 그룹 뒤에 **제약 그룹** 추가 — 축 배지(W/H/Root) + min·max number input(해당 축만) + Clear + (선택)Constrain 프리셋 + Overflow 토글. 새 props: `parentDirection`, `constraints`, `constraintsDict`, `overflowOn`, `onSetConstraint`/`onClearConstraints`/`onPreset`/`onToggleOverflow`. `selectedId===null` 또는 루트(부모 방향 undefined) 면 disable. 입력 클래스는 literal 상수.
+2. `FloatingDemo.tsx`:
+   - `STORAGE_KEY` → `'floating-demo:tree:v2'`.
+   - 헬퍼 import. `parentDir = useMemo(getParentSplitDirection)`, `currentConstraints = useMemo(getPanelConstraints)`.
+   - overflow 토글 state(선택 패널 id 기준) + 토글 시 해당 `DemoPanel` 을 `showOverflowContent` 로 재등록.
+   - `handleSetConstraint(field, value)`/`handleClearConstraints()`/`handlePreset()`/`handleToggleOverflow()` — 각 `setTree(prev => applyPanelConstraints(prev, selectedId, next))` 후 `pushLog('constraint', formatConstraintEvent(...))`. 빈 입력 ⇒ 필드 제거(`Number.isFinite` 가드).
+   - 상수: `PRESET_MIN_PX`/`PRESET_MAX_PX`. **line 177 effect/disable 영역 불변.**
+3. `DemoPanel.tsx`: `showOverflowContent?: boolean`. true 면 라벨 아래 고정 크기 블록(`w-[420px] h-[200px]` 등 literal 상수). 기본 false → 기존 패널 변화 없음.
+4. `ActivityLog.tsx`: `LogKind` 에 `'constraint'`; `KIND_LABEL.constraint='LIMIT'`; `KIND_COLOR.constraint='text-tertiary'`.
 
-   - `jste.examples.only` / `.skip` / `.todo` — 셀렉터 라벨
-   - `jste.results.skipped` — Skipped 뱃지·카운터 라벨
-   - `jste.results.todo` — Todo 뱃지·카운터 라벨
-   - `jste.results.summary` — 4 카운터 + ms 로 변경 (기존 키 갱신)
+**검증**: `npx tsc --noEmit` 통과. (시각 검증은 B4.)
 
-2. summary 템플릿 예시:
-   - ko: `"통과 {{passed}} · 실패 {{failed}} · 건너뜀 {{skipped}} · 예정 {{todo}} · {{ms}}ms"`
-   - en: `"{{passed}} passed · {{failed}} failed · {{skipped}} skipped · {{todo}} todo · {{ms}}ms"`
-
-3. **두 파일을 동시에 편집한 뒤 키 셋 diff 로 누락 확인** (`jq 'paths(scalars) | join(".")'` 또는 단순 grep). i18n 누락 시 화면에 빈 문자열 표시되는 게 알려진 함정
-
-**산출물**
-
-- 업데이트된 ko/en 사전
-
-**검증**
-
-- `npm run lint`, `npm run build` 통과
-- /ko, /en 양쪽에서 새 라벨이 모두 정상 표시
-
-**완료 메모**: 2026-06-08 `lib/i18n/dictionaries.ts` 의 `jste.examples` 타입에 only/skip/todo 추가, ko/en.json 양쪽에 라벨 동시 추가 (".only — 포커스" / ".only — focus" 등). `jste.results.summary` 를 4 카운터 + ms 로 갱신 ("통과 X · 실패 Y · 건너뜀 Z · 예정 W · Vms" / "X passed · Y failed · Z skipped · W todo · Vms"). 별도 `results.skipped/todo` 키는 summary 안에 라벨이 포함돼 사용처가 없어 추가하지 않음. tsc 통과 — `satisfies Dictionary` 양쪽 OK.
+**완료 메모**:
 
 ---
 
-## Phase 6 — 검증 + 메모리 동기화 + PR
-
-**목적**: 표준 검증 통과 후 사용자 사전 허락 받고 PR 까지.
+## Phase B3 — i18n(constraints) + 마무리 배선
 
 **작업 내용**
 
-1. **표준 검증 3종**: `npx tsc --noEmit`, `npm run lint`, `npm run build` — 셋 다 통과
-2. **브라우저 스모크**:
-   - dev 서버 (`preview_start`) 실행
-   - /ko, /en 각각 `/libraries/js-te` 에서:
-     - 기존 5개 예제 (hello/matchers/each/fn/mock) 모두 동작 변화 없는지 (regression)
-     - 새 3개 예제 (only/skip/todo) 각각 의도된 상태·카운터로 표시되는지
-     - summary 4 카운터 라인 표시 확인
-   - 콘솔 에러 0 확인
-3. **메모리 갱신**:
-   - `~/.claude/projects/-Users-san-dannysir-labs/memory/project_js_te_mini_runner_rationale.md` 에 0.9.0 전환·shim 삭제·모드 처리 방식 (Option B) 한두 줄 추가
-4. **README 갱신**: "미니 러너 한계" 섹션의 0.7.3 언급을 0.9.0 으로. 새 시연 한 줄 언급 (선택)
-5. **PLAN 사본 동기화**: 이 파일과 `/Users/san/.claude/plans/reflective-hatching-sutton.md` 가 동일한지 마지막 확인
-6. **사용자 사전 허락 받고**:
-   - 커밋 (작업 단위별 분리 또는 한 묶음)
-   - 브랜치 `feat/jste-0.9-only-skip-todo` push
-   - PR 생성. 제목·본문 초안 미리 제시
+1. i18n 3곳 동시: `dictionaries.ts` 의 `floating` 타입에 `constraints` 서브객체; `ko.json`·`en.json` 에 `floating.constraints.*` (label/min/max/clear/preset/overflowToggle/axisWidth/axisHeight/axisNone/hint/events.{set,clear}). `events.set` = en `"Set {{field}}={{value}}px on {{id}}"` / ko `"{{id}} 패널 {{field}}={{value}}px 설정"`, `events.clear` = en `"Cleared constraints on {{id}}"` / ko `"{{id}} 패널 제약 해제"`.
+2. `formatConstraintEvent(template, { field, value, id })` (기존 `formatEvent` `.replace` 패턴 확장).
+3. **키 셋 양쪽 diff 로 누락 확인** (누락 시 빈 문자열 함정 + `satisfies Dictionary` 빌드 실패).
 
-**산출물**
+**검증**: `npx tsc --noEmit`, `npm run lint` 통과.
 
-- 모든 검증 통과
-- PR 한 건
+**완료 메모**:
 
-**진행 메모 (대기 중)**: 2026-06-08 표준 검증 3종 (tsc/lint/build) 모두 통과. 단 브라우저 스모크에서 회귀 발견 — 라이브러리 0.9.0 의 `dist/browser.mjs` 1번 라인이 `import { fileURLToPath } from 'node:url'` 을 포함 (0.8.0 의 `--testLocation` 도입 시 `SELF_FILE = fileURLToPath(import.meta.url)` 가 그대로 browser 빌드에 번들됨). Turbopack worker 가 이 Node 빌트인을 풀지 못해 silent hang → 모든 예제가 5초 타임아웃으로 실패. 본 사이트 측에서 우회 불가. 라이브러리 0.9.1 patch ship 대기 중 (별도 세션 spawn_task 로 분리 — `js-te-package` 의 testManager.js 의 SELF_FILE 계산을 환경별 분기). 0.9.1 ship 후 본 세션에서 `^0.9.0` → `^0.9.1` bump, 브라우저 스모크 재개, 메모리·README 갱신, 사용자 사전 허락 받고 commit/push/PR. 한편 본 사이클 진행 중 무관한 lint 회귀 발견 — `FloatingDemo.tsx:177` 의 `setState in effect` 위반. main 에도 존재하는 사전 위반이라 한 줄 `eslint-disable-next-line react-hooks/set-state-in-effect` 로 임시 통과시키고 본질적 effect 리팩토링은 별도 fix 태스크로 spawn (사용자 결정).
+---
 
-**진행 메모 (2026-06-13)**: 0.9.1 ship 확인 → `node:url` 회귀 해결 (기존 예제 hello/matchers/each/fn 전부 PASS). 그러나 새 only/skip/todo 는 여전히 FAIL — **별개의 라이브러리 버그** 발견: browser entry (`js-te-package/browser.js`) 가 `test.only/.skip/.todo`·`describe.only/.skip` 부착을 누락 (메인 `index.js` 엔 있음 — 0.9.0 모디파이어 추가 시 browser 만 빠뜨림). 데모 러너가 browser entry 의 `test` 를 그대로 주입하므로 `test.only is not a function` 런타임 에러. **사용자 결정 = 우회 대신 라이브러리 패치 0.9.2.** 사용자가 `browser.js` 에 모디파이어 5줄 추가 + 빌드 + npm link 완료. 본 세션에서 패치 사전검증: npm link / `npm pack --no-save` tarball 둘 다 Turbopack symlink·hidden-lockfile 트랩으로 실패 → **오버레이**(레지스트리 0.9.1 깨끗이 설치 후 패치 `dist/browser.mjs`+map+`browser.js` 만 node_modules 에 cp)로 검증 성공: only(통과1·건너뜀1)/skip(통과1·건너뜀1)/todo(통과1·예정2) 전부 PASS, 트리 `⊘`(skipped)·`✓`(pass) 정상 렌더. **다음 액션 (0.9.2 publish 후 새 세션)**: `^0.9.1`→`^0.9.2`, 레지스트리 clean `npm install`(오버레이 제거), /ko·/en 전체 스모크, 메모리·README 갱신, 사용자 사전 허락 받고 commit/push/PR. **현재 dannysir-labs 상태**: `package.json` `^0.9.1`(← `^0.9.0` bump, 미커밋), `node_modules/@dannysir/js-te` 는 임시 오버레이. 상세는 메모리 `project_jste_09_browser_entry_bug.md`.
+## Phase B4 — floating 검증 + 메모리/README + PR
 
-**진행 메모 (2026-06-13, 0.9.2 적용)**: 0.9.2 publish 확인 (`npm view` latest=0.9.2, browser.mjs 에 `test.only/.skip/.todo`·`describe.only/.skip` 부착 확인). dannysir-labs 정리 — `package.json` `^0.9.1`→`^0.9.2`, 오버레이 node_modules 제거 후 레지스트리 clean install (symlink 아닌 정규 dir, lockfile 0.9.2), 전역 npm link `@dannysir/js-te` 제거(`npm rm -g`). 표준 검증 3종 (tsc/lint/build) 모두 통과. 브라우저 스모크 (/ko·/en): only(통과1·건너뜀1)/skip(통과1·건너뜀1)/todo(통과1·예정2) 전부 PASS, 트리 `⊘`(skipped)·`✓`(pass)·`☐`(todo) 정상, 기존 hello/matchers/each/fn 회귀 없음, 콘솔 에러 0. 메모리(`project_js_te_mini_runner_rationale`, `project_jste_09_browser_entry_bug`)·README 갱신 완료. 사용자 허락 받고 **로컬 단일 feat 커밋 완료** (Phase 1~6 작업 트리 전체를 한 커밋으로). **남은 것: push/PR — 사용자 추가 지시 대기.** PR merge 시 체크박스 [x].
+**작업 내용**
 
-**완료 메모**: 
+1. **표준 검증 3종**: tsc / lint / build.
+2. **브라우저 스모크** (/ko·/en, `/libraries/floating-components`), preview_* MCP:
+   - (a) 패널 선택→min/max 설정→border drag 시 실제로 해당 px 에서 막힘(가로 패널 width, 세로 패널 height). `getBoundingClientRect` 로 확인.
+   - (b) Overflow 토글→cross-axis 축소 시 패널 내 스크롤(`scrollHeight>clientHeight`).
+   - (c) TreeInspector 에 `"minWidth": …` 반영. (d) ActivityLog 에 `LIMIT` 로그(coalesce 안 됨). (e) 빈 입력 ⇒ 키 삭제·제약 해제.
+   - (f) 기존 split/add/move/close/reset/resize 회귀 없음, 제약이 split 후 자식에 유지·Reset 시 해제. (g) 새로고침 영속(v2). 구 `:v1` 키는 무시(크래시 0). (h) /ko 라벨 한글·/en 영문(빈 문자열 0). (i) 콘솔 0.
+3. **메모리**: floating 0.4.0 시연(툴바 제약 컨트롤·treeConstraints) 한 줄. B-2 보류 메모에 "0.4.0 작업이 같은 파일 만졌으나 disable 영역 불변" 한 줄.
+4. **README**: floating 시연/버전 언급 갱신.
+5. **PLAN 사본 동기화** 확인.
+6. **사용자 사전 허락 받고**: 커밋 → `feat/floating-0.4-minmax-overflow` push → PR. 제목·본문 초안 선제시.
+
+**검증**: 3종 통과 + 스모크 OK. PR 한 건.
+
+**완료 메모**:
 
 ---
 
@@ -293,4 +225,4 @@ npm run lint
 npm run build
 ```
 
-세 명령이 **모두 통과** 해야 작업 단위 "완료" 처리.
+세 명령이 **모두 통과** 해야 작업 단위 "완료" 처리. (+ 의미 있는 변경 후 브라우저 스모크.)
