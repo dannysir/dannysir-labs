@@ -3,7 +3,15 @@
 import { HistoryIcon } from '@/components/site/icons';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 
-export type LogKind = 'init' | 'split' | 'add' | 'move' | 'resize' | 'reset' | 'close';
+export type LogKind =
+  | 'init'
+  | 'split'
+  | 'add'
+  | 'move'
+  | 'resize'
+  | 'reset'
+  | 'close'
+  | 'constraint';
 
 export interface LogEntry {
   id: number;
@@ -20,6 +28,7 @@ const KIND_LABEL: Record<LogKind, string> = {
   resize: 'RESIZE',
   reset: 'RESET',
   close: 'CLOSE',
+  constraint: 'LIMIT',
 };
 
 const KIND_COLOR: Record<LogKind, string> = {
@@ -30,6 +39,7 @@ const KIND_COLOR: Record<LogKind, string> = {
   resize: 'text-tertiary',
   reset: 'text-secondary',
   close: 'text-error',
+  constraint: 'text-tertiary',
 };
 
 interface ActivityLogProps {

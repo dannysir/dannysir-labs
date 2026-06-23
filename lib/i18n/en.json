@@ -57,6 +57,22 @@
       "selectedHint": "Selected: {{id}}",
       "noSelection": "Click a panel to select it"
     },
+    "constraints": {
+      "label": "Size limits",
+      "min": "min",
+      "max": "max",
+      "clear": "Clear",
+      "preset": "Constrain",
+      "overflowToggle": "Overflow demo",
+      "axisWidth": "↔ width (W)",
+      "axisHeight": "↕ height (H)",
+      "axisNone": "Root — no axis",
+      "hint": "Limits apply only to the panel's split-direction axis (horizontal split → width, vertical → height). Larger content scrolls instead of clipping.",
+      "events": {
+        "set": "Set {{field}}={{value}}px on {{id}}",
+        "clear": "Cleared limits on {{id}}"
+      }
+    },
     "inspector": {
       "title": "Tree state"
     },

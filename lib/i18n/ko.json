@@ -57,6 +57,22 @@
       "selectedHint": "선택된 패널: {{id}}",
       "noSelection": "패널을 클릭해 선택하세요"
     },
+    "constraints": {
+      "label": "크기 제약",
+      "min": "최소",
+      "max": "최대",
+      "clear": "해제",
+      "preset": "제약 적용",
+      "overflowToggle": "오버플로 시연",
+      "axisWidth": "↔ 너비 (W)",
+      "axisHeight": "↕ 높이 (H)",
+      "axisNone": "루트 — 축 없음",
+      "hint": "제약은 패널의 분할 축에만 적용됩니다 (가로 분할 → 너비, 세로 분할 → 높이). 더 큰 콘텐츠는 잘리지 않고 스크롤됩니다.",
+      "events": {
+        "set": "{{id}} 패널 {{field}}={{value}}px 설정",
+        "clear": "{{id}} 패널 제약 해제"
+      }
+    },
     "inspector": {
       "title": "트리 상태"
     },

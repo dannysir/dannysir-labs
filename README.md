@@ -10,7 +10,7 @@
 
 | 라이브러리 | 시연 방식 |
 | --- | --- |
-| [`@dannysir/floating-components`](https://github.com/dannysir/floating-component) | npm 의존성을 그대로 임포트해 브라우저에서 실행 |
+| [`@dannysir/floating-components`](https://github.com/dannysir/floating-component) | npm 의존성을 그대로 임포트해 브라우저에서 실행. split·resize·이동에 더해 0.4.0 의 패널 크기 제약(min/max)·overflow 스크롤을 툴바에서 시연 |
 | [`@dannysir/js-te`](https://github.com/dannysir/js-te-package) | Node 전용이라 `@dannysir/js-te/browser` entry 를 위임받는 브라우저 미니 러너로 모사 |
 
 ---
