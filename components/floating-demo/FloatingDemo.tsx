@@ -16,6 +16,12 @@ import { DemoPanel } from './DemoPanel';
 import { SelectionContext } from './SelectionContext';
 import { Toolbar } from './Toolbar';
 import { TreeInspector } from './TreeInspector';
+import {
+  applyPanelConstraints,
+  getPanelConstraints,
+  getParentSplitDirection,
+  type PanelConstraints,
+} from './treeConstraints';
 
 interface FloatingDemoProps {
   dict: Dictionary['floating'];
@@ -23,10 +29,22 @@ interface FloatingDemoProps {
 
 const MAX_LOG_ENTRIES = 50;
 
-const STORAGE_KEY = 'floating-demo:tree';
+const STORAGE_KEY = 'floating-demo:tree:v2';
+
+const PRESET_MIN_PX = 160;
+const PRESET_MAX_PX = 320;
 
 const formatLabel = (template: string, id: string): string =>
   template.replace('{{id}}', id);
+
+const formatConstraintEvent = (
+  template: string,
+  parts: { field: string; value: number | string; id: string },
+): string =>
+  template
+    .replace('{{field}}', parts.field)
+    .replace('{{value}}', String(parts.value))
+    .replace('{{id}}', parts.id);
 
 const nowTime = (): string => {
   const now = new Date();
@@ -79,9 +97,19 @@ export function FloatingDemo({ dict }: FloatingDemoProps): React.ReactElement {
   } = useLayoutTree(initialTree);
 
   const [selectedId, setSelectedIdRaw] = useState<string | null>('a');
+  const [overflowPanelId, setOverflowPanelId] = useState<string | null>(null);
   const counterRef = useRef(0);
   const logCounterRef = useRef(0);
   const events = dict.activityLog.events;
+
+  const parentDir = useMemo(
+    () => (selectedId ? getParentSplitDirection(tree, selectedId) : undefined),
+    [tree, selectedId],
+  );
+  const currentConstraints = useMemo<PanelConstraints>(
+    () => (selectedId ? getPanelConstraints(tree, selectedId) : {}),
+    [tree, selectedId],
+  );
 
   const makeEntry = useCallback(
     (kind: LogKind, message: string): LogEntry => {
@@ -227,8 +255,111 @@ export function FloatingDemo({ dict }: FloatingDemoProps): React.ReactElement {
     counterRef.current = 0;
     setTree(initialTree);
     setSelectedIdRaw('a');
+    if (overflowPanelId) {
+      store.register(
+        overflowPanelId,
+        <DemoPanel
+          id={overflowPanelId}
+          label={formatLabel(dict.panelLabel, overflowPanelId)}
+        />,
+      );
+      setOverflowPanelId(null);
+    }
     pushLog('reset', events.reset);
-  }, [setTree, initialTree, pushLog, events.reset]);
+  }, [
+    setTree,
+    initialTree,
+    pushLog,
+    events.reset,
+    overflowPanelId,
+    store,
+    dict.panelLabel,
+  ]);
+
+  const handleSetConstraint = useCallback(
+    (field: keyof PanelConstraints, value: number | undefined) => {
+      if (!selectedId) return;
+      setTree((prev) => {
+        const next: PanelConstraints = {
+          ...getPanelConstraints(prev, selectedId),
+          [field]: value,
+        };
+        return applyPanelConstraints(prev, selectedId, next);
+      });
+      if (value !== undefined) {
+        pushLog(
+          'constraint',
+          formatConstraintEvent(dict.constraints.events.set, {
+            field,
+            value,
+            id: selectedId,
+          }),
+        );
+      }
+    },
+    [selectedId, setTree, pushLog, dict.constraints.events.set],
+  );
+
+  const handleClearConstraints = useCallback(() => {
+    if (!selectedId) return;
+    setTree((prev) => applyPanelConstraints(prev, selectedId, {}));
+    pushLog(
+      'constraint',
+      dict.constraints.events.clear.replace('{{id}}', selectedId),
+    );
+  }, [selectedId, setTree, pushLog, dict.constraints.events.clear]);
+
+  const handlePreset = useCallback(() => {
+    if (!selectedId) return;
+    const dir = getParentSplitDirection(tree, selectedId);
+    if (!dir) return;
+    const next: PanelConstraints =
+      dir === 'horizontal'
+        ? { minWidth: PRESET_MIN_PX, maxWidth: PRESET_MAX_PX }
+        : { minHeight: PRESET_MIN_PX, maxHeight: PRESET_MAX_PX };
+    setTree((prev) => applyPanelConstraints(prev, selectedId, next));
+    const minField = dir === 'horizontal' ? 'minWidth' : 'minHeight';
+    const maxField = dir === 'horizontal' ? 'maxWidth' : 'maxHeight';
+    pushLog(
+      'constraint',
+      formatConstraintEvent(dict.constraints.events.set, {
+        field: minField,
+        value: PRESET_MIN_PX,
+        id: selectedId,
+      }),
+    );
+    pushLog(
+      'constraint',
+      formatConstraintEvent(dict.constraints.events.set, {
+        field: maxField,
+        value: PRESET_MAX_PX,
+        id: selectedId,
+      }),
+    );
+  }, [selectedId, tree, setTree, pushLog, dict.constraints.events.set]);
+
+  const handleToggleOverflow = useCallback(() => {
+    if (!selectedId) return;
+    const turningOn = overflowPanelId !== selectedId;
+    if (overflowPanelId && overflowPanelId !== selectedId) {
+      store.register(
+        overflowPanelId,
+        <DemoPanel
+          id={overflowPanelId}
+          label={formatLabel(dict.panelLabel, overflowPanelId)}
+        />,
+      );
+    }
+    store.register(
+      selectedId,
+      <DemoPanel
+        id={selectedId}
+        label={formatLabel(dict.panelLabel, selectedId)}
+        showOverflowContent={turningOn}
+      />,
+    );
+    setOverflowPanelId(turningOn ? selectedId : null);
+  }, [selectedId, overflowPanelId, store, dict.panelLabel]);
 
   const handleClosePanel = useCallback(
     (id: string) => {
@@ -261,11 +392,19 @@ export function FloatingDemo({ dict }: FloatingDemoProps): React.ReactElement {
           <Toolbar
             selectedId={selectedId}
             dict={dict.toolbar}
+            constraintsDict={dict.constraints}
             liveCanvasLabel={dict.liveCanvas}
+            parentDirection={parentDir}
+            constraints={currentConstraints}
+            overflowOn={overflowPanelId !== null && overflowPanelId === selectedId}
             onSplitH={handleSplitH}
             onSplitV={handleSplitV}
             onAddPanel={handleAddPanel}
             onReset={handleReset}
+            onSetConstraint={handleSetConstraint}
+            onClearConstraints={handleClearConstraints}
+            onPreset={handlePreset}
+            onToggleOverflow={handleToggleOverflow}
           />
           <div className="relative flex-1 overflow-hidden bg-surface-lowest bg-[radial-gradient(#222a3d_1px,transparent_1px)] [background-size:24px_24px]">
             <TreeLayout

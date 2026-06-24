@@ -92,10 +92,10 @@
 | Phase | 트랙 | 제목 | 상태 |
 | --- | --- | --- | --- |
 | A1 | js-te | 0.9.3 bump + only.each/skip.each 예제 + i18n | [x] |
-| A2 | js-te | 검증 + 메모리/README + PR | [ ] |
-| B1 | floating | 0.4.0 bump + treeConstraints 헬퍼 | [ ] |
-| B2 | floating | Toolbar 제약 컨트롤 + 데모 통합 + overflow + ActivityLog | [ ] |
-| B3 | floating | i18n(constraints) + STORAGE_KEY v2 | [ ] |
+| A2 | js-te | 검증 + 메모리/README + PR | [x] |
+| B1 | floating | 0.4.0 bump + treeConstraints 헬퍼 | [x] |
+| B2 | floating | Toolbar 제약 컨트롤 + 데모 통합 + overflow + ActivityLog | [x] |
+| B3 | floating | i18n(constraints) + STORAGE_KEY v2 | [x] |
 | B4 | floating | 검증 + 메모리/README + PR | [ ] |
 
 > Phase 완료 시 체크박스 갱신 + 해당 섹션 끝 "완료 메모" 한 줄 기록.
@@ -139,9 +139,9 @@
 
 **검증**: 3종 통과 + 스모크 OK. PR 한 건.
 
-**진행 메모 (2026-06-23)**: 표준검증 3종(tsc/lint/build) 모두 통과. 브라우저 스모크 — /en onlyEach(통과2·실패0·건너뜀1·예정0)·skipEach(통과1·건너뜀3) 전부 PASS, /ko 한글 라벨 정상(`.only.each — 묶음 포커스`/`.skip.each — 묶음 건너뜀`, 빈 문자열 0)·onlyEach(통과2·건너뜀1)·기존 hello 회귀 없음, 콘솔 에러 0. 메모리(`project_js_te_mini_runner_rationale`·`MEMORY.md`)·README(미니 러너 한계 섹션) 갱신 완료. **남은 것: 커밋/push/PR — 사용자 사전 허락 대기.** PR 머지 시 체크박스 [x].
+**진행 메모 (2026-06-23)**: 표준검증 3종(tsc/lint/build) 모두 통과. 브라우저 스모크 — /en onlyEach(통과2·실패0·건너뜀1·예정0)·skipEach(통과1·건너뜀3) 전부 PASS, /ko 한글 라벨 정상(`.only.each — 묶음 포커스`/`.skip.each — 묶음 건너뜀`, 빈 문자열 0)·onlyEach(통과2·건너뜀1)·기존 hello 회귀 없음, 콘솔 에러 0. 메모리(`project_js_te_mini_runner_rationale`·`MEMORY.md`)·README(미니 러너 한계 섹션) 갱신 완료.
 
-**완료 메모**:
+**완료 메모**: 2026-06-23 단일 feat 커밋 `4580e1c` → **PR #7 머지 완료** (main HEAD `84cf0d5`). 러너 코드 무수정으로 `.only.each`/`.skip.each` 시연 (라이브러리가 각 `.each` 케이스에 mode 부착). **Track A(js-te 0.9.3) 종료.**
 
 ---
 
@@ -158,7 +158,7 @@
 
 **검증**: `npx tsc --noEmit` (헬퍼는 `any` 금지, `T[]`, non-null assertion 금지).
 
-**완료 메모**:
+**완료 메모**: 2026-06-23 `@dannysir/floating-components ^0.3.0 → ^0.4.0` (레지스트리 install, `dist/index.d.ts` 에 min/max 필드·`SplitDirection="horizontal"|"vertical"` 확인). `treeConstraints.ts` 신규 — `PanelConstraints` interface + `applyPanelConstraints`(불변 **replace**, undefined⇒키삭제)·`getParentSplitDirection`·`getPanelConstraints`. 라이브러리가 노드 update API 미제공이라 `setTree` 기반 직접 작성(map/find, for-of 회피). tsc 통과.
 
 ---
 
@@ -178,7 +178,7 @@
 
 **검증**: `npx tsc --noEmit` 통과. (시각 검증은 B4.)
 
-**완료 메모**:
+**완료 메모**: 2026-06-23 Toolbar 에 축 인식 제약 그룹(부모 split 방향→해당 축 min/max number input·Constrain 프리셋(160/320)·Clear·Overflow 토글·축 배지 W/H/Root, `flex-wrap`). DemoPanel `showOverflowContent?` opt-in(360×200 literal 블록). ActivityLog `LogKind` 에 `'constraint'`(`KIND_LABEL='LIMIT'`/`text-tertiary`). FloatingDemo: `STORAGE_KEY` v2·`parentDir`/`currentConstraints` derive(useMemo, effect 0)·핸들러 4종(`handleSetConstraint` 빈입력⇒키삭제·`handleClearConstraints`·`handlePreset`·`handleToggleOverflow` store 재등록)·**line 177 set-state-in-effect 영역 불변**. tsc 통과.
 
 ---
 
@@ -192,7 +192,7 @@
 
 **검증**: `npx tsc --noEmit`, `npm run lint` 통과.
 
-**완료 메모**:
+**완료 메모**: 2026-06-23 i18n `floating.constraints.*`(label/min/max/clear/preset/overflowToggle/axis{Width,Height,None}/hint/events.{set,clear}) ko/en + `dictionaries.ts` 타입 동시 추가. `formatConstraintEvent`(field/value/id `.replace`). tsc(`satisfies Dictionary` 양쪽 키 일치)·lint 통과.
 
 ---
 
@@ -212,6 +212,8 @@
 6. **사용자 사전 허락 받고**: 커밋 → `feat/floating-0.4-minmax-overflow` push → PR. 제목·본문 초안 선제시.
 
 **검증**: 3종 통과 + 스모크 OK. PR 한 건.
+
+**진행 메모 (2026-06-23)**: 표준검증 3종(tsc/lint/build) 모두 통과. 브라우저 스모크 /en·/ko 전부 통과 — (a) minWidth=400 설정 시 패널 a CSS min-width honor(폭 확장 시각 확인) (b) Overflow 토글 시 wrapper 가로 스크롤(clientW 295 < scrollW 328) (c) TreeInspector `"minWidth":400` 반영 (d) ActivityLog `LIMIT Set minWidth=400px on a` (e) 빈 입력⇒트리에서 키 삭제 (f) Reset 시 제약·overflow 해제·기본 3패널 복귀, Split V 후 새 패널 축 W→H 전환(`크기 제약 · ↕ 높이 (H)`) (g) v2 영속(/en 4패널 트리 /ko 복원) (h) /ko 한글 라벨(빈 문자열 0) (i) 콘솔 warn/error 0. 메모리(신규 `project_floating_04_constraints_demo` + B-2 갱신 + MEMORY.md)·README 갱신 완료. **남은 것: 커밋/push/PR — 사용자 사전 허락 대기.** PR 머지 시 B4 [x].
 
 **완료 메모**:
 

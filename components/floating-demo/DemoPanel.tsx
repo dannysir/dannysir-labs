@@ -19,9 +19,14 @@ const accentForId = (id: string): string => {
 interface DemoPanelProps {
   id: string;
   label: string;
+  showOverflowContent?: boolean;
 }
 
-export function DemoPanel({ id, label }: DemoPanelProps): React.ReactElement {
+export function DemoPanel({
+  id,
+  label,
+  showOverflowContent = false,
+}: DemoPanelProps): React.ReactElement {
   const { selectedId, setSelectedId, closePanel, closable, closeLabel } =
     useContext(SelectionContext);
   const accent = accentForId(id);
@@ -95,10 +100,22 @@ export function DemoPanel({ id, label }: DemoPanelProps): React.ReactElement {
           ) : null}
         </span>
       </div>
-      <div className="flex flex-1 items-center justify-center">
+      <div className="flex flex-1 flex-col items-center justify-center gap-3 p-3">
         <span className="text-lg font-semibold text-on-surface-variant">
           {label}
         </span>
+        {showOverflowContent ? (
+          <div
+            className="flex h-[200px] w-[360px] shrink-0 items-center justify-center rounded-lg border border-dashed text-center font-mono text-xs"
+            style={{
+              borderColor: `${accent}66`,
+              backgroundColor: `${accent}0f`,
+              color: accent,
+            }}
+          >
+            360 × 200
+          </div>
+        ) : null}
       </div>
     </div>
   );

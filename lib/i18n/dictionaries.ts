@@ -63,6 +63,22 @@ export type Dictionary = {
       selectedHint: string;
       noSelection: string;
     };
+    constraints: {
+      label: string;
+      min: string;
+      max: string;
+      clear: string;
+      preset: string;
+      overflowToggle: string;
+      axisWidth: string;
+      axisHeight: string;
+      axisNone: string;
+      hint: string;
+      events: {
+        set: string;
+        clear: string;
+      };
+    };
     inspector: {
       title: string;
     };
